@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32228.343
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "24HReportSystemData", "24HReportSystemData\24HReportSystemData.csproj", "{5BAD8CED-7EB4-4F49-A808-3CEACB371A94}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "24HReportSystemAPI", "24HReportSystemAPI\24HReportSystemAPI.csproj", "{120C90D9-F736-43DB-AE76-CF629D367B6F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5BAD8CED-7EB4-4F49-A808-3CEACB371A94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BAD8CED-7EB4-4F49-A808-3CEACB371A94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BAD8CED-7EB4-4F49-A808-3CEACB371A94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BAD8CED-7EB4-4F49-A808-3CEACB371A94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{120C90D9-F736-43DB-AE76-CF629D367B6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{120C90D9-F736-43DB-AE76-CF629D367B6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{120C90D9-F736-43DB-AE76-CF629D367B6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{120C90D9-F736-43DB-AE76-CF629D367B6F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F4CFFB70-77EB-4EBB-935B-BBEBDE823FED}
+	EndGlobalSection
+EndGlobal
