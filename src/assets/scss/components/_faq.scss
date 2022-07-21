@@ -1,0 +1,37 @@
+/*----------------------------------------*/
+/*  08. faq
+/*----------------------------------------*/
+.accordion_box {
+	position: relative;
+}
+.accordion_box .block {
+	position: relative;
+	background: #F4F6F8;
+	overflow: hidden;
+	margin-bottom: 16px;
+}
+.accordion_box .block:last-child {
+	margin-bottom: 0;
+}
+.accordion_box .block .acc-btn {
+	color: var(--color-black);
+    font-family: var(--font-title);
+	position: relative;
+	font-weight: 600;
+	font-size: 16px;
+	cursor: pointer;
+	padding: 20px 30px;
+	padding-bottom: 18px;
+    @include respond(all 500ms ease);
+}
+.accordion_box .block .content {
+	position: relative;
+	padding: 0px 30px 20px;
+}
+.accordion_box .block .acc_body {
+	position: relative;
+	display: none;
+}
+.accordion_box .block .acc_body.current {
+	display: block;
+}

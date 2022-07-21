@@ -1,0 +1,120 @@
+/*----------------------------------------*/
+/*  12. author
+/*----------------------------------------*/
+.author {
+    &__item {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    &__avatar {
+        position: relative;
+        width: 180px;
+        height: 180px;
+        margin-right: 40px;
+        .avatar {
+            width: 180px;
+            height: 180px;
+            padding: 10px;
+            background-color: var(--color-white);
+            box-shadow: 0px 0px 22px rgba(0, 0, 0, 0.07);
+            object-fit: cover;
+            @include border-radius(50%);
+            z-index: 1;
+        }
+    }
+    &__avatar-shape {
+        position: absolute;
+        bottom: 10px;
+        left: 0;
+        z-index: -1;
+    }
+    &__avatar-number {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        width: 35px;
+        height: 35px;
+        font-size: 15px;
+        font-weight: 700;
+        background-color: var(--color-primary);
+        color: #fff;
+        @include border-radius(50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    &__content {
+        width: calc(100% - 240px);
+        @include respond(xs) {
+            width: 100%;
+            margin-top: 30px;
+        }
+        span {
+            display: block;
+            font-style: 15px;
+        }
+        .name {
+            font-size: 30px;
+            margin-bottom: 5px;
+            @include respond(xs) {
+                font-size: 20px;
+            }
+        }
+        .info {
+            margin-top: 10px;
+            img {
+                margin-right: 5px;
+            }
+        }
+        p {
+            margin-bottom: 30px;
+        }
+        h3 {
+            font-size: 20px;
+        }
+        .info-wrap {
+            margin-right: 70px;
+        }
+        .rating {
+            margin-top: 10px;
+            margin-left: 60px;
+            @include respond(xs) {
+                margin-left: 0;
+            }
+            i {
+                color: #FF842B;
+                font-size: 15px;
+                margin: 0 2px;
+            }
+            span {
+                margin-left: 5px;
+                @include transform(translateY(-5px));
+            }
+        }
+    }
+    &__list {
+        display: flex;
+        flex-wrap: wrap;
+        li {
+            font-size: 18px;
+            width: 380px;
+            position: relative;
+            padding-left: 30px;
+            margin-top: 20px;
+            &::before {
+                position: absolute;
+                top: 0;
+                left: 0;
+                font-size: 14px;
+                content: "\f00c";
+                font-family: "Font Awesome 5 Pro";
+                font-weight: 400;
+                color: var(--color-primary);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                @include transition(.3s);
+            }
+        }
+    }
+}

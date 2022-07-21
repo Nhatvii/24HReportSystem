@@ -1,0 +1,85 @@
+/*----------------------------------------*/
+/*  09. news
+/*----------------------------------------*/
+.news {
+    overflow: hidden;
+}
+.news-block {
+    padding: 50px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    @include transition(.3s);
+    @include respond(laptop) {
+        padding: 30px;
+    }
+    @include respond(md) {
+        padding: 30px;
+    }
+    @include respond(xs) {
+        padding: 20px;
+    }
+    &:hover, &.active {
+        background-color: var(--color-primary);
+        border-color: var(--color-primary);
+        .post-tags li a, .post-title a, p, .post-meta li, .post-meta span {
+            color: #fff;
+        }
+        .post-tags li span, .post-meta--4 li::before {
+            background-color: #fff;
+        }
+        .post-tags li span {
+            color: var(--color-primary);
+        }
+    }
+    .post-tags {
+        li {
+            span {
+                background-color: #0DC361;
+                @include transition(.3s);
+            }
+            a {
+                color: rgba(var(--color-black-rgb), .75);
+            }
+        }
+    }
+    .post-title {
+        font-size: 34px;
+        margin-bottom: 25px;
+        @include respond(laptop) {
+            font-size: 28px
+        }
+        @include respond(lg) {
+            font-size: 26px
+        }
+    }
+    p {
+        @include transition(.3s);
+    }
+    .post-meta {
+        li, span {
+            color: var(--color-default);
+            @include transition(.3s);
+        }
+        .year {
+            color: var(--color-primary);
+        }
+        .post-meta__author .avatar img {
+            background-color: var(--color-primary);
+        }
+    }
+    &--1 {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+    &--2 {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    &--3 {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        .post-tags li span {
+            background-color: #FFA800;
+        }
+    }
+}

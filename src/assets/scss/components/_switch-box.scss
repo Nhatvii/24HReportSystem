@@ -1,0 +1,101 @@
+/*==================================
+ // theme-swithcer-box
+ ================================*/
+ .theme-switch-box-wrap {
+    position: fixed;
+    right: 12px;
+    top: 320px;
+    z-index: 100;
+  }
+ 
+  
+  .theme-switch-box {
+    display: -ms-grid;
+    display: grid;
+    gap: 8px;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    background: var(--color-primary);
+    padding: 8px 6px;
+    border-radius: 1.5rem;
+  }
+  .theme-switch-box-wrap.v2 .theme-switch-box {
+    background: var(--color-primary-2);
+  }
+  [data-theme=dark] .theme-switch-box,
+  [data-theme=dark] .theme-switch-box-wrap.v2 .theme-switch-box {
+    background: #d8d8d8;
+  }
+  .theme-switch-box {
+    &__theme-status {
+      color: var(--color-white);
+      line-height: 1;
+      text-align: center;
+    }
+    &__label {
+      width: 18px;
+      height: 36px;
+      display: inline-block;
+      position: relative;
+      transition: all 0.3s ease;
+      -webkit-transition: all 0.3s ease;
+      -moz-transition: all 0.3s ease;
+      -ms-transition: all 0.3s ease;
+      border-radius: 1.5rem;
+      overflow: hidden;
+    }
+    &__main {
+      position: absolute;
+      background: #000;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      -webkit-transition: all 0.3s ease;
+      -moz-transition: all 0.3s ease;
+      -ms-transition: all 0.3s ease;
+      border-radius: 1.5rem;
+      &::before {
+        position: absolute;
+      content: "";
+      width: 12px;
+      height: 12px;
+      background-color: #fff;
+      left: 50%;
+      top: 0;
+      -webkit-transform: translateX(-50%) translateY(3px);
+              transform: translateX(-50%) translateY(3px);
+      border-radius: 100%;
+      border-radius: 1.5rem;
+      @include transition(.3s);
+      }
+    }
+    &__input {
+      display: none;
+    }
+    &__input:checked + &__main::before {
+      top: 17px;
+      @include transition(.3s);
+    }
+
+  }
+  .shape-element {
+    position: absolute;
+    z-index: -1;
+  }
+  .shape-element span {
+    display: block;
+  }
+  @media (max-width: 991px) {
+    .shape-element {
+      display: none;
+    }
+  }

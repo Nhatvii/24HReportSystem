@@ -1,0 +1,56 @@
+@font-face {
+    font-family: "flaticon";
+    src: url("../fonts/flaticon.ttf?c4fb59b5ba45fd31b3a9432be10284bf") format("truetype"),
+url("../fonts/flaticon.woff?c4fb59b5ba45fd31b3a9432be10284bf") format("woff"),
+url("../fonts/flaticon.woff2?c4fb59b5ba45fd31b3a9432be10284bf") format("woff2"),
+url("../fonts/flaticon.eot?c4fb59b5ba45fd31b3a9432be10284bf#iefix") format("embedded-opentype"),
+url("../fonts/flaticon.svg?c4fb59b5ba45fd31b3a9432be10284bf#flaticon") format("svg");
+}
+
+i[class^="flaticon-"]:before, i[class*=" flaticon-"]:before {
+    font-family: flaticon !important;
+    font-style: normal;
+    font-weight: normal !important;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.flaticon-digital-marketing:before {
+    content: "\f101";
+}
+.flaticon-political-science:before {
+    content: "\f102";
+}
+.flaticon-handshake:before {
+    content: "\f103";
+}
+.flaticon-handshake-1:before {
+    content: "\f104";
+}
+.flaticon-technology:before {
+    content: "\f105";
+}
+.flaticon-news:before {
+    content: "\f106";
+}
+.flaticon-news-1:before {
+    content: "\f107";
+}
+.flaticon-ball:before {
+    content: "\f108";
+}
+.flaticon-paw:before {
+    content: "\f109";
+}
+.flaticon-bear:before {
+    content: "\f10a";
+}
+.flaticon-thunder:before {
+    content: "\f10b";
+}
+.flaticon-bookmark:before {
+    content: "\f10c";
+}
