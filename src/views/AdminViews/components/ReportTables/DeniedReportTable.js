@@ -97,7 +97,7 @@ const DeniedReportTable = () => {
       key: "show_details",
       label: "Thêm",
       label: "Options",
-      _style: { width: "1%" },
+      _style: { width: "5%" },
       filter: false,
       sorter: false,
       _props: { className: "fw-semibold" },
@@ -292,9 +292,7 @@ const DeniedReportTable = () => {
                               </video>
                             </label>
                           ) : (
-                            <span className="text-muted">
-                              Video không còn khả dụng
-                            </span>
+                            <span className="text-muted">Không có video</span>
                           )}
                         </Col>
                       ))

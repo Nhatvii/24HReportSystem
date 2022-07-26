@@ -79,22 +79,22 @@ const Register = (props) => {
       });
       const response = await registerApi.createUser(json);
       if (!JSON.stringify(response).includes("error")) {
-        setShow(true);
-        setSuccessMessage("Đăng kí thành công. Xin xác nhận số điện thoại");
-        auth
-          .signInWithPhoneNumber(
-            "+84" + values.phone.substring(1, values.phone),
-            window.recaptchaVerifier
-          )
-          .then((result) => {
-            setResetTime(30);
-            setResult(result);
-            setModal(!modal);
-            setValues(values);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+        const params = { email: email, isAuthen: true };
+        const response = await userApi.update(params);
+        if (!JSON.stringify(response).includes("error")) {
+          const params = {
+            account: email,
+            password: password,
+          };
+          const loginResponse = await loginApi.getAll(params);
+          console.log(loginResponse);
+          if (!JSON.stringify(loginResponse).includes("error")) {
+            //lấy dữ liệu đăng Nhập
+            localStorage.setItem("user_info", JSON.stringify(loginResponse));
+            setIsLoading(false);
+            window.location.href = "/home";
+          }
+        }
       } else {
         setErrorMessage(response.error.message);
       }
@@ -128,53 +128,52 @@ const Register = (props) => {
       } else {
         setEmail(values.email);
         setPassword(values.password);
-        register_user(values);
+        setShow(true);
+        setSuccessMessage("Xin xác nhận số điện thoại");
+        auth
+          .signInWithPhoneNumber(
+            "+84" + values.phone.substring(1, values.phone),
+            window.recaptchaVerifier
+          )
+          .then((result) => {
+            setResetTime(30);
+            setResult(result);
+            setModal(!modal);
+            setValues(values);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
     },
   });
-  const SkipValidation = async () => {
-    const params = { email: email, isAuthen: true };
-    const response = userApi.update(params);
-    if (!JSON.stringify(response).includes("error")) {
-      const params = {
-        account: email,
-        password: password,
-      };
-      const loginResponse = loginApi.getAll(params);
-      console.log(loginResponse);
-      if (!JSON.stringify(response).includes("error")) {
-        //lấy dữ liệu đăng Nhập
-        localStorage.setItem("user_info", JSON.stringify(loginResponse));
-        setIsLoading(false);
-        window.location.href = "/home";
-      }
-    }
-  };
+  // const SkipValidation = async () => {
+  //   const params = { email: email, isAuthen: true };
+  //   const response = userApi.update(params);
+  //   if (!JSON.stringify(response).includes("error")) {
+  //     const params = {
+  //       account: email,
+  //       password: password,
+  //     };
+  //     const loginResponse = loginApi.getAll(params);
+  //     console.log(loginResponse);
+  //     if (!JSON.stringify(response).includes("error")) {
+  //       //lấy dữ liệu đăng Nhập
+  //       localStorage.setItem("user_info", JSON.stringify(loginResponse));
+  //       setIsLoading(false);
+  //       window.location.href = "/home";
+  //     }
+  //   }
+  // };
   const ValidateOtp = async () => {
-    console.log(email);
-    console.log(password);
     if (otp === null) return;
     result
       .confirm(otp)
       .then(async (result) => {
         setErrorMessage("");
         setSuccessMessage("Xác thực thành công");
-        const params = { email: email, isAuthen: true };
-        const response = await userApi.update(params);
-        if (!JSON.stringify(response).includes("error")) {
-          const params = {
-            account: email,
-            password: password,
-          };
-          const loginResponse = await loginApi.getAll(params);
-          console.log(loginResponse);
-          if (!JSON.stringify(loginResponse).includes("error")) {
-            //lấy dữ liệu đăng Nhập
-            localStorage.setItem("user_info", JSON.stringify(loginResponse));
-            setIsLoading(false);
-            window.location.href = "/home";
-          }
-        }
+        //Đăng kí
+        register_user(values);
       })
       .catch((err) => {
         setSuccessMessage("");
@@ -214,27 +213,6 @@ const Register = (props) => {
   }, [resetTime]);
   return (
     <>
-      <ToastContainer className="p-3" position={"top-center"}>
-        <Toast
-          bg={"info"}
-          onClose={() => setShow(false)}
-          show={show}
-          delay={3000}
-          autohide
-        >
-          <Toast.Header>
-            <strong className="me-auto">Thông báo!</strong>
-          </Toast.Header>
-          <Toast.Body>
-            <span
-              class="spinner-border spinner-border-sm"
-              role="status"
-              aria-hidden="true"
-            ></span>{" "}
-            Chào mừng đến với 24hReport. Đang tiến hành đăng nhập
-          </Toast.Body>
-        </Toast>
-      </ToastContainer>
       <div className="form-center">
         <Modal
           isOpen={modal}
@@ -276,9 +254,9 @@ const Register = (props) => {
               </Button>{" "}
               sau <b>{resetTime}</b> giây.
             </span>
-            <Button onClick={() => SkipValidation()} color="secondary">
+            {/* <Button onClick={() => SkipValidation()} color="secondary">
               Xác thực sau
-            </Button>
+            </Button> */}
             {isLoading ? (
               <Button color="info">Đang đăng nhập</Button>
             ) : (
@@ -388,7 +366,7 @@ const Register = (props) => {
             )}
             <Col md="6" className="text-right">
               <Button color="link" className="px-0">
-                <a href="/auth#/login">Đã có tải khoản?</a>
+                <a href="/login">Đã có tải khoản?</a>
               </Button>
             </Col>
           </Row>

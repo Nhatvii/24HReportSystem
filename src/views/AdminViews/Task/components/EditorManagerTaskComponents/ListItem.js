@@ -1,5 +1,5 @@
 import { Draggable } from "react-beautiful-dnd";
-import React, { useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import styled from "styled-components";
 import moment from "moment";
 import "moment/locale/vi";
@@ -27,6 +27,11 @@ import { PreviewDetail } from "../../../Posts/components/PreviewDetail";
 import { PreviewComment } from "../../../Posts/components/PreviewComment";
 import postApi from "../../../../../api/postApi";
 import { ImgUpload, UploadContainer } from "../../../Posts/CreatePost";
+import categoryApi from "../../../../../api/categoryApi";
+import BreadCrumb from "../../../../../components/BreadCrumb";
+import FontAwesome from "../../../../../components/uiStyle/FontAwesome";
+import { Link } from "react-router-dom";
+import { Comments } from "../../../../UserViews/Post/components/Comments";
 const Avatar = styled.img`
   height: 30px;
   width: 30px;
@@ -71,6 +76,7 @@ const ListItem = ({ item, index, loadTask }) => {
   const [visibleReportModal, setVisibleReportModal] = useState(false);
   const [visiblePreviewModal, setVisiblePreviewModal] = useState(false);
   const [editedDescription, setEditedDescription] = useState(null);
+  const [categoryList, setCategoryList] = useState([]);
   //
   const viewDetails = async (id) => {
     setVisibleModal(!visibleModal);
@@ -82,6 +88,15 @@ const ListItem = ({ item, index, loadTask }) => {
       alert(e.message);
     }
   };
+  async function loadCategory() {
+    try {
+      const params = {};
+      const response = await categoryApi.getAllSub(params);
+      setCategoryList(response);
+    } catch (e) {
+      alert(e.message);
+    }
+  }
   const toggleReportDetails = async (id) => {
     setVisibleReportModal(!visibleReportModal);
     try {
@@ -126,6 +141,9 @@ const ListItem = ({ item, index, loadTask }) => {
       alert(e.message);
     }
   };
+  useEffect(() => {
+    loadCategory();
+  }, []);
   return (
     <>
       <Modal
@@ -278,7 +296,20 @@ const ListItem = ({ item, index, loadTask }) => {
                                     <b>Phân loại: </b>
                                   </Label>
                                 </Col>
-                                <Col md="4">{reportDetails.categoryId}</Col>
+                                <Col md="4">
+                                  {reportDetails.categoryId === 1
+                                    ? "Khác"
+                                    : categoryList.find(
+                                        (c) =>
+                                          c.categoryId ===
+                                          reportDetails.categoryId
+                                      ) &&
+                                      categoryList.find(
+                                        (c) =>
+                                          c.categoryId ===
+                                          reportDetails.categoryId
+                                      ).subCategory}
+                                </Col>
                                 <Col md="2">
                                   <Label for="staffId">
                                     <b>Người xác nhận: </b>
@@ -375,7 +406,7 @@ const ListItem = ({ item, index, loadTask }) => {
                                               </label>
                                             ) : (
                                               <span className="text-muted">
-                                                Video không còn khả dụng
+                                                Không có video
                                               </span>
                                             )}
                                           </Col>
@@ -456,21 +487,130 @@ const ListItem = ({ item, index, loadTask }) => {
                               </ModalHeader>
                               <ModalBody style={{ backgroundColor: "#F7F7F7" }}>
                                 {/* Nội dung xem trước */}
-                                <Row>
-                                  <Col>
-                                    <PostData>
-                                      <PreviewDetail
-                                        text={details.posts[0].description}
-                                        title={details.posts[0].title}
-                                      />
-                                    </PostData>
-                                  </Col>
-                                  <Col>
-                                    <CommentArea>
-                                      <PreviewComment />
-                                    </CommentArea>
-                                  </Col>
-                                </Row>
+                               
+                                <Fragment>
+                                  <BreadCrumb
+                                    className="shadow5"
+                                    title="Bài viết"
+                                  />
+                                  <span className="space-30" />
+                                  <div className="container">
+                                    <div className="row">
+                                      <div className="col-12 col-md-10 col-lg-8 m-auto">
+                                        <div className="row">
+                                          <div className="col-6 align-self-center">
+                                            <div className="page_category">
+                                              <h4>
+                                                {details.posts[0].category
+                                                  ? details.posts[0].category
+                                                  : "Khác"}
+                                              </h4>
+                                            </div>
+                                          </div>
+                                          <div className="col-6 text-right">
+                                            <div className="page_comments">
+                                              <ul className="inline">
+                                                <li>
+                                                  <FontAwesome name="thumbs-up" />
+                                                  1
+                                                </li>
+                                                <li>
+                                                  <FontAwesome name="comment" />
+                                                  1
+                                                </li>
+                                                <li>
+                                                  <FontAwesome name="share" />1
+                                                </li>
+                                              </ul>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div className="space-30" />
+                                        <div className="single_post_heading">
+                                          <h1>{details.posts[0].title}</h1>
+                                          <div className="space-10" />
+                                          <p>{details.posts[0].subTitle}</p>
+                                        </div>
+                                        <div className="space-40" />
+                                        {details.posts[0].image.includes(
+                                          "http"
+                                        ) && (
+                                          <img
+                                            src={details.posts[0].image}
+                                            alt="thumb"
+                                            style={{
+                                              marginLeft: "auto",
+                                              marginRight: "auto",
+                                              width: "100%",
+                                              display: "inline-block",
+                                            }}
+                                            class="img-responsive"
+                                          />
+                                        )}
+                                        <div className="space-20" />
+                                        <div className="row">
+                                          <div className="col-lg-6 align-self-center">
+                                            <div className="author">
+                                              <div className="author_img">
+                                                <div className="author_img_wrap">
+                                                  <img
+                                                    src="https://picsum.photos/50/50"
+                                                    alt="author"
+                                                  />
+                                                </div>
+                                              </div>
+                                              <Link to="#">
+                                                {
+                                                  JSON.parse(
+                                                    localStorage.getItem(
+                                                      "user_info"
+                                                    )
+                                                  ).accountInfo.username
+                                                }
+                                              </Link>
+                                              <ul>
+                                                <li>
+                                                  <Link to="#">
+                                                    {moment(
+                                                      details.posts[0]
+                                                        .publicTime
+                                                    ).format("DD ,D MM YYYY")}
+                                                  </Link>
+                                                </li>
+                                                <li>
+                                                  {details.posts[0]
+                                                    .updateTime &&
+                                                    "cập nhật lần cuối " +
+                                                      moment(
+                                                        details.posts[0]
+                                                          .updateTime
+                                                      )
+                                                        .format(
+                                                          "dddd, Do MM YYYY"
+                                                        )
+                                                        .toLocaleUpperCase()}
+                                                </li>
+                                              </ul>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div className="space-20" />
+                                        <div style={{ whiteSpace: "pre-wrap" }}>
+                                          <Markup
+                                            content={
+                                              details.posts[0].description
+                                            }
+                                          />
+                                        </div>
+                                        <div className="space-40" />
+                                        <div className="border_black" />
+                                        {/* Comment like share */}
+                                        <Comments className="comments" />
+                                        <div className="space-60" />
+                                      </div>
+                                    </div>
+                                  </div>
+                                </Fragment>
                               </ModalBody>
                               {details.posts[0].status !== "Public" && (
                                 <ModalFooter>

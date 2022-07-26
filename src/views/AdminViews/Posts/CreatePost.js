@@ -1,5 +1,5 @@
 import { CFormTextarea } from "@coreui/react-pro";
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import ReactQuill from "react-quill";
 import Select from "react-select";
@@ -23,12 +23,22 @@ import { PreviewComment } from "./components/PreviewComment";
 import { PreviewDetail } from "./components/PreviewDetail";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import storage from "../../../firebase/firebaseConfig";
+import BreadCrumb from "../../../components/BreadCrumb";
+import FontAwesome from "../../../components/uiStyle/FontAwesome";
+import { Link } from "react-router-dom";
+import moment from "moment";
+import { Comments } from "../../UserViews/Post/components/Comments";
+import { Markup } from "interweave";
 export const ImgUpload = styled.div`
   flex-direction: row;
   text-align: center;
   margin: 10px;
   background-image: ${(props) =>
-    props.preview
+    props.preview === "5moreVideo"
+      ? "url(https://img.freepik.com/premium-vector/video-media-film-production-line-art-vector-icon-multimedia-movie-directing_654297-125.jpg?w=2000)"
+      : props.preview === "5moreImg"
+      ? "url(http://cdn.onlinewebfonts.com/svg/img_562621.png)"
+      : props.preview
       ? `url(${props.preview})`
       : "url(https://www.ncenet.com/wp-content/uploads/2020/04/No-image-found.jpg)"};
   min-height: 200px;
@@ -38,6 +48,7 @@ export const ImgUpload = styled.div`
   background-size: cover;
   background-position: 50% 50%;
   margin-right: 5px;
+  margin-left: 1.5rem;
 `;
 export const UploadContainer = styled.div`
   display: flex;
@@ -232,18 +243,101 @@ const CreatePost = () => {
         </ModalHeader>
         <ModalBody style={{ backgroundColor: "#F7F7F7" }}>
           {/* Nội dung xem trước */}
-          <Row>
-            <Col>
-              <PostData>
-                <PreviewDetail text={text} title={title} />
-              </PostData>
-            </Col>
-            <Col>
-              <CommentArea>
-                <PreviewComment />
-              </CommentArea>
-            </Col>
-          </Row>
+          <div className="archives post post1">
+            <Fragment>
+              <BreadCrumb className="shadow5" title="Bài viết" />
+              <span className="space-30" />
+              <div className="container">
+                <div className="row">
+                  <div className="col-12 col-md-10 col-lg-8 m-auto">
+                    <div className="row">
+                      <div className="col-6 align-self-center">
+                        <div className="page_category">
+                          <h4>{selectedCategory.label}</h4>
+                        </div>
+                      </div>
+                      <div className="col-6 text-right">
+                        <div className="page_comments">
+                          <ul className="inline">
+                            <li>
+                              <FontAwesome name="thumbs-up" />1
+                            </li>
+                            <li>
+                              <FontAwesome name="comment" />1
+                            </li>
+                            <li>
+                              <FontAwesome name="share" />1
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="space-30" />
+                    <div className="single_post_heading">
+                      <h1>{title}</h1>
+                      <div className="space-10" />
+                      <p>{subTitle}</p>
+                    </div>
+                    <div className="space-40" />
+                    <img
+                      src={preview}
+                      alt="thumb"
+                      style={{
+                        marginLeft: "auto",
+                        marginRight: "auto",
+                        width: "100%",
+                        display: "inline-block",
+                      }}
+                      class="img-responsive"
+                    />
+                    <div className="space-20" />
+                    <div className="row">
+                      <div className="col-lg-6 align-self-center">
+                        <div className="author">
+                          <div className="author_img">
+                            <div className="author_img_wrap">
+                              <img
+                                src="https://picsum.photos/50/50"
+                                alt="author"
+                              />
+                            </div>
+                          </div>
+                          <Link to="#">
+                            {
+                              JSON.parse(localStorage.getItem("user_info"))
+                                .accountInfo.username
+                            }
+                          </Link>
+                          <ul>
+                            <li>
+                              <Link to="#">
+                                {moment().format("DD ,D MM YYYY")}
+                              </Link>
+                            </li>
+                            <li>
+                              {"cập nhật lần cuối " +
+                                moment()
+                                  .format("dddd, Do MM YYYY")
+                                  .toLocaleUpperCase()}
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="space-20" />
+                    <div style={{ whiteSpace: "pre-wrap" }}>
+                      <Markup content={text} />
+                    </div>
+                    <div className="space-40" />
+                    <div className="border_black" />
+                    {/* Comment like share */}
+                    <Comments className="comments" />
+                    <div className="space-60" />
+                  </div>
+                </div>
+              </div>
+            </Fragment>
+          </div>
         </ModalBody>
       </Modal>
       <div className="animated fadeIn pl-3 pr-3 pt-2 pb-3">

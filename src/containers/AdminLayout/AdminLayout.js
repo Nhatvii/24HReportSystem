@@ -20,13 +20,12 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import { Container } from "reactstrap";
 import AdminAside from "./AdminAside";
 import AdminFooter from "./AdminFooter";
-const AdminLayout = (props) => {
+export const AdminLayout = (props) => {
   const { history } = props;
   const [menu, setMenu] = useState({ items: [] });
   const user_info = JSON.parse(localStorage.getItem("user_info"));
   // If normal user want to access the admin page redirect to login
-  if (user_info === null || user_info.role.roleId === 1)
-    history.push("/auth#/login");
+  if (user_info === null || user_info.role.roleId === 1) history.push("/login");
   useEffect(() => {
     user_info &&
       setMenu({
@@ -37,7 +36,7 @@ const AdminLayout = (props) => {
   }, []);
   return (
     <div className="app">
-      <AppHeader fixed>
+      <AppHeader>
         <AdminHeader />
       </AppHeader>
       <div className="app-body">

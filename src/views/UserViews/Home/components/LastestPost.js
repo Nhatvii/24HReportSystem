@@ -12,7 +12,7 @@ export default function LastestPost() {
     try {
       const params = { isRecentDate: true, Status: 3 };
       const response = await postApi.getAll(params);
-      localStorage.setItem("latest-post", JSON.stringify(response));
+      localStorage.setItem("latest-post", JSON.stringify(response.slice(0, 4)));
       setPosts(JSON.parse(localStorage.getItem("latest-post")));
     } catch (err) {
       console.log("Error", err);

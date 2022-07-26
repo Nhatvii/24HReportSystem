@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import {
   Alert,
   Button,
@@ -34,6 +34,11 @@ import { PreviewDetail } from "../../../../../Posts/components/PreviewDetail";
 import postApi from "../../../../../../../api/postApi";
 import { CBadge, CSmartTable } from "@coreui/react-pro";
 import { ImgUpload, UploadContainer } from "../../../../../Posts/CreatePost";
+import categoryApi from "../../../../../../../api/categoryApi";
+import FontAwesome from "../../../../../../../components/uiStyle/FontAwesome";
+import BreadCrumb from "../../../../../../../components/BreadCrumb";
+import { Link } from "react-router-dom";
+import { Comments } from "../../../../../../UserViews/Post/components/Comments";
 
 const DetailsModal = (props) => {
   const [opacity, setOpacity] = useState("0");
@@ -51,6 +56,7 @@ const DetailsModal = (props) => {
   const [details, setDetails] = useState(null);
   const [visibleModal, setVisibleModal] = useState(false);
   const [selectedPost, setSelectedPost] = useState();
+  const [categoryList, setCategoryList] = useState([]);
   //user info
   const user_info = localStorage.getItem("user_info");
   const toggleDetails = async (id) => {
@@ -78,6 +84,15 @@ const DetailsModal = (props) => {
       alert(e.message);
     }
   };
+  async function loadCategory() {
+    try {
+      const params = {};
+      const response = await categoryApi.getAllSub(params);
+      setCategoryList(response);
+    } catch (e) {
+      alert(e.message);
+    }
+  }
   //Function
   const columns = [
     {
@@ -104,13 +119,13 @@ const DetailsModal = (props) => {
     },
     {
       key: "status",
-      _style: { width: "20%" },
+      _style: { width: "5%" },
       _props: { className: "fw-semibold" },
     },
     {
       key: "show_details",
       label: "Options",
-      _style: { width: "1%" },
+      _style: { width: "5%" },
       filter: false,
       sorter: false,
       _props: { className: "fw-semibold" },
@@ -130,11 +145,31 @@ const DetailsModal = (props) => {
   };
   const reloadNumber = async () => {
     try {
-      const params = { EditorID: JSON.parse(user_info).email, status: "" };
-      const params2 = { EditorID: JSON.parse(user_info).email, status: 2 };
-      const params3 = { EditorID: JSON.parse(user_info).email, status: 5 };
-      const params4 = { EditorID: JSON.parse(user_info).email, status: 3 };
-      const params5 = { EditorID: JSON.parse(user_info).email, status: 4 };
+      const params = {
+        EditorID:
+          JSON.parse(user_info) !== null ? JSON.parse(user_info).email : null,
+        status: "",
+      };
+      const params2 = {
+        EditorID:
+          JSON.parse(user_info) !== null ? JSON.parse(user_info).email : null,
+        status: 2,
+      };
+      const params3 = {
+        EditorID:
+          JSON.parse(user_info) !== null ? JSON.parse(user_info).email : null,
+        status: 5,
+      };
+      const params4 = {
+        EditorID:
+          JSON.parse(user_info) !== null ? JSON.parse(user_info).email : null,
+        status: 3,
+      };
+      const params5 = {
+        EditorID:
+          JSON.parse(user_info) !== null ? JSON.parse(user_info).email : null,
+        status: 4,
+      };
 
       const response = await taskApi.getAllByIdAndStatus(params);
       const response2 = await taskApi.getAllByIdAndStatus(params2);
@@ -245,7 +280,9 @@ const DetailsModal = (props) => {
       setTimeout(() => setOpacity("1"), 200);
     }
   }, [props]);
-
+  useEffect(() => {
+    loadCategory();
+  }, []);
   return (
     <ModalContainer visible={display} opacity={opacity}>
       <ModalWrapper
@@ -339,7 +376,13 @@ const DetailsModal = (props) => {
                       <b>Phân loại: </b>
                     </Label>
                   </Col>
-                  <Col md="4">{reportDetails.categoryId}</Col>
+                  <Col md="4">
+                    {reportDetails.categoryId === 1
+                      ? "Khác"
+                      : categoryList.find(
+                          (c) => c.categoryId === reportDetails.categoryId
+                        ).subCategory}
+                  </Col>
                   <Col md="2">
                     <Label for="staffId">
                       <b>Người xác nhận: </b>
@@ -430,7 +473,7 @@ const DetailsModal = (props) => {
                                 </label>
                               ) : (
                                 <span className="text-muted">
-                                  Video không còn khả dụng
+                                  Không có video
                                 </span>
                               )}
                             </Col>
@@ -485,21 +528,115 @@ const DetailsModal = (props) => {
                       </ModalHeader>
                       <ModalBody style={{ backgroundColor: "#F7F7F7" }}>
                         {/* Nội dung xem trước */}
-                        <Row>
-                          <Col>
-                            <PostData>
-                              <PreviewDetail
-                                text={description.posts[0].description}
-                                title={description.posts[0].title}
-                              />
-                            </PostData>
-                          </Col>
-                          <Col>
-                            <CommentArea>
-                              <PreviewComment />
-                            </CommentArea>
-                          </Col>
-                        </Row>
+                        <Fragment>
+                          <BreadCrumb className="shadow5" title="Bài viết" />
+                          <span className="space-30" />
+                          <div className="container">
+                            <div className="row">
+                              <div className="col-12 col-md-10 col-lg-8 m-auto">
+                                <div className="row">
+                                  <div className="col-6 align-self-center">
+                                    <div className="page_category">
+                                      <h4>
+                                        {description.posts[0].category
+                                          ? description.posts[0].category
+                                          : "Khác"}
+                                      </h4>
+                                    </div>
+                                  </div>
+                                  <div className="col-6 text-right">
+                                    <div className="page_comments">
+                                      <ul className="inline">
+                                        <li>
+                                          <FontAwesome name="thumbs-up" />1
+                                        </li>
+                                        <li>
+                                          <FontAwesome name="comment" />1
+                                        </li>
+                                        <li>
+                                          <FontAwesome name="share" />1
+                                        </li>
+                                      </ul>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="space-30" />
+                                <div className="single_post_heading">
+                                  <h1>{description.posts[0].title}</h1>
+                                  <div className="space-10" />
+                                  <p>{description.posts[0].subTitle}</p>
+                                </div>
+                                <div className="space-40" />
+                                {description.posts[0].image.includes(
+                                  "http"
+                                ) && (
+                                  <img
+                                    src={description.posts[0].image}
+                                    alt="thumb"
+                                    style={{
+                                      marginLeft: "auto",
+                                      marginRight: "auto",
+                                      width: "100%",
+                                      display: "inline-block",
+                                    }}
+                                    class="img-responsive"
+                                  />
+                                )}
+                                <div className="space-20" />
+                                <div className="row">
+                                  <div className="col-lg-6 align-self-center">
+                                    <div className="author">
+                                      <div className="author_img">
+                                        <div className="author_img_wrap">
+                                          <img
+                                            src="https://picsum.photos/50/50"
+                                            alt="author"
+                                          />
+                                        </div>
+                                      </div>
+                                      <Link to="#">
+                                        {
+                                          JSON.parse(
+                                            localStorage.getItem("user_info")
+                                          ).accountInfo.username
+                                        }
+                                      </Link>
+                                      <ul>
+                                        <li>
+                                          <Link to="#">
+                                            {moment(
+                                              description.posts[0].publicTime
+                                            ).format("DD ,D MM YYYY")}
+                                          </Link>
+                                        </li>
+                                        <li>
+                                          {description.posts[0].updateTime &&
+                                            "cập nhật lần cuối " +
+                                              moment(
+                                                description.posts[0].updateTime
+                                              )
+                                                .format("dddd, Do MM YYYY")
+                                                .toLocaleUpperCase()}
+                                        </li>
+                                      </ul>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="space-20" />
+                                <div style={{ whiteSpace: "pre-wrap" }}>
+                                  <Markup
+                                    content={description.posts[0].description}
+                                  />
+                                </div>
+                                <div className="space-40" />
+                                <div className="border_black" />
+                                {/* Comment like share */}
+                                <Comments className="comments" />
+                                <div className="space-60" />
+                              </div>
+                            </div>
+                          </div>
+                        </Fragment>
                       </ModalBody>
                     </Modal>
                   )}

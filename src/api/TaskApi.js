@@ -22,6 +22,10 @@ class TaskApi {
     const url = "/Task";
     return axiosClient.post(url, params);
   };
+  taskReviewFilter = (params) => {
+    const url = "/Task/TaskReviewFilter?percent=" + params.percent;
+    return axiosClient.put(url, params);
+  };
 }
 const taskApi = new TaskApi();
 export default taskApi;

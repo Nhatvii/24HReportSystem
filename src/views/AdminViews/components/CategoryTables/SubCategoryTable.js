@@ -99,7 +99,7 @@ const SubCategoryTable = () => {
   }
   useEffect(() => {
     loadCategories();
-  }, [loadCategories]);
+  }, []);
   //
   const [details, setDetails] = useState(null);
   const [visibleModal, setVisibleModal] = useState(false);
@@ -125,7 +125,7 @@ const SubCategoryTable = () => {
     {
       key: "show_details",
       label: "Options",
-      _style: { width: "1%" },
+      _style: { width: "5%" },
       filter: false,
       sorter: false,
       _props: { className: "fw-semibold" },
@@ -327,7 +327,7 @@ const SubCategoryTable = () => {
           pagination
           scopedColumns={{
             categoryId: (item) => {
-              return <td className="py-2">{item.categoryId}</td>;
+              return <td className="py-2">{item._id + 1}</td>;
             },
             rootCategoryNavigation: (item) => {
               return (

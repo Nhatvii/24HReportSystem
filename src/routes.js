@@ -1,7 +1,7 @@
 import React from "react";
 import Loadable from "react-loadable";
 import { Row } from "reactstrap";
-import { AdminLayout, UserLayout } from "./containers";
+import { AdminLayout } from "./containers";
 
 function Loading() {
   return (
@@ -12,30 +12,6 @@ function Loading() {
     </Row>
   );
 }
-const Home = Loadable({
-  loader: () => import("./views/UserViews/Home"),
-  loading: Loading,
-});
-const Auth = Loadable({
-  loader: () => import("./views/Pages/Login/Auth"),
-  loading: Loading,
-});
-const ViewAllPosts = Loadable({
-  loader: () => import("./views/UserViews/Home/components/ViewAllPost"),
-  loading: Loading,
-});
-const SendReport = Loadable({
-  loader: () => import("./views/UserViews/SendReport"),
-  loading: Loading,
-});
-const ViewReport = Loadable({
-  loader: () => import("./views/UserViews/ViewReport"),
-  loading: Loading,
-});
-const FAQ = Loadable({
-  loader: () => import("./views/UserViews/FAQ"),
-  loading: Loading,
-});
 // Admin
 const Dashboard = Loadable({
   loader: () => import("./views/AdminViews/Dashboard"),
@@ -54,7 +30,7 @@ const SubCategories = Loadable({
   loading: Loading,
 });
 const StaffCreateReport = Loadable({
-  loader: () => import("./views/UserViews/SendReport/SendReport"),
+  loader: () => import("./views/Pages/SendReport"),
   loading: Loading,
 });
 const AllNewReports = Loadable({
@@ -113,57 +89,13 @@ const PostDetail = Loadable({
   loader: () => import("./views/UserViews/Post/PostDetail"),
   loading: Loading,
 });
-const UserProfile = Loadable({
-  loader: () => import("./views/Pages/Profile/profile"),
-  loading: Loading,
-});
+
 const AdminProfile = Loadable({
   loader: () => import("./views/Pages/Profile/profile"),
   loading: Loading,
 });
 
 const routes = [
-  { path: "/", name: "24h Report", component: UserLayout, exact: true },
-  {
-    path: "/auth#/login",
-    name: "Auth",
-    component: Auth,
-    exact: true,
-  },
-  { path: "/home", name: "Trang chủ", component: Home },
-  {
-    path: "/sendReport",
-    name: "Gửi báo cáo",
-    component: SendReport,
-  },
-  {
-    path: "/view-all",
-    name: "Xem tất cả",
-    component: ViewAllPosts,
-  },
-  {
-    path: "/viewReport",
-    name: "Xem phản hồi",
-    role: ["User"],
-    component: ViewReport,
-  },
-  {
-    path: "/faq",
-    name: "FAQ",
-    component: FAQ,
-  },
-  {
-    path: "/admin",
-    name: "Admin",
-    component: AdminLayout,
-    exact: true,
-  },
-  {
-    path: "/user/profile",
-    name: "User Profile",
-    component: UserProfile,
-    exact: true,
-  },
   {
     path: "/admin/profile",
     name: "Admin Profile",

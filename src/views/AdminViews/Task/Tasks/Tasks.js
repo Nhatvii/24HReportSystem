@@ -14,7 +14,7 @@ const DragDropContextContainer = styled.div`
 const ListGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-  grid-gap: 5px;
+  grid-gap: 2px;
 `;
 const statusList = ["New", "Pending", "Review", "Finish", "UnFinished"];
 

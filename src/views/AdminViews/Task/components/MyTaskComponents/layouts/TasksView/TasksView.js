@@ -70,15 +70,35 @@ const TasksView = (props) => {
     try {
       var params = {};
       if (selected === 1 || selected === 2 || selected === 3) {
-        params = { EditorID: JSON.parse(user_info).email, status: "" };
+        params = {
+          EditorID:
+            JSON.parse(user_info) !== null ? JSON.parse(user_info).email : null,
+          status: "",
+        };
       } else if (selected === 4) {
-        params = { EditorID: JSON.parse(user_info).email, status: 5 };
+        params = {
+          EditorID:
+            JSON.parse(user_info) !== null ? JSON.parse(user_info).email : null,
+          status: 5,
+        };
       } else if (selected === 5) {
-        params = { EditorID: JSON.parse(user_info).email, status: 3 };
+        params = {
+          EditorID:
+            JSON.parse(user_info) !== null ? JSON.parse(user_info).email : null,
+          status: 3,
+        };
       } else if (selected === 6) {
-        params = { EditorID: JSON.parse(user_info).email, status: 4 };
+        params = {
+          EditorID:
+            JSON.parse(user_info) !== null ? JSON.parse(user_info).email : null,
+          status: 4,
+        };
       } else {
-        params = { EditorID: JSON.parse(user_info).email, status: 2 };
+        params = {
+          EditorID:
+            JSON.parse(user_info) !== null ? JSON.parse(user_info).email : null,
+          status: 2,
+        };
       }
       const response = await taskApi.getAllByIdAndStatus(params);
       setTasks(

@@ -1,6 +1,6 @@
 import { Droppable } from "react-beautiful-dnd";
 import ListItem from "./ListItem";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { CSmartTable } from "@coreui/react-pro";
 import {
@@ -26,13 +26,15 @@ import { PseudoText } from "../../../../UserViews/Post/components/styles";
 import { CFormTextarea } from "@coreui/react-pro";
 import { useRanger } from "react-ranger";
 import { ImgUpload, UploadContainer } from "../../../Posts/CreatePost";
+import categoryApi from "../../../../../api/categoryApi";
 const MIN_LENGTH_DESCRIPTION = 10;
 const MAX_LENGTH_DESCRIPTION = 300;
 export const Track = styled("div")`
   display: inline-block;
   height: 8px;
-  width: 90%;
-  margin: 2% 1% 10% 5%;
+  width: 100%;
+  margin: 5% 1% 10% 1%;
+  padding-top: 0.25rem;
 `;
 
 export const Tick = styled.div`
@@ -47,8 +49,9 @@ export const Tick = styled.div`
   }
 `;
 export const Checkbutton = styled.button`
-  padding-left: 1rem;
-  padding-right: 1rem;
+  z-index: 9999;
+  display: inline;
+  margin-top: 1rem;
   hover: {
     cursor: pointer;
   }
@@ -75,7 +78,6 @@ export const Checkbutton = styled.button`
   }
   :hover:before {
     font-weight: bold;
-    content: "Duyệt tự động ";
   }
   font-size: 10px;
   border: none;
@@ -122,12 +124,13 @@ export const Handle = styled.div`
 const ColumnHeader = styled.div`
   text-transform: uppercase;
   margin-top: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 0.5rem;
   font-size: 18px;
   font-weight: bold;
 `;
 const StatusColumn = styled.div`
-  max-height: 85vh;
+  max-height: 80vh;
+  height: 80vh;
   padding: 5px;
   border-radius: 5px;
   background: #ebe8e8;
@@ -195,7 +198,7 @@ const columns = [
   {
     key: "show_details",
     label: "Chi tiết",
-    _style: { width: "1%" },
+    _style: { width: "5%" },
     filter: false,
     sorter: false,
     _props: { className: "fw-semibold" },
@@ -215,6 +218,7 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
   const [selected, setSelected] = useState("");
   const [time, setTime] = useState(moment());
   const [reportIdList, setReportIdList] = useState([]);
+  const [categoryList, setCategoryList] = useState([]);
   //
   const [reports, setReports] = useState();
   const [details, setDetails] = useState(null);
@@ -232,6 +236,30 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
     values,
     onChange: setValues,
   });
+  async function loadCategory() {
+    try {
+      const params = {};
+      const response = await categoryApi.getAllSub(params);
+      setCategoryList(response);
+    } catch (e) {
+      alert(e.message);
+    }
+  }
+  async function autoReviewTask() {
+    try {
+      const params = { percent: values[0] / 100 };
+      console.log(params);
+      const response = await taskApi.taskReviewFilter(params);
+      if (!JSON.stringify(response).includes("error")) {
+        //do something
+        alert(response.message);
+      } else {
+        alert(response.error.message);
+      }
+    } catch (e) {
+      alert("Error: " + e.message);
+    }
+  }
   async function loadEditors() {
     try {
       const params = {};
@@ -350,17 +378,12 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
     reportIdList.push(id);
     toggleDetails(id);
   };
+  useEffect(() => {
+    loadCategory();
+  }, []);
   return (
     <StatusColumn>
-      <ColumnHeader>
-        {statusName(prefix)}{" "}
-        {prefix === "Review" && (
-          <Checkbutton>
-            <span></span>
-            <icon className="fa fa-check"></icon>
-          </Checkbutton>
-        )}
-      </ColumnHeader>
+      <ColumnHeader>{statusName(prefix)}</ColumnHeader>
       <DroppableStyles>
         <Modal
           isOpen={visibleModal3}
@@ -417,7 +440,13 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
                       <Col md="3">
                         <Label for="category">Phân loại: </Label>
                       </Col>
-                      <Col md="9">{details.categoryId}</Col>
+                      <Col md="9">
+                        {details.categoryId === 1
+                          ? "Khác"
+                          : categoryList.find(
+                              (c) => c.categoryId === details.categoryId
+                            ).subCategory}
+                      </Col>
                     </FormGroup>
                     <FormGroup row>
                       <Col md="3">
@@ -501,7 +530,7 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
                                     </label>
                                   ) : (
                                     <span className="text-muted">
-                                      Video không còn khả dụng
+                                      Không có video
                                     </span>
                                   )}
                                 </Col>
@@ -774,32 +803,42 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
           </CreateTaskButton>
         )}
         {prefix === "Review" && (
-          <>
-            <Track {...getTrackProps()}>
-              {ticks.map(({ value, getTickProps }) => (
-                <Tick {...getTickProps()}>
-                  <TickLabel>{value}</TickLabel>
-                </Tick>
-              ))}
-              {segments.map(({ getSegmentProps }, i) => (
-                <Segment {...getSegmentProps()} index={i} />
-              ))}
-              {handles.map(({ value, active, getHandleProps }) => (
-                <button
-                  {...getHandleProps({
-                    style: {
-                      appearance: "none",
-                      border: "none",
-                      background: "transparent",
-                      outline: "none",
-                    },
-                  })}
-                >
-                  <Handle active={active}>{value}</Handle>
-                </button>
-              ))}
-            </Track>
-          </>
+          <Row style={{ maxWidth: "16vw", marginLeft: "1rem" }}>
+            <Col md={10}>
+              <Track {...getTrackProps()}>
+                {ticks.map(({ value, getTickProps }) => (
+                  <Tick {...getTickProps()}>
+                    <TickLabel>{value}</TickLabel>
+                  </Tick>
+                ))}
+                {segments.map(({ getSegmentProps }, i) => (
+                  <Segment {...getSegmentProps()} index={i} />
+                ))}
+                {handles.map(({ value, active, getHandleProps }) => (
+                  <button
+                    {...getHandleProps({
+                      style: {
+                        appearance: "none",
+                        border: "none",
+                        background: "transparent",
+                        outline: "none",
+                      },
+                    })}
+                  >
+                    <Handle active={active}>{value}</Handle>
+                  </button>
+                ))}
+              </Track>
+            </Col>
+            <Col md={2}>
+              {prefix === "Review" && (
+                <Checkbutton onClick={() => autoReviewTask()}>
+                  <span></span>
+                  <icon className="fa fa-check"></icon>
+                </Checkbutton>
+              )}
+            </Col>
+          </Row>
         )}
         <Droppable droppableId={`${prefix}`}>
           {(provided) => (

@@ -73,7 +73,7 @@ const RootCategoryTable = () => {
   }
   useEffect(() => {
     loadCategories();
-  }, [loadCategories]);
+  }, []);
   //
   const [details, setDetails] = useState(null);
   const [visibleModal, setVisibleModal] = useState(false);
@@ -93,7 +93,7 @@ const RootCategoryTable = () => {
     {
       key: "show_details",
       label: "Options",
-      _style: { width: "1%" },
+      _style: { width: "5%" },
       filter: false,
       sorter: false,
       _props: { className: "fw-semibold" },
@@ -242,7 +242,6 @@ const RootCategoryTable = () => {
           draggable
           activePage={1}
           cleaner
-          clickableRows
           columns={columns}
           columnFilter
           columnSorter
@@ -252,15 +251,15 @@ const RootCategoryTable = () => {
           pagination
           scopedColumns={{
             rootCategoryId: (item) => {
-              return <td className="py-2">{item.rootCategoryId}</td>;
+              return <td className="py-2">{item._id + 1}</td>;
             },
             show_details: (item) => {
               return (
-                <td className="py-2">
+                <td className="">
                   <Row>
                     <Button onClick={() => toggleDetails(item.rootCategoryId)}>
                       Chi tiết
-                    </Button>
+                    </Button>{" "}
                     <Button
                       onClick={() => (
                         toggle(), setDeletedCategory(item.rootCategoryId)
@@ -276,9 +275,9 @@ const RootCategoryTable = () => {
             },
           }}
           tableFilter
-          tableProps={{
-            hover: true,
-          }}
+          // tableProps={{
+          //   hover: true,
+          // }}
         />
       )}
     </>

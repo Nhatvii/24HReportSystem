@@ -73,11 +73,16 @@ const PendingReportTable = () => {
         categoryId: selected ? selected.value : 1,
         staffId: JSON.parse(user_info).email,
       };
-      await updateReportApi.updateCategory(params2);
-      await updateReportApi.update(params);
+      console.log(params);
+      console.log(params2);
+      const response = await updateReportApi.updateCategory(params2);
+      const response2 = await updateReportApi.update(params);
+      console.log(response2);
+      console.log(response);
       // window.location.reload();
       loadReports();
       setVisibleModal(false);
+      setSelected();
     } catch (e) {
       alert(e.message);
     }
@@ -121,7 +126,7 @@ const PendingReportTable = () => {
       key: "show_details",
       label: "Thêm",
       label: "Options",
-      _style: { width: "1%" },
+      _style: { width: "5%" },
       filter: false,
       sorter: false,
       _props: { className: "fw-semibold" },
@@ -161,14 +166,18 @@ const PendingReportTable = () => {
     <>
       <Modal
         isOpen={visibleModal}
-        onClose={() => (setVisibleModal(false), setDetails(null))}
+        onClose={() => (
+          setVisibleModal(false), setDetails(null), setSelected()
+        )}
         className=""
         size="lg"
         style={{ maxWidth: "1600px", width: "80%" }}
       >
         <ModalHeader
           className="bg-primary"
-          toggle={() => (setVisibleModal(false), setDetails(null))}
+          toggle={() => (
+            setVisibleModal(false), setDetails(null), setSelected()
+          )}
         >
           Chi tiết báo cáo
         </ModalHeader>
@@ -314,9 +323,7 @@ const PendingReportTable = () => {
                                 </video>
                               </label>
                             ) : (
-                              <span className="text-muted">
-                                Video không còn khả dụng
-                              </span>
+                              <span className="text-muted">Không có video</span>
                             )}
                           </Col>
                         ))

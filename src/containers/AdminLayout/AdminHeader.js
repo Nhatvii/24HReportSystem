@@ -20,8 +20,8 @@ class AdminHeader extends Component {
     const { children, ...attributes } = this.props;
 
     return (
-      <React.Fragment>
-        <AppSidebarToggler className="d-lg-none" display="md" mobile />
+      <React.Fragment className="">
+        <AppSidebarToggler />
         <AppNavbarBrand
           full={{
             src: "https://dewey.tailorbrands.com/production/brand_version_mockup_image/209/7405193209_dafd8c3c-9a54-4e9e-87b7-9b4257430f5e.png?cb=1654526260",
@@ -39,10 +39,10 @@ class AdminHeader extends Component {
         <AppSidebarToggler className="d-md-down-none" display="lg" />
         <Nav className="d-md-down-none" navbar>
           <NavItem className="px-3">
-            <NavLink href="/">Dashboard</NavLink>
+            <NavLink href="/dashboard">Dashboard</NavLink>
           </NavItem>
           <NavItem className="px-3">
-            <NavLink href="#">Users</NavLink>
+            <NavLink href="/admin/profile">Profile</NavLink>
           </NavItem>
           <NavItem className="px-3">
             <NavLink href="#">Settings</NavLink>

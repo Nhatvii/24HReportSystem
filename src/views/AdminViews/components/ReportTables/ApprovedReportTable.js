@@ -75,7 +75,7 @@ const ReportTableNew = () => {
       label: "Thứ tự",
       filter: false,
       sorter: false,
-      _style: { width: "2%" },
+      _style: { width: "5%" },
       _props: { className: "fw-semibold" },
     },
     {
@@ -113,7 +113,7 @@ const ReportTableNew = () => {
       key: "show_details",
       label: "Thêm",
       label: "Options",
-      _style: { width: "1%" },
+      _style: { width: "5%" },
       filter: false,
       sorter: false,
       _props: { className: "fw-semibold" },
@@ -299,9 +299,7 @@ const ReportTableNew = () => {
                               </video>
                             </label>
                           ) : (
-                            <span className="text-muted">
-                              Video không còn khả dụng
-                            </span>
+                            <span className="text-muted">Không có video</span>
                           )}
                         </Col>
                       ))

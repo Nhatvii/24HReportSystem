@@ -78,7 +78,7 @@ const columns = [
 const SendReport = () => {
   const user_info = JSON.parse(localStorage.getItem("user_info"));
   if (!user_info) {
-    window.location.href = "/auth#/login";
+    window.location.href = "/login";
   }
   const [reports, setReports] = useState();
   const [searchId, setSearchId] = useState("");

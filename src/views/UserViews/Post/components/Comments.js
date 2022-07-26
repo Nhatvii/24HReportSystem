@@ -1,6 +1,5 @@
 import { CFormTextarea } from "@coreui/react-pro";
 import React, { useEffect, useState } from "react";
-import { Button } from "reactstrap";
 import commentApi from "../../../../api/commentApi";
 import { CommentsHeader } from "./CommentsHeader";
 import { LikeShareSection } from "./LikeShareSection";
@@ -15,7 +14,7 @@ import {
 } from "./styles";
 import postDetailApi from "../../../../api/postDetailApi";
 import LetteredAvatar from "react-lettered-avatar";
-
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 const MIN_LENGTH_DESCRIPTION = 10;
 const MAX_LENGTH_DESCRIPTION = 100;
 
@@ -31,6 +30,17 @@ export const Comments = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [postDetail, setPostDetail] = useState([]);
   const [avatarColor, setAvatarColor] = useState([]);
+  //
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
+  const toggle = () => {
+    setOpenDeleteModal(!openDeleteModal);
+    setIsLoading(!isLoading);
+  };
+  const toggle2 = () => {
+    setOpenUpdateModal(!openUpdateModal);
+    setIsLoading(!isLoading);
+  };
   const randomColor = (name) => {
     let filteredColor = avatarColor.filter((e) => e.name !== name);
     setAvatarColor([
@@ -95,12 +105,15 @@ export const Comments = (props) => {
   };
   //xóa comment
   const deleteComment = async (commentId) => {
+    setIsLoading(true);
     try {
       const params = { commentId: commentId };
       const response = await commentApi.delete(params);
       if (response.statusCode === 200) {
         fetchComments();
         setSelectedId("");
+        setOpenDeleteModal(false);
+        setIsLoading(false);
       }
     } catch (e) {
       alert(e.message);
@@ -108,6 +121,7 @@ export const Comments = (props) => {
   };
   //Sửa comment
   const updateComment = async (commentId) => {
+    setIsLoading(true);
     try {
       const params = {
         commentId: commentId,
@@ -118,6 +132,8 @@ export const Comments = (props) => {
       if (response.statusCode === 200) {
         fetchComments();
         setSelectedId("");
+        setOpenUpdateModal(false);
+        setIsLoading(false);
       }
     } catch (e) {
       alert(e.message);
@@ -133,14 +149,14 @@ export const Comments = (props) => {
     setWarningMessage("Độ dài bình luận ít nhất phải lớn hơn 16 kí tự.");
   };
   useEffect(() => {
-    fetchPostDetail();
-    fetchComments();
+    if (props.postId) fetchPostDetail();
+    if (props.postId) fetchComments();
     console.log(JSON.parse(user_info));
     JSON.parse(user_info) !== null &&
       (JSON.parse(user_info).accountInfo.username !== null
         ? randomColor(JSON.parse(user_info).accountInfo.username)
         : randomColor(JSON.parse(user_info).email));
-  }, [_numberOfShares, _numberOfComments]);
+  }, []);
 
   return (
     <div>
@@ -257,7 +273,7 @@ export const Comments = (props) => {
               color: "white",
               marginBottom: "0.5rem",
             }}
-            onClick={() => (window.location.href = "/auth#/login")}
+            onClick={() => (window.location.href = "/login")}
           >
             Đăng nhập ngay
           </Button>
@@ -332,7 +348,11 @@ export const Comments = (props) => {
                           className="delete"
                           data-toggle="modal"
                           data-target="#confirmDelete"
-                          onClick={() => setSelectedId(comment.commentId)}
+                          onClick={() => (
+                            console.log(comment.commentId),
+                            setSelectedId(comment.commentId),
+                            setOpenDeleteModal(true)
+                          )}
                         >
                           Xóa
                         </div>
@@ -340,11 +360,65 @@ export const Comments = (props) => {
                           className="modify"
                           data-toggle="modal"
                           data-target="#updateComment"
-                          onClick={() => setSelectedId(comment.commentId)}
+                          onClick={() => (
+                            setOpenUpdateModal(true),
+                            setSelectedId(comment.commentId)
+                          )}
                         >
                           Chỉnh sửa
                         </div>
                         {/* Popup model update*/}
+                        <Modal
+                          isOpen={openUpdateModal}
+                          toggle={() => toggle2()}
+                          className=""
+                          size="lg"
+                          style={{
+                            maxWidth: "400px",
+                            width: "40%",
+                            paddingTop: "15rem",
+                          }}
+                        >
+                          <ModalHeader
+                            className="bg-primary"
+                            toggle={() => toggle2()}
+                          >
+                            Sửa bình luận
+                          </ModalHeader>
+                          <ModalBody>
+                            <CFormTextarea
+                              rows="3"
+                              className="input-lg w-200 mb-1"
+                              type="text"
+                              id="update"
+                              value={updatedComment}
+                              onChange={handleUpdateChange}
+                              placeholder="Viết bình luận..."
+                            />
+                          </ModalBody>
+                          <ModalFooter>
+                            {isLoading ? (
+                              <Button color="primary">
+                                <span
+                                  class="spinner-border spinner-border-sm"
+                                  role="status"
+                                  aria-hidden="true"
+                                ></span>{" "}
+                                Đang sửa
+                              </Button>
+                            ) : (
+                              <Button
+                                color="primary"
+                                onClick={() => updateComment(selectedId)}
+                              >
+                                Sửa
+                              </Button>
+                            )}
+                            <Button color="secondary" onClick={() => toggle2()}>
+                              Hủy
+                            </Button>
+                          </ModalFooter>
+                        </Modal>
                         <div
                           class="modal fade"
                           id="updateComment"
@@ -407,61 +481,49 @@ export const Comments = (props) => {
                           </div>
                         </div>
                         {/* Popup model delete*/}
-                        <div
-                          class="modal fade"
-                          id="confirmDelete"
-                          tabindex="-1"
-                          role="dialog"
-                          aria-labelledby="confirmDeleteTitle"
-                          aria-hidden="true"
-                          data-backdrop="false"
+                        <Modal
+                          isOpen={openDeleteModal}
+                          toggle={() => toggle()}
+                          className=""
+                          size="lg"
+                          style={{
+                            maxWidth: "400px",
+                            width: "40%",
+                            paddingTop: "15rem",
+                          }}
                         >
-                          <div
-                            class="modal-dialog modal-dialog-centered"
-                            role="document"
+                          <ModalHeader
+                            className="bg-danger"
+                            toggle={() => toggle()}
                           >
-                            <div class="modal-content">
-                              <div class="modal-header bg-danger">
-                                <h5
-                                  class="modal-title"
-                                  id="exampleModalLongTitle"
-                                >
-                                  Xóa bình luận
-                                </h5>
-                                <button
-                                  type="button"
-                                  class="close"
-                                  data-dismiss="modal"
-                                  aria-label="Close"
-                                >
-                                  <span aria-hidden="true">&times;</span>
-                                </button>
-                              </div>
-                              <div class="modal-body">
-                                <h4>
-                                  Bạn chắc chắn muốn xóa bình luận của mình?
-                                </h4>
-                              </div>
-                              <div class="modal-footer">
-                                <button
-                                  type="button"
-                                  class="btn btn-secondary"
-                                  data-dismiss="modal"
-                                >
-                                  Hủy
-                                </button>
-                                <button
-                                  type="button"
-                                  class="btn btn-danger"
-                                  data-dismiss="modal"
-                                  onClick={() => deleteComment(selectedId)}
-                                >
-                                  Xóa
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                            Bạn chắc không?
+                          </ModalHeader>
+                          <ModalBody>
+                            Bạn chắc chắn muốn xóa bình luận của mình?
+                          </ModalBody>
+                          <ModalFooter>
+                            {isLoading ? (
+                              <Button color="primary">
+                                <span
+                                  class="spinner-border spinner-border-sm"
+                                  role="status"
+                                  aria-hidden="true"
+                                ></span>{" "}
+                                Đang Xóa
+                              </Button>
+                            ) : (
+                              <Button
+                                color="primary"
+                                onClick={() => deleteComment(selectedId)}
+                              >
+                                Xóa
+                              </Button>
+                            )}
+                            <Button color="secondary" onClick={() => toggle()}>
+                              Hủy
+                            </Button>
+                          </ModalFooter>
+                        </Modal>
                       </div>
                     ) : (
                       <div className="settings"></div>

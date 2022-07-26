@@ -198,7 +198,7 @@ export default function ViewAllPost(props) {
             </div>
           </div>
           <TitleBreakLine />
-          {/* Most shared here */}
+          {/* Chia sẻ nhiềud here */}
           <MostSharedNews />
           {/* Tin khác */}
           <br />

@@ -20,6 +20,7 @@ export const fetchToken = async (setTokenFound, setFcmToken) => {
     .then((currentToken) => {
       if (currentToken) {
         setTokenFound(true);
+        console.log(currentToken);
         setFcmToken(currentToken);
       } else {
         console.log("No token found");
@@ -34,6 +35,7 @@ export const fetchToken = async (setTokenFound, setFcmToken) => {
 export const onMessageListener = () =>
   new Promise((resolve) => {
     onMessage(messaging, (payload) => {
+      console.log(payload);
       resolve(payload);
     });
   });

@@ -92,7 +92,7 @@ export default function PostList() {
               </div>
             </div>
             <TitleBreakLine />
-            {/* Most shared here */}
+            {/* Chia sẻ nhiềud here */}
             <MostSharedNews />
             {/* Tin khác */}
             <br />

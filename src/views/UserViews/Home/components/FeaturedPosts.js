@@ -5,7 +5,6 @@ import "../styles/featuredPosts.css";
 import SideTab from "./SideTab";
 import PostList from "./PostList";
 import TitleBreakLine from "./TitleBreakLine";
-import PostCarousel from "./PostCarousel";
 import LastestPost from "./LastestPost";
 import { Label } from "./styles";
 export default function FeaturedPosts() {
@@ -29,9 +28,6 @@ export default function FeaturedPosts() {
                       }}
                     >
                       <LastestPost />
-                    </div>
-                    <div className="col-sm-12 col-xl-9 pb-md-3">
-                      <PostCarousel />
                     </div>
                   </section>
                 </div>

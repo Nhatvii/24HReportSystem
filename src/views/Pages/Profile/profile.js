@@ -18,11 +18,11 @@ import {
 } from "reactstrap";
 import userApi from "../../../api/UserApi";
 
-function Profile() {
+export const Profile = () => {
   //Check user
   const user_info = JSON.parse(localStorage.getItem("user_info"));
   if (localStorage.getItem("user_info") === null) {
-    window.location.href = "/auth#/login";
+    window.location.href = "/login";
   }
   //State
   const [isLoading, setIsLoading] = useState(false);
@@ -121,7 +121,7 @@ function Profile() {
   };
   useEffect(() => {
     if (localStorage.getItem("user_info") === null) {
-      window.location.href = "/auth#/login";
+      window.location.href = "/login";
     }
   }, [user_info]);
   return (
@@ -352,6 +352,4 @@ function Profile() {
       </div>
     </>
   );
-}
-
-export default Profile;
+};

@@ -11,7 +11,6 @@ import {
   ModalHeader,
 } from "reactstrap";
 import { useFormik } from "formik";
-
 import UserTable from "../components/UserTables/UserTable";
 
 const Users = () => {

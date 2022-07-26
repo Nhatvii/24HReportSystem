@@ -26,6 +26,7 @@ const LikeData = styled.div`
   justify-content: left;
   flex: auto;
   p {
+    padding-top: 0.5rem;
     margin-left: 5px;
     font-size: 12px;
   }
@@ -54,13 +55,13 @@ const PostOption = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2px;
   flex: 1;
   :hover {
     background-color: #eff2f5;
     border-radius: 5px;
   }
   p {
+    padding-top: 0.5rem;
     margin-left: 10px;
     font-size: small;
   }
@@ -130,7 +131,7 @@ export function LikeShareSection(props) {
   };
   useEffect(() => {
     if (JSON.parse(user_info) !== null) {
-      UpdateViewCount();
+      if (props.postId) UpdateViewCount();
       LoadEmotion();
     }
     LoadNumberOfLike();
@@ -191,7 +192,7 @@ export function LikeShareSection(props) {
             )}
           </PostOption>
         ) : (
-          <PostOption onClick={() => (window.location.href = "/auth#/login")}>
+          <PostOption onClick={() => (window.location.href = "/login")}>
             <>
               <i class="fa fa-regular fa-thumbs-up" />
               <p>Thích</p>
@@ -201,8 +202,7 @@ export function LikeShareSection(props) {
 
         <PostOption
           onClick={() =>
-            JSON.parse(user_info) === null &&
-            (window.location.href = "/auth#/login")
+            JSON.parse(user_info) === null && (window.location.href = "/login")
           }
         >
           <i class="fa fa-solid fa-comment"></i>

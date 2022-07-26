@@ -62,13 +62,13 @@ const EditorPostTable = () => {
     },
     {
       key: "status",
-      _style: { width: "20%" },
+      _style: { width: "5%" },
       _props: { className: "fw-semibold" },
     },
     {
       key: "show_details",
       label: "Options",
-      _style: { width: "1%" },
+      _style: { width: "5%" },
       filter: false,
       sorter: false,
       _props: { className: "fw-semibold" },
