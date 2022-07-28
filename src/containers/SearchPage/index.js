@@ -17,6 +17,7 @@ const SearchPage = (props) => {
   const [posts, setPosts] = useState([]);
   const [title, setTitle] = useState("");
   const fetchPostList = async () => {
+    console.log(props.history.location.state.categoryID);
     setTitle(localStorage.getItem("title"));
     try {
       const params = {
@@ -27,10 +28,9 @@ const SearchPage = (props) => {
             : "",
         status: 3,
       };
-      console.log(params);
       const response = await postApi.getAll(params);
       setPosts(
-        props.history.location.state.CategoryID === null
+        props.history.location.state.categoryID === undefined
           ? response
           : response.filter(
               (item) =>
@@ -45,8 +45,8 @@ const SearchPage = (props) => {
   useEffect(() => {
     localStorage.setItem(
       "categoryID",
-      props.history.location.state.CategoryID !== undefined
-        ? props.history.location.state.CategoryID
+      props.history.location.state.categoryId !== undefined
+        ? props.history.location.state.CategoryId
         : null
     );
     localStorage.setItem(

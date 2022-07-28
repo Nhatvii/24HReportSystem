@@ -153,13 +153,13 @@ const SendReport = () => {
       if (response.statusCode === 200) {
         if (user_info !== null) {
           if (user_info.role.roleId === 1) {
-            window.location.href = "/viewReport";
+            window.location.href = "/view-report";
           } else {
             alert("Tạo báo cáo thành công");
           }
         } else {
           alert("Tạo báo cáo thành công");
-          window.location.href = "/home";
+          window.location.href = "/";
         }
         setCategoryList([]);
         setSelected("");
@@ -316,297 +316,299 @@ const SendReport = () => {
     // return () => URL.revokeObjectURL(objectUrl);
   }, [selectedFile]);
   return (
-    <Card className="mt-4 ml-5 mr-5 mb-4 pb-2" style={{ height: "auto" }}>
-      <CardHeader>
-        <b>Chi tiết báo cáo </b>
-      </CardHeader>
-      <CardBody>
-        <FormGroup row>
-          <Col md="1">
-            <Label className="font-weight-bold">
-              Vị trí:<span className="text-danger">*</span>
-            </Label>
-          </Col>
-          <Col md="8">
-            <div className="row pl-3">
-              <Input
-                className="mr-5 input-lg col-md-3"
-                type="text"
-                id="address"
-                value={address}
-                onChange={handle_address}
-                placeholder="Vị trí vụ việc..."
-              />
-              <Select
-                className="pr-5 "
-                name="cityId"
-                isDisabled={cityOptions.length === 0}
-                options={cityOptions}
-                onChange={(option) => onCitySelect(option)}
-                placeholder="Tỉnh/Thành"
-                defaultValue={selectedCity}
-              />
-
-              <Select
-                className="pr-5"
-                name="districtId"
-                isDisabled={districtOptions.length === 0}
-                options={districtOptions}
-                onChange={(option) => onDistrictSelect(option)}
-                placeholder="Quận/Huyện"
-                defaultValue={selectedDistrict}
-              />
-              <Select
-                className="pr-5"
-                name="wardId"
-                isDisabled={wardOptions.length === 0}
-                options={wardOptions}
-                placeholder="Phường/Xã"
-                onChange={(option) => onWardSelect(option)}
-                defaultValue={selectedWard}
-              />
-            </div>
-          </Col>
-        </FormGroup>
-        {/* date time picker */}
-        <FormGroup row>
-          <Col md="1">
-            <Label for="time" className="font-weight-bold">
-              Thời điểm:<span className="text-danger">*</span>
-            </Label>
-          </Col>
-          <Col md="8">
-            <DatetimePickerTrigger
-              shortcuts={shortcuts}
-              moment={time}
-              onChange={handleMoment}
-              maxDate={moment()}
-            >
-              <Row>
-                <Col md="6">
-                  <input
-                    className="pt-1 pb-1"
-                    type="text"
-                    value={time.format("YYYY-MM-DD HH:mm")}
-                    readOnly
-                  />
-                </Col>
-                <Col md="6">
-                  <i className="fa fa-calendar p-2 ml-2 border" />
-                </Col>
-              </Row>
-            </DatetimePickerTrigger>
-            <FormText>
-              Lưu ý: <i>Thời điểm xảy ra vụ việc</i>
-            </FormText>
-          </Col>
-        </FormGroup>
-        {user_info !== null && user_info.role.roleId !== 1 && (
+    <div className="fifth_bg">
+      <Card className=" ml-5 mr-5 mb-4 pb-2">
+        <CardHeader className="bg-primary">
+          <h5>Gửi báo cáo </h5>
+        </CardHeader>
+        <CardBody>
           <FormGroup row>
             <Col md="1">
               <Label className="font-weight-bold">
-                Chọn phân loại:<span className="text-danger">*</span>
+                Vị trí:<span className="text-danger">*</span>
               </Label>
             </Col>
-            <Col md="10">
+            <Col md="8">
               <div className="row pl-3">
+                <Input
+                  className="mr-5 input-lg col-md-3"
+                  type="text"
+                  id="address"
+                  value={address}
+                  onChange={handle_address}
+                  placeholder="Vị trí vụ việc..."
+                />
                 <Select
-                  name="category"
-                  isDisabled={categoryList.length === null}
-                  options={categoryList}
-                  onChange={(option) => setSelected(option)}
-                  placeholder="Chọn phân loại"
-                  defaultValue={selected}
+                  className="pr-5 "
+                  name="cityId"
+                  isDisabled={cityOptions.length === 0}
+                  options={cityOptions}
+                  onChange={(option) => onCitySelect(option)}
+                  placeholder="Tỉnh/Thành"
+                  defaultValue={selectedCity}
+                />
+
+                <Select
+                  className="pr-5"
+                  name="districtId"
+                  isDisabled={districtOptions.length === 0}
+                  options={districtOptions}
+                  onChange={(option) => onDistrictSelect(option)}
+                  placeholder="Quận/Huyện"
+                  defaultValue={selectedDistrict}
+                />
+                <Select
+                  className="pr-5"
+                  name="wardId"
+                  isDisabled={wardOptions.length === 0}
+                  options={wardOptions}
+                  placeholder="Phường/Xã"
+                  onChange={(option) => onWardSelect(option)}
+                  defaultValue={selectedWard}
                 />
               </div>
             </Col>
           </FormGroup>
-        )}
-        {/* File Upload */}
-        <FormGroup row>
-          <Col md="1">
-            <Label for="file" className="font-weight-bold">
-              File đính kèm:
-            </Label>
-          </Col>
-          <Col>
-            <Input
-              id="file"
-              name="file"
-              type="file"
-              multiple
-              accept="image/*, video/*"
-              onChange={(e) => onSelectFile(e)}
-            />
-            <FormText>
-              Lưu ý:{" "}
-              <i>Dung lượng hình ảnh không quá 5MB, video không quá 50MB</i>
-            </FormText>
-          </Col>
-        </FormGroup>
-        <Row>
-          {preview.length !== 0 &&
-            img.length !== 0 &&
-            preview
+          {/* date time picker */}
+          <FormGroup row>
+            <Col md="1">
+              <Label for="time" className="font-weight-bold">
+                Thời điểm:<span className="text-danger">*</span>
+              </Label>
+            </Col>
+            <Col md="8">
+              <DatetimePickerTrigger
+                shortcuts={shortcuts}
+                moment={time}
+                onChange={handleMoment}
+                maxDate={moment()}
+              >
+                <Row>
+                  <Col md="6">
+                    <input
+                      className="pt-1 pb-1"
+                      type="text"
+                      value={time.format("YYYY-MM-DD HH:mm")}
+                      readOnly
+                    />
+                  </Col>
+                  <Col md="6">
+                    <i className="fa fa-calendar p-2 ml-2 border" />
+                  </Col>
+                </Row>
+              </DatetimePickerTrigger>
+              <FormText>
+                Lưu ý: <i>Thời điểm xảy ra vụ việc</i>
+              </FormText>
+            </Col>
+          </FormGroup>
+          {user_info !== null && user_info.role.roleId !== 1 && (
+            <FormGroup row>
+              <Col md="1">
+                <Label className="font-weight-bold">
+                  Chọn phân loại:<span className="text-danger">*</span>
+                </Label>
+              </Col>
+              <Col md="10">
+                <div className="row pl-3">
+                  <Select
+                    name="category"
+                    isDisabled={categoryList.length === null}
+                    options={categoryList}
+                    onChange={(option) => setSelected(option)}
+                    placeholder="Chọn phân loại"
+                    defaultValue={selected}
+                  />
+                </div>
+              </Col>
+            </FormGroup>
+          )}
+          {/* File Upload */}
+          <FormGroup row>
+            <Col md="1">
+              <Label for="file" className="font-weight-bold">
+                File đính kèm:
+              </Label>
+            </Col>
+            <Col>
+              <Input
+                id="file"
+                name="file"
+                type="file"
+                multiple
+                accept="image/*, video/*"
+                onChange={(e) => onSelectFile(e)}
+              />
+              <FormText>
+                Lưu ý:{" "}
+                <i>Dung lượng hình ảnh không quá 5MB, video không quá 50MB</i>
+              </FormText>
+            </Col>
+          </FormGroup>
+          <Row>
+            {preview.length !== 0 &&
+              img.length !== 0 &&
+              preview
 
-              .slice(0, 5)
-              .filter((img) => img.type === "image")
-              .map((img) => (
-                <FormGroup row>
-                  <FormGroup>
-                    <UploadContainer>
-                      <ImgUpload preview={img.location} />
-                    </UploadContainer>
+                .slice(0, 5)
+                .filter((img) => img.type === "image")
+                .map((img) => (
+                  <FormGroup row>
+                    <FormGroup>
+                      <UploadContainer>
+                        <ImgUpload preview={img.location} />
+                      </UploadContainer>
+                    </FormGroup>
                   </FormGroup>
+                ))}
+            {img.length > 5 && (
+              <FormGroup row>
+                <FormGroup>
+                  <UploadContainer>
+                    <ImgUpload preview={"5moreImg"} />
+                    <div class="centered">5 +</div>
+                  </UploadContainer>
                 </FormGroup>
-              ))}
-          {img.length > 5 && (
-            <FormGroup row>
-              <FormGroup>
-                <UploadContainer>
-                  <ImgUpload preview={"5moreImg"} />
-                  <div class="centered">5 +</div>
-                </UploadContainer>
               </FormGroup>
-            </FormGroup>
-          )}
-        </Row>
-        <Row>
-          {preview.length !== 0 &&
-            video.length !== 0 &&
-            preview
-              .slice(0, 5)
-              .filter((video) => video.type === "video")
-              .map((video) => (
-                <label for="videos">
-                  <video
-                    width="350"
-                    height="150"
-                    style={{
-                      height: "200px",
-                      objectFit: "contain",
-                      paddingLeft: "1.5rem",
-                    }}
-                    autoPlay
-                    controls
-                    loop
-                  >
-                    <source src={video.location} />
-                  </video>
-                </label>
-              ))}
-          {video.length > 5 && (
-            <FormGroup row>
-              <FormGroup>
-                <UploadContainer>
-                  <ImgUpload preview={"5moreVideo"} />
-                  <div class="top">5 +</div>
-                </UploadContainer>
+            )}
+          </Row>
+          <Row>
+            {preview.length !== 0 &&
+              video.length !== 0 &&
+              preview
+                .slice(0, 5)
+                .filter((video) => video.type === "video")
+                .map((video) => (
+                  <label for="videos">
+                    <video
+                      width="350"
+                      height="150"
+                      style={{
+                        height: "200px",
+                        objectFit: "contain",
+                        paddingLeft: "1.5rem",
+                      }}
+                      autoPlay
+                      controls
+                      loop
+                    >
+                      <source src={video.location} />
+                    </video>
+                  </label>
+                ))}
+            {video.length > 5 && (
+              <FormGroup row>
+                <FormGroup>
+                  <UploadContainer>
+                    <ImgUpload preview={"5moreVideo"} />
+                    <div class="top">5 +</div>
+                  </UploadContainer>
+                </FormGroup>
               </FormGroup>
-            </FormGroup>
-          )}
-        </Row>
-        {/* Detail */}
-        <FormGroup>
-          <Label for="detail" className="font-weight-bold">
-            Chi tiết:<span className="text-danger">*</span>
-          </Label>
-        </FormGroup>
-        <FormGroup>
-          <ReactQuill
-            value={text}
-            placeholder="Chi tiết báo cáo"
-            onChange={handleEditor}
-            modules={modules}
-            style={{
-              height: "25rem",
-              marginBottom:
-                window.innerWidth < 505
-                  ? "7rem"
-                  : 505 < window.innerWidth && window.innerWidth < 650
-                  ? "6rem"
-                  : 650 < window.innerWidth && window.innerWidth < 1250
-                  ? "4rem"
-                  : "2rem",
-            }}
-          />
-        </FormGroup>
-        {/* Chấp nhập điều khoản && ẩn danh */}
-        {user_info !== null && user_info.role.roleId === 1 && (
-          <FormGroup check inline style={{ paddingTop: "2rem" }}>
-            <Input
-              type="checkbox"
-              value={isAnonymous}
-              onChange={handleAnonymous}
+            )}
+          </Row>
+          {/* Detail */}
+          <FormGroup>
+            <Label for="detail" className="font-weight-bold">
+              Chi tiết:<span className="text-danger">*</span>
+            </Label>
+          </FormGroup>
+          <FormGroup>
+            <ReactQuill
+              value={text}
+              placeholder="Chi tiết báo cáo"
+              onChange={handleEditor}
+              modules={modules}
+              style={{
+                height: "25rem",
+                marginBottom:
+                  window.innerWidth < 505
+                    ? "7rem"
+                    : 505 < window.innerWidth && window.innerWidth < 650
+                    ? "6rem"
+                    : 650 < window.innerWidth && window.innerWidth < 1250
+                    ? "4rem"
+                    : "2rem",
+              }}
             />
-            <Label check>
-              <i style={{ color: "red" }}>* </i>
-              Tôi muốn gửi ẩn danh
-            </Label>
           </FormGroup>
-        )}
-        <br />
-        {user_info !== null && user_info.role.roleId === 1 && (
-          <FormGroup
-            check
-            inline
-            style={{ paddingTop: "1rem", paddingBottom: "1rem" }}
-          >
-            <Input type="checkbox" value={isChecked} onChange={handleCheck} />
-            <Label check>
-              <i style={{ color: "red" }}>* </i>
-              Tôi hoàn toàn chịu trách nhiệm về thông tin báo báo theo{" "}
-              <a href="#" style={{ color: "#2F80ED" }}>
-                điều khoản sử dụng
-              </a>
-            </Label>
-          </FormGroup>
-        )}
-        {user_info === null && (
-          <FormGroup
-            check
-            inline
-            style={{ paddingTop: "1rem", paddingBottom: "1rem" }}
-          >
-            <Input type="checkbox" value={isChecked} onChange={handleCheck} />
-            <Label check>
-              <i style={{ color: "red" }}>* </i>
-              Tôi hoàn toàn chịu trách nhiệm về thông tin báo báo theo{" "}
-              <a href="#" style={{ color: "#2F80ED" }}>
-                điều khoản sử dụng
-              </a>
-            </Label>
-          </FormGroup>
-        )}
-        {isChecked || (user_info !== null && user_info.role.roleId !== 1) ? (
-          <FormGroup inline>
-            <Button
-              style={{
-                background: "linear-gradient(to right,#56CCF2,#2F80ED)",
-                color: "white",
-                marginTop: "2rem",
-              }}
-              onClick={() => handle_submit()}
+          {/* Chấp nhập điều khoản && ẩn danh */}
+          {user_info !== null && user_info.role.roleId === 1 && (
+            <FormGroup check inline style={{ paddingTop: "2rem" }}>
+              <Input
+                type="checkbox"
+                value={isAnonymous}
+                onChange={handleAnonymous}
+              />
+              <Label check>
+                <i style={{ color: "red" }}>* </i>
+                Tôi muốn gửi ẩn danh
+              </Label>
+            </FormGroup>
+          )}
+          <br />
+          {user_info !== null && user_info.role.roleId === 1 && (
+            <FormGroup
+              check
+              inline
+              style={{ paddingTop: "1rem", paddingBottom: "1rem" }}
             >
-              <b>Gửi báo cáo</b>
-            </Button>
-          </FormGroup>
-        ) : (
-          <FormGroup inline>
-            <Button
-              isDisabled
-              style={{
-                background: "linear-gradient(to right,#56CCF2,#2F80ED)",
-                color: "white",
-                marginTop: "2rem",
-              }}
+              <Input type="checkbox" value={isChecked} onChange={handleCheck} />
+              <Label check>
+                <i style={{ color: "red" }}>* </i>
+                Tôi hoàn toàn chịu trách nhiệm về thông tin báo báo theo{" "}
+                <a href="#" style={{ color: "#2F80ED" }}>
+                  điều khoản sử dụng
+                </a>
+              </Label>
+            </FormGroup>
+          )}
+          {user_info === null && (
+            <FormGroup
+              check
+              inline
+              style={{ paddingTop: "1rem", paddingBottom: "1rem" }}
             >
-              <b>Gửi báo cáo</b>
-            </Button>
-          </FormGroup>
-        )}
-      </CardBody>
-    </Card>
+              <Input type="checkbox" value={isChecked} onChange={handleCheck} />
+              <Label check>
+                <i style={{ color: "red" }}>* </i>
+                Tôi hoàn toàn chịu trách nhiệm về thông tin báo báo theo{" "}
+                <a href="#" style={{ color: "#2F80ED" }}>
+                  điều khoản sử dụng
+                </a>
+              </Label>
+            </FormGroup>
+          )}
+          {isChecked || (user_info !== null && user_info.role.roleId !== 1) ? (
+            <FormGroup inline>
+              <Button
+                style={{
+                  background: "linear-gradient(to right,#56CCF2,#2F80ED)",
+                  color: "white",
+                  marginTop: "2rem",
+                }}
+                onClick={() => handle_submit()}
+              >
+                <b>Gửi báo cáo</b>
+              </Button>
+            </FormGroup>
+          ) : (
+            <FormGroup inline>
+              <Button
+                isDisabled
+                style={{
+                  background: "linear-gradient(to right,#56CCF2,#2F80ED)",
+                  color: "white",
+                  marginTop: "2rem",
+                }}
+              >
+                <b>Gửi báo cáo</b>
+              </Button>
+            </FormGroup>
+          )}
+        </CardBody>
+      </Card>
+    </div>
   );
 };
 

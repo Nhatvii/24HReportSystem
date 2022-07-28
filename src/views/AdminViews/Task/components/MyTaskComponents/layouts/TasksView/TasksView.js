@@ -27,6 +27,7 @@ const TasksView = (props) => {
         };
         console.log(params);
         await taskApi.updateStatus(params);
+        loadAllTasks(props.id);
       } catch (e) {
         alert(e.message);
       }
@@ -198,6 +199,8 @@ const TasksView = (props) => {
         tasks={tasks}
         setOpenModal={setOpenModal}
         openModal={openModal}
+        loadAllTasks={loadAllTasks}
+        id={props.id}
       />
       <TasksContainer>
         {getTask.length > 0 ? (

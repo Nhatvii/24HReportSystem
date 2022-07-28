@@ -55,6 +55,7 @@ function Tasks(props) {
     const response = await taskApi.updateStatus(params);
     if (!JSON.stringify(response).includes("error")) {
       console.log("Không tạo tại task");
+      loadTask();
     } else {
       loadTask();
     }
@@ -85,14 +86,14 @@ function Tasks(props) {
           status: 5,
           postId: task.posts[0].postId,
         };
-        console.log(params);
         const response = await taskApi.updateStatus(params);
         if (!JSON.stringify(response).includes("error")) {
           console.log("Bỏ task");
         }
         loadTask();
       } else {
-        alert("Tạo thất bại");
+        loadTask();
+        alert("Tạo lại thất bại");
       }
     } catch (e) {
       alert(e.message);
@@ -137,7 +138,6 @@ function Tasks(props) {
       } else {
         await taskApi.updateStatus(params);
       }
-
       loadTask();
     } catch (e) {
       alert(e.message);

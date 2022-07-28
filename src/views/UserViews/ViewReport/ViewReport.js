@@ -90,8 +90,8 @@ const SendReport = () => {
         response
           .filter((report) =>
             user_info && user_info.role.roleId === 1
-              ? report.userId === user_info.email
-              : report.staffId === user_info.email
+              ? report.userId === (user_info && user_info.email)
+              : report.staffId === (user_info && user_info.email)
           )
           .sort((a, b) => new moment(a.createTime) - new moment(b.createTime))
           .reverse()
@@ -115,10 +115,12 @@ const SendReport = () => {
         flexDirection: "column",
         alignItems: "center",
         height: "90vh",
+        marginTop: "rem",
+        paddingTop: "5rem",
       }}
     >
       <div className="h3 pt-3 font-weight-bold">Lịch sử báo cáo của bạn</div>
-      <Row className="pb-3 pt-3">
+      {/* <Row className="pb-3 pt-3">
         <Input
           placeholder="Tìm kiếm báo cáo"
           className="mb-3 mr-3"
@@ -128,7 +130,7 @@ const SendReport = () => {
         <Button style={{ height: "40px" }} onClick={() => handle_search}>
           Tìm
         </Button>
-      </Row>
+      </Row> */}
 
       {reports !== null && (
         <CSmartTable

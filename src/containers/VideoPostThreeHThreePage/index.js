@@ -23,13 +23,13 @@ import big2 from "../../doc/img/blog/big2.jpg";
 const financePosts = [
   {
     photo: finance41,
-    title: "Copa America: Luis Suarez from devastated US",
+    title: "Copa America:  from devastated US",
     description:
       "The property, complete with seates screening from room amphitheater pond with sandy",
   },
   {
     photo: finance41,
-    title: "Copa America: Luis Suarez from devastated US",
+    title: "Copa America:  from devastated US",
     description:
       "The property, complete with seates screening from room amphitheater pond with sandy",
   },

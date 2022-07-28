@@ -16,7 +16,7 @@ const news = [
     image: fnewsImg3,
     category: "TECHNOLOGY",
     date: "March 26, 2020",
-    title: "Copa America: Luis Suarez from devastated US",
+    title: "Copa America:  from devastated US",
   },
   {
     image: fnewsImg4,
@@ -28,7 +28,7 @@ const news = [
     image: fnewsImg3,
     category: "TECHNOLOGY",
     date: "March 26, 2020",
-    title: "Copa America: Luis Suarez from devastated US",
+    title: "Copa America:  from devastated US",
   },
   {
     image: fnewsImg4,
@@ -40,7 +40,7 @@ const news = [
     image: fnewsImg3,
     category: "TECHNOLOGY",
     date: "March 26, 2020",
-    title: "Copa America: Luis Suarez from devastated US",
+    title: "Copa America:  from devastated US",
   },
   {
     image: fnewsImg2,
@@ -52,7 +52,7 @@ const news = [
     image: fnewsImg3,
     category: "TECHNOLOGY",
     date: "March 26, 2020",
-    title: "Copa America: Luis Suarez from devastated US",
+    title: "Copa America:  from devastated US",
   },
   {
     image: fnewsImg4,
@@ -64,7 +64,7 @@ const news = [
     image: fnewsImg3,
     category: "TECHNOLOGY",
     date: "March 26, 2020",
-    title: "Copa America: Luis Suarez from devastated US",
+    title: "Copa America:  from devastated US",
   },
 ];
 

@@ -13,27 +13,27 @@ import trend37 from "../../doc/img/blog/90652.jpg";
 const trendingNews = [
   {
     photo: trend32,
-    title: "Copa America: Luis Suarez from devastated US",
+    title: "Copa America:  from devastated US",
   },
   {
     photo: trend33,
-    title: "Copa America: Luis Suarez from devastated US",
+    title: "Copa America:  from devastated US",
   },
   {
     photo: trend34,
-    title: "Copa America: Luis Suarez from devastated US",
+    title: "Copa America:  from devastated US",
   },
   {
     photo: trend35,
-    title: "Copa America: Luis Suarez from devastated US",
+    title: "Copa America:  from devastated US",
   },
   {
     photo: trend36,
-    title: "Copa America: Luis Suarez from devastated US",
+    title: "Copa America:  from devastated US",
   },
   {
     photo: trend37,
-    title: "Copa America: Luis Suarez from devastated US",
+    title: "Copa America:  from devastated US",
   },
 ];
 const TrendingNewsThree = () => {

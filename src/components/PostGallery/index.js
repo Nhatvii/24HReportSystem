@@ -43,7 +43,13 @@ const PostGallery = (props) => {
             <div className="row">
               <div className="col-xl-8">
                 <div className="slider_demo2">
-                  <Slider asNavFor={nav2} arrows={false} fade={true}>
+                  <Slider
+                    asNavFor={nav2}
+                    arrows={false}
+                    fade={true}
+                    autoplay
+                    autoplaySpeed={5000}
+                  >
                     {console.log(
                       JSON.parse(localStorage.getItem("carousel-post"))
                     )}
@@ -61,6 +67,7 @@ const PostGallery = (props) => {
                                   alt="thumb"
                                   style={{
                                     width: "100%",
+                                    height: "30rem",
                                     display: "inline-block",
                                   }}
                                   class="img-responsive"

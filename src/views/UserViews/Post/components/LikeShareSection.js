@@ -226,7 +226,7 @@ export function LikeShareSection(props) {
               </Popover>
             }
           >
-            <Button
+            <div
               style={{
                 backgroundColor: "transparent",
                 border: "none",
@@ -238,7 +238,7 @@ export function LikeShareSection(props) {
                 <i class="fa fa-solid fa-share"></i>
                 <p>Chia sẻ</p>
               </PostOption>
-            </Button>
+            </div>
           </OverlayTrigger>
         </PostOption>
       </PostOptions>

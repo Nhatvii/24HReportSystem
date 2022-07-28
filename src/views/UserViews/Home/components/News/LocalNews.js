@@ -26,7 +26,7 @@ export default function LocalNews() {
           src="https://cdn-imgix.headout.com/tour/28481/TOUR-IMAGE/2bbd5c6c-e3dc-4dc4-b4d5-11c94baad3e3-15133-dubai-combo-img-worlds-of-adventure---free-burj-khalifa-at-the-top-with-coffee-06.JPG"
           className="card-img"
         />
-        <h5>Copa America: Luis Suarez from devastated US</h5>
+        <h5>Copa America: from devastated US</h5>
         <p>
           The property, complete with 30-seat screening from room, a 100-seat
           amphitheater and a swimming pond with sandy shower…
@@ -38,7 +38,7 @@ export default function LocalNews() {
           src="https://cdn-imgix.headout.com/tour/28481/TOUR-IMAGE/2bbd5c6c-e3dc-4dc4-b4d5-11c94baad3e3-15133-dubai-combo-img-worlds-of-adventure---free-burj-khalifa-at-the-top-with-coffee-06.JPG"
           className="card-img"
         />
-        <h5>Copa America: Luis Suarez from devastated US</h5>
+        <h5>Copa America: from devastated US</h5>
         <p>
           The property, complete with 30-seat screening from room, a 100-seat
           amphitheater and a swimming pond with sandy shower…

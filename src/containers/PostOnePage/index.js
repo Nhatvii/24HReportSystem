@@ -36,8 +36,8 @@ const PostOnePage = (props) => {
   }, []);
   return (
     <Fragment>
-      <div className="archives post post1">
-        <BreadCrumb className="shadow5 padding-top-30" title="Bài viết" />
+      <div className="fifth_bg archives post post1">
+        <BreadCrumb className="shadow5 padding-top-10" title="Bài viết" />
         <span className="space-30" />
         {postDetail !== null && (
           <div className="container">
@@ -102,14 +102,14 @@ const PostOnePage = (props) => {
                           postDetail.editor.accountInfo.username}
                       </Link>
                       <ul>
-                        <li>
+                        <li className="capitalize">
                           <Link to="/">
                             {moment(postDetail.createTime).format(
-                              "DD ,D MM YYYY"
+                              "dddd, Do MM YYYY"
                             )}
                           </Link>
                         </li>
-                        <li>
+                        <li className="capitalize">
                           {postDetail.updateTime &&
                             "cập nhật lần cuối" +
                               moment(postDetail.updateTime).format(

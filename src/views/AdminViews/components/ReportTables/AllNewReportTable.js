@@ -108,7 +108,6 @@ const AllNewReportTable = () => {
       _props: { className: "fw-semibold" },
     },
   ];
-
   const toggleDetails = async (id) => {
     setVisibleModal(!visibleModal);
     try {

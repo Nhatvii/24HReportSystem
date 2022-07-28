@@ -74,6 +74,7 @@ const DetailsModal = (props) => {
       );
       setEditedPostDescription(description);
       setDetails(response);
+      props.loadAllTasks(props.id);
     } catch (e) {
       alert(e.message);
     }
@@ -175,7 +176,6 @@ const DetailsModal = (props) => {
       const response3 = await taskApi.getAllByIdAndStatus(params3);
       const response4 = await taskApi.getAllByIdAndStatus(params4);
       const response5 = await taskApi.getAllByIdAndStatus(params5);
-
       localStorage.setItem(
         "task1",
         response.filter((task) => task.status !== "New").length
@@ -217,6 +217,8 @@ const DetailsModal = (props) => {
       reloadNumber();
       handleCloseModal();
       setIsLoading(false);
+      setSelectedPost();
+      props.loadAllTasks(props.id);
       // window.location.reload();
     } catch (e) {
       alert(e.message);
@@ -224,6 +226,7 @@ const DetailsModal = (props) => {
   };
   const handleCloseModal = () => {
     setOpacity("0");
+    setSelectedPost();
     setTimeout(() => setDisplay("none"), 200);
     props.setOpenModal({ ifOpen: false, id: "" });
     setIsLoading(false);

@@ -78,7 +78,6 @@ const MyTask = () => {
       const response3 = await taskApi.getAllByIdAndStatus(params3);
       const response4 = await taskApi.getAllByIdAndStatus(params4);
       const response5 = await taskApi.getAllByIdAndStatus(params5);
-
       localStorage.setItem("task1", response.length);
       localStorage.setItem(
         "task2",

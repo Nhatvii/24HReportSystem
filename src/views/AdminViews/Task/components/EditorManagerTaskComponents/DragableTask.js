@@ -49,20 +49,22 @@ export const Tick = styled.div`
   }
 `;
 export const Checkbutton = styled.button`
+  float: right;
   z-index: 9999;
   display: inline;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
+  padding: auto;
   hover: {
     cursor: pointer;
   }
   color: white;
   background-color: #4caf50 !important;
-  border-radius: 50%;
+  border-radius: 5px;
   padding: 2px;
   icon {
     color: white;
     background-color: #4caf50;
-    border-radius: 50%;
+    border-radius: 5px;
     padding: 2px;
   }
   :hover icon {
@@ -74,7 +76,7 @@ export const Checkbutton = styled.button`
     display: none;
   }
   :hover {
-    border-radius: 10px;
+    border-radius: 5px;
   }
   :hover:before {
     font-weight: bold;
@@ -282,7 +284,9 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
                 </Badge>
                 <Badge pill color="success" style={{ paddingTop: "4px" }}>
                   Chuyên môn:{" "}
-                  {editor.accountInfo.specializeNavigation === undefined
+                  {editor.accountInfo.specializeNavigation === null
+                    ? "Không có"
+                    : editor.accountInfo.specializeNavigation.type === null
                     ? "Không có"
                     : editor.accountInfo.specializeNavigation.type}
                 </Badge>
@@ -354,6 +358,11 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
         setReportIdList([]);
         // window.location.reload();
       } else {
+        setVisibleModal(false);
+        setEditors([]);
+        setIsLoading(false);
+        setDescription("");
+        setReportIdList([]);
         alert("Tạo thất bại");
       }
     } catch (e) {
@@ -383,7 +392,12 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
   }, []);
   return (
     <StatusColumn>
-      <ColumnHeader>{statusName(prefix)}</ColumnHeader>
+      <ColumnHeader>
+        {statusName(prefix)}{" "}
+        {prefix === "Review" && (
+          <Checkbutton onClick={() => autoReviewTask()}>Lọc nhanh</Checkbutton>
+        )}
+      </ColumnHeader>
       <DroppableStyles>
         <Modal
           isOpen={visibleModal3}
@@ -539,6 +553,7 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
                     </FormGroup>
                     <Button
                       className="float-right"
+                      color="primary"
                       onClick={() => selectReport(details.reportId)}
                     >
                       Chọn báo cáo
@@ -751,7 +766,11 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
                       </Label>
                     </Col>
                     <Col md="10">
-                      <Button onClick={() => openSelectReport()}>
+                      <Button
+                        class="btn btn-primary"
+                        color="primary"
+                        onClick={() => openSelectReport()}
+                      >
                         Chọn báo cáo
                       </Button>
                     </Col>
@@ -780,6 +799,7 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
               {!isLoading ? (
                 <Button
                   onClick={() => createTask()}
+                  color="primary"
                   class="font-weight-bold btn btn-primary"
                 >
                   Tạo công việc
@@ -804,8 +824,8 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
           </CreateTaskButton>
         )}
         {prefix === "Review" && (
-          <Row style={{ maxWidth: "16vw", marginLeft: "1rem" }}>
-            <Col md={10}>
+          <Row style={{ maxWidth: "16vw", marginLeft: "0.25rem" }}>
+            <Col md={12}>
               <Track {...getTrackProps()}>
                 {ticks.map(({ value, getTickProps }) => (
                   <Tick {...getTickProps()}>
@@ -830,14 +850,6 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
                   </button>
                 ))}
               </Track>
-            </Col>
-            <Col md={2}>
-              {prefix === "Review" && (
-                <Checkbutton onClick={() => autoReviewTask()}>
-                  <span></span>
-                  <icon className="fa fa-check"></icon>
-                </Checkbutton>
-              )}
             </Col>
           </Row>
         )}

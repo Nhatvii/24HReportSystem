@@ -11,7 +11,7 @@ import thumb4 from "../../doc/img/header/widget/tab4.jpg";
 const data = [
   {
     image: thumb1,
-    title: "Copa America: Luis Suarez from devastated US",
+    title: "Copa America:  from devastated US",
     category: "TECHNOLOGY",
     date: "March 26, 2020",
   },
@@ -73,54 +73,57 @@ const WidgetTab = ({ className, dark }) => {
     if (activeTab !== tab) setActiveTab(tab);
   };
   return (
-    <div className={`widget_tab md-mt-30 ${className}`}>
-      <Nav>
-        <NavItem>
-          <Link
-            to="/"
-            className={classnames({ active: activeTab === "1" })}
-            onClick={() => {
-              toggle("1");
-            }}
-          >
-            Nổi bật
-          </Link>
-        </NavItem>
-        <NavItem>
-          <Link
-            to="/"
-            className={classnames({ active: activeTab === "2" })}
-            onClick={() => {
-              toggle("2");
-            }}
-          >
-            Gần đây
-          </Link>
-        </NavItem>
-        <NavItem>
-          <Link
-            to="/"
-            className={classnames({ active: activeTab === "3" })}
-            onClick={() => {
-              toggle("3");
-            }}
-          >
-            Đề xuất
-          </Link>
-        </NavItem>
-      </Nav>
-      <TabContent activeTab={activeTab} style={{ border: "none" }}>
-        <TabPane tabId="1">
-          <WidgetTabPane dark={dark} a_id={activeTab} id="1" arr={data} />
-        </TabPane>
-        <TabPane tabId="2">
-          <WidgetTabPane dark={dark} a_id={activeTab} id="2" arr={data} />
-        </TabPane>
-        <TabPane tabId="3">
-          <WidgetTabPane dark={dark} a_id={activeTab} id="3" arr={data} />
-        </TabPane>
-      </TabContent>
-    </div>
+    <>
+      <div className={`widget_tab md-mt-30 ${className}`}>
+        <Nav>
+          <NavItem>
+            <Link
+              to="/"
+              className={classnames({ active: activeTab === "1" })}
+              onClick={() => {
+                toggle("1");
+              }}
+            >
+              Nổi bật
+            </Link>
+          </NavItem>
+          <NavItem>
+            <Link
+              to="/"
+              className={classnames({ active: activeTab === "2" })}
+              onClick={() => {
+                toggle("2");
+              }}
+            >
+              Gần đây
+            </Link>
+          </NavItem>
+          <NavItem>
+            <Link
+              to="/"
+              className={classnames({ active: activeTab === "3" })}
+              onClick={() => {
+                toggle("3");
+              }}
+            >
+              Đề xuất
+            </Link>
+          </NavItem>
+        </Nav>
+        <TabContent activeTab={activeTab} style={{ border: "none" }}>
+          <TabPane tabId="1">
+            <WidgetTabPane dark={dark} a_id={activeTab} id="1" arr={data} />
+          </TabPane>
+          <TabPane tabId="2">
+            <WidgetTabPane dark={dark} a_id={activeTab} id="2" arr={data} />
+          </TabPane>
+          <TabPane tabId="3">
+            <WidgetTabPane dark={dark} a_id={activeTab} id="3" arr={data} />
+          </TabPane>
+        </TabContent>
+      </div>
+      <div className="space-30" />
+    </>
   );
 };
 

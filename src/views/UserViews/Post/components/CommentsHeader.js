@@ -11,10 +11,10 @@ export function CommentsHeader(props) {
   return (
     <Header>
       <h4>{props.amountComments} Bình luận</h4>
-      <Button basic compact icon labelPosition="left">
+      {/* <Button basic compact icon labelPosition="left">
         <Icon name="align left" />
         Lọc
-      </Button>
+      </Button> */}
     </Header>
   );
 }

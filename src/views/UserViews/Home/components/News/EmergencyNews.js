@@ -29,7 +29,7 @@ export default function EmergencyNews() {
           />
         </div>
         <div className="col-sm-6 col-md-6 col-lg-6">
-          <h5>Copa America: Luis Suarez from devastated US</h5>
+          <h5>Copa America: from devastated US</h5>
           <p>
             The property, complete with 30-seat screening from room, a 100-seat
             amphitheater and a swimming pond with sandy shower…
@@ -45,7 +45,7 @@ export default function EmergencyNews() {
           />
         </div>
         <div className="col-sm-6 col-md-6 col-lg-6">
-          <h5>Copa America: Luis Suarez from devastated US</h5>
+          <h5>Copa America: from devastated US</h5>
           <p>
             The property, complete with 30-seat screening from room, a 100-seat
             amphitheater and a swimming pond with sandy shower…

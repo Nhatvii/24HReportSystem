@@ -91,7 +91,7 @@ const Register = (props) => {
             //lấy dữ liệu đăng Nhập
             localStorage.setItem("user_info", JSON.stringify(loginResponse));
             setIsLoading(false);
-            window.location.href = "/home";
+            window.location.href = "/";
           }
         }
       } else {

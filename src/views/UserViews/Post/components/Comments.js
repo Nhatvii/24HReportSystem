@@ -35,11 +35,11 @@ export const Comments = (props) => {
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const toggle = () => {
     setOpenDeleteModal(!openDeleteModal);
-    setIsLoading(!isLoading);
+    setIsLoading(false);
   };
   const toggle2 = () => {
     setOpenUpdateModal(!openUpdateModal);
-    setIsLoading(!isLoading);
+    setIsLoading(false);
   };
   const randomColor = (name) => {
     let filteredColor = avatarColor.filter((e) => e.name !== name);
@@ -349,7 +349,6 @@ export const Comments = (props) => {
                           data-toggle="modal"
                           data-target="#confirmDelete"
                           onClick={() => (
-                            console.log(comment.commentId),
                             setSelectedId(comment.commentId),
                             setOpenDeleteModal(true)
                           )}
