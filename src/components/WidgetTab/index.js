@@ -7,7 +7,6 @@ import thumb1 from "../../doc/img/header/widget/tab1.jpg";
 import thumb2 from "../../doc/img/header/widget/tab2.jpg";
 import thumb3 from "../../doc/img/header/widget/tab3.jpg";
 import thumb4 from "../../doc/img/header/widget/tab4.jpg";
-import thumb5 from "../../doc/img/header/widget/tab5.jpg";
 
 const data = [
   {
@@ -34,24 +33,18 @@ const data = [
     category: "TECHNOLOGY",
     date: "March 26, 2020",
   },
-  {
-    image: thumb5,
-    title: "Cheap smartphone sensor could help you old food safe",
-    category: "TECHNOLOGY",
-    date: "March 26, 2020",
-  },
 ];
 
 const WidgetTabPane = ({ arr, a_id, id, dark }) => {
   return (
     <Fade in={id === a_id}>
-      <div className="widget tab_widgets">
+      <div className="widget ">
         {arr.map((item, i) => (
           <Fragment key={i}>
             <div className="single_post widgets_small">
               <div className="post_img">
                 <div className="img_wrap">
-                  <Link to="/">
+                  <Link to="#">
                     <img src="https://picsum.photos/200/154" alt="thumb" />
                   </Link>
                 </div>
@@ -66,13 +59,7 @@ const WidgetTabPane = ({ arr, a_id, id, dark }) => {
                 </h4>
               </div>
             </div>
-            <div className="space-15" />
-            {dark ? (
-              <div className="border_white" />
-            ) : (
-              <div className="border_black" />
-            )}
-            <div className="space-15" />
+            <div className="space-15" /> <div className="space-15" />
           </Fragment>
         ))}
       </div>
@@ -85,10 +72,9 @@ const WidgetTab = ({ className, dark }) => {
   const toggle = (tab) => {
     if (activeTab !== tab) setActiveTab(tab);
   };
-
   return (
     <div className={`widget_tab md-mt-30 ${className}`}>
-      <Nav tabs>
+      <Nav>
         <NavItem>
           <Link
             to="/"

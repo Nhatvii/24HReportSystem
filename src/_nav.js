@@ -23,7 +23,7 @@ export default {
       name: "Quản lý người dùng",
       url: "/users",
       icon: "icon-user",
-      role: ["Admin", "Editor Manager"],
+      role: ["Admin"],
     },
     {
       name: "Quản lý danh mục gốc",
@@ -41,7 +41,7 @@ export default {
       name: "Tạo báo cáo",
       url: "/report/create",
       icon: "icon-star",
-      role: ["Staff", "Editor Manager"],
+      role: ["Staff"],
     },
     //
     {

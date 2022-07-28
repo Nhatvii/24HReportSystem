@@ -843,12 +843,15 @@ span.tranding.tranding_border {
 }
 
 .widget_tab {
+  box-shadow: $shadow4;
+  border-radius: 10px;
+  padding-left: 2%;
+  padding-right: 2%;
   ul {
     margin: 0;
     padding: 0;
-    margin-bottom: 25px;
+   
     border: none;
-
     li {
       list-style: none;
       margin-right: 8px;
@@ -859,21 +862,23 @@ span.tranding.tranding_border {
       }
 
       a {
-        background: $white;
+        background: transparent;
         font-size: 12px;
         font-weight: $wightMedium;
-        color: black;
+        color: gray  !important;
         text-transform: uppercase;
-        box-shadow: $shadow4;
+        font-weight: bold;
+        // box-shadow: $shadow4;
         line-height: 12px;
         padding: 12px;
         width: 100%;
         text-align: center;
         cursor: pointer;
-
         &.active {
-          color: $white !important;
-          background: $secondary_bg !important;;
+          font-weight: bold;
+          color: $trading_bg !important;
+          background: transparent;
+          border-bottom: $trading_bg 1px solid;
         }
       }
 
