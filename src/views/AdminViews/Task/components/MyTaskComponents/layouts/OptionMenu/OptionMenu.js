@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Option, Options } from "../../MyTaskStyle";
 const OptionMenu = (props) => {
   const allOptions = [

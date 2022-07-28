@@ -161,7 +161,7 @@ const PendingReportTable = () => {
       alert(e.message);
     }
   };
-  useEffect(() => {});
+  useEffect(() => {}, []);
   return (
     <>
       <Modal
@@ -381,7 +381,6 @@ const PendingReportTable = () => {
         <CSmartTable
           noItemsLabel="Không có dữ liệu..."
           activePage={1}
-          cleaner
           clickableRows
           columns={columns}
           columnFilter

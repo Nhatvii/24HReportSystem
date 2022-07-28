@@ -27,7 +27,7 @@ const UserTable = () => {
     try {
       const param = {};
       const response = await userApi.getAll(param);
-      setUsers(response);
+      setUsers(response.sort((a, b) => a.email - b.email));
     } catch (e) {
       alert(e.message);
     }
@@ -52,7 +52,7 @@ const UserTable = () => {
   }, []);
   useEffect(() => {
     fetchCategoryList();
-  }, []);
+  }, [categoryList]);
   //
   const [details, setDetails] = useState(null);
   const [visibleModal, setVisibleModal] = useState(false);
@@ -69,18 +69,24 @@ const UserTable = () => {
     {
       key: "email",
       label: "Email",
+      filter: false,
+      sorter: false,
       _style: { width: "20%" },
       _props: { className: "fw-semibold" },
     },
     {
       key: "role",
       label: "Vai trò",
+      filter: false,
+      sorter: false,
       _style: { width: "10%" },
       _props: { className: "fw-semibold" },
     },
     {
       key: "specializeNavigation",
       label: "Chuyên môn",
+      filter: false,
+      sorter: false,
       _style: { width: "5%" },
       _props: { className: "fw-semibold" },
     },
@@ -115,6 +121,7 @@ const UserTable = () => {
         setCategoryList([]);
         setDetails(null);
         setIsUpdate(!isUpdate);
+        loadUsers();
       }
     } catch (e) {
       alert(e.message);
@@ -126,7 +133,10 @@ const UserTable = () => {
       <Modal
         isOpen={visibleModal}
         toggle={() => (
-          setVisibleModal(false), setDetails(null), setCategoryList([])
+          setVisibleModal(false),
+          setDetails(null),
+          setCategoryList([]),
+          setIsUpdate(false)
         )}
         className=""
         size="lg"
@@ -135,7 +145,10 @@ const UserTable = () => {
         <ModalHeader
           className="bg-primary"
           toggle={() => (
-            setVisibleModal(false), setDetails(null), setCategoryList([])
+            setVisibleModal(false),
+            setDetails(null),
+            setCategoryList([]),
+            setIsUpdate(false)
           )}
         >
           Chi tiết người dùng
@@ -143,14 +156,30 @@ const UserTable = () => {
         {details !== null ? (
           <>
             <ModalBody>
-              <b>Email: </b>
-              {details.email}
-              <br />
-              <b>Password: </b>
-              {details.password}
-              <br />
-              <b>Role: </b>
-              {details.role.roleName}
+              <FormGroup row>
+                <Col md="3">
+                  <Label for="email">
+                    <b>Email: </b>
+                  </Label>
+                </Col>
+                <Col md="9">{details.email}</Col>
+              </FormGroup>
+              <FormGroup row>
+                <Col md="3">
+                  <Label for="password">
+                    <b>Password: </b>
+                  </Label>
+                </Col>
+                <Col md="9">{details.password}</Col>
+              </FormGroup>
+              <FormGroup row>
+                <Col md="3">
+                  <Label for="role">
+                    <b>Vai trò: </b>
+                  </Label>
+                </Col>
+                <Col md="9">{details.role.roleName}</Col>
+              </FormGroup>
               {details.role.roleId === 3 &&
                 (isUpdate ? (
                   <FormGroup row className="mt-2 mb-2 pt-3 pb-3">
@@ -219,8 +248,6 @@ const UserTable = () => {
           noItemsLabel="Không có dữ liệu..."
           activePage={1}
           columns={columns}
-          columnFilter
-          columnSorter
           items={users}
           itemsPerPageSelect
           itemsPerPage={10}
@@ -293,7 +320,7 @@ const UserTable = () => {
               );
             },
           }}
-          tableFilter
+          // tableFilter
           // tableProps={{
           //   hover: true,
           // }}

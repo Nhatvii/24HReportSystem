@@ -11,6 +11,6 @@ export const HeaderContainer = styled.header`
 
 export const HeaderTitle = styled.div`
   text-transform: uppercase;
-  color: var(--mainTextColour);
+  color: black;
   font-weight: bold;
 `;

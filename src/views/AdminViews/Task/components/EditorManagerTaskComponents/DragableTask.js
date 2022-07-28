@@ -180,25 +180,25 @@ const columns = [
     label: "STT",
     filter: false,
     sorter: false,
-    _style: { width: "5%" },
+    _style: { width: "2%" },
     _props: { className: "fw-semibold" },
   },
   {
     key: "location",
     label: "Vị trí",
-    _style: { width: "40%" },
+    _style: { width: "20%" },
     _props: { className: "fw-semibold" },
   },
   {
     key: "description",
     label: "Nội dung",
-    _style: { width: "40%" },
+    _style: { width: "20%" },
     _props: { className: "fw-semibold" },
   },
   {
     key: "show_details",
     label: "Chi tiết",
-    _style: { width: "5%" },
+    _style: { width: "10%" },
     filter: false,
     sorter: false,
     _props: { className: "fw-semibold" },
@@ -278,9 +278,10 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
               <div className="d-flex justify-content-between text-center">
                 <span>{editor.accountInfo.username}</span>
                 <Badge pill color="danger" style={{ paddingTop: "4px" }}>
-                  {editor.accountInfo.workLoad}
+                  Task đang làm: {editor.accountInfo.workLoad}
                 </Badge>
                 <Badge pill color="success" style={{ paddingTop: "4px" }}>
+                  Chuyên môn:{" "}
                   {editor.accountInfo.specializeNavigation === undefined
                     ? "Không có"
                     : editor.accountInfo.specializeNavigation.type}
@@ -339,7 +340,6 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
         reportId: reportIdList,
         boardId: id,
       };
-      console.log(reportIdList);
       reportIdList.map(async (reportId) => {
         const params = { reportID: reportId, editorID: selected.value };
         console.log(params);
@@ -568,7 +568,6 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
                 <CSmartTable
                   noItemsLabel="Đang tải danh sách báo cáo..."
                   activePage={1}
-                  cleaner
                   clickableRows
                   columns={columns}
                   columnFilter
@@ -703,19 +702,15 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
                         </b>{" "}
                       </Label>
                     </Col>
-                    <Col md="10">
-                      <div className="row pl-3">
-                        <Select
-                          style={{ width: "100% " }}
-                          name="editorId"
-                          autosize={true}
-                          // isDisabled={editors.length !== 0}
-                          options={editors}
-                          onChange={(option) => setSelected(option)}
-                          placeholder="Chọn người đảm nhận công việc"
-                          defaultValue={selected}
-                        />
-                      </div>
+                    <Col md="9">
+                      <Select
+                        name="editorId"
+                        // isDisabled={editors.length !== 0}
+                        options={editors}
+                        onChange={(option) => setSelected(option)}
+                        placeholder="Chọn người đảm nhận công việc"
+                        defaultValue={selected}
+                      />
                     </Col>
                   </FormGroup>
                   <FormGroup row>
@@ -733,13 +728,19 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
                         onChange={handleMoment}
                         minDate={moment()}
                       >
-                        <input
-                          className="pt-1 pb-1"
-                          type="text"
-                          value={time.format("YYYY-MM-DD HH:mm")}
-                          readOnly
-                        />
-                        <i className="icon-calendar p-2 ml-2 border" />
+                        <Row>
+                          <Col md="6">
+                            <input
+                              className="pt-1 pb-1"
+                              type="text"
+                              value={time.format("YYYY-MM-DD HH:mm")}
+                              readOnly
+                            />
+                          </Col>
+                          <Col md="6">
+                            <i className="icon-calendar p-2 ml-2 border" />
+                          </Col>
+                        </Row>
                       </DatetimePickerTrigger>
                     </Col>
                   </FormGroup>

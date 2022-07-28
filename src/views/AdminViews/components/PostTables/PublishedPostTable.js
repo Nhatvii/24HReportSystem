@@ -15,6 +15,7 @@ import {
   ModalFooter,
   ModalHeader,
 } from "reactstrap";
+import moment from "moment";
 
 //
 const PublishedPostTable = () => {
@@ -52,27 +53,31 @@ const PublishedPostTable = () => {
       key: "index",
       filter: false,
       sorter: false,
+      label: "Thứ tự",
       _style: { width: "5%" },
       _props: { className: "fw-semibold" },
     },
     {
       key: "title",
-      _style: { width: "20%" },
-      _props: { className: "fw-semibold" },
-    },
-    {
-      key: "createTime",
+      label: "Tiêu đề",
       _style: { width: "20%" },
       _props: { className: "fw-semibold" },
     },
     {
       key: "description",
+      label: "Chi tiết",
       _style: { width: "20%" },
       _props: { className: "fw-semibold" },
     },
-
+    {
+      key: "createTime",
+      label: "Thời gian tạo",
+      _style: { width: "20%" },
+      _props: { className: "fw-semibold" },
+    },
     {
       key: "status",
+      label: "Trạng thái",
       _style: { width: "5%" },
       _props: { className: "fw-semibold" },
     },
@@ -181,7 +186,9 @@ const PublishedPostTable = () => {
                     <b>Thời điểm tạo: </b>
                   </Label>
                 </Col>
-                <Col md="10">{details.createTime}</Col>
+                <Col md="10">
+                  {moment(details.createTime).format("DD-MM-yyyy")}
+                </Col>
               </FormGroup>
               <FormGroup row>
                 <Col md="2">

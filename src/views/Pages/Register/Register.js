@@ -67,7 +67,6 @@ const Register = (props) => {
 
   //Đăng kí
   async function register_user(values) {
-    console.log(values);
     setIsLoading(true);
     try {
       const json = JSON.stringify({
@@ -123,7 +122,11 @@ const Register = (props) => {
         JSON.stringify(response).includes("Phone Number already exist!!!")
       ) {
         setErrorMessage(response.error.message);
-      } else if (JSON.stringify(response).includes("Email already exist!!!")) {
+      } else if (
+        JSON.stringify(response).includes(
+          "Email này đã tồn tại. Vui lòng chọn Email khác!!!"
+        )
+      ) {
         setErrorMessage(response.error.message);
       } else {
         setEmail(values.email);

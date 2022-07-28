@@ -68,6 +68,7 @@ const DragItem = styled.div`
   display: grid;
   grid-gap: 5px;
   flex-direction: column;
+  margin-top: 10px;
 `;
 const ListItem = ({ item, index, loadTask }) => {
   const [details, setDetails] = useState(null);
@@ -487,7 +488,6 @@ const ListItem = ({ item, index, loadTask }) => {
                               </ModalHeader>
                               <ModalBody style={{ backgroundColor: "#F7F7F7" }}>
                                 {/* Nội dung xem trước */}
-                               
                                 <Fragment>
                                   <BreadCrumb
                                     className="shadow5"

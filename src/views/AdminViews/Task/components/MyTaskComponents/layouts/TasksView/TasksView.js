@@ -123,9 +123,13 @@ const TasksView = (props) => {
   };
   useEffect(() => {
     loadAllTasks(props.id);
-  }, [props, tasks]);
+  }, []);
   const getTask = tasks.map((task) => (
-    <SingleTask key={task.taskId} role="button">
+    <SingleTask
+      key={task.taskId}
+      role="button"
+      onClick={() => handleOpenModal(task.taskId, task.status)}
+    >
       <TaskTitle
         taskFinish={
           task.status === "Finish" || task.status === "UnFinished"
@@ -183,6 +187,13 @@ const TasksView = (props) => {
   ));
   return (
     <>
+      <SingleTask key="0">
+        <b>Tiêu đề</b>
+        <b>Mức ưu tiên</b>
+        <b>Ngày tạo</b>
+        <b>Ngày kết thúc</b>
+        <b>Status</b>
+      </SingleTask>
       <DetailsModal
         tasks={tasks}
         setOpenModal={setOpenModal}

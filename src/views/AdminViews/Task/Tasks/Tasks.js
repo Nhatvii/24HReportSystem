@@ -6,6 +6,7 @@ import taskApi from "../../../../api/TaskApi";
 import moment from "moment";
 import "moment/locale/vi";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import reportApi from "../../../../api/reportApi";
 const DragDropContextContainer = styled.div`
   padding: 10px;
   border-radius: 6px;
@@ -41,15 +42,21 @@ function Tasks(props) {
     }
   };
   const abortTask = async () => {
+    //bỏ task
     const params = {
       taskId: task.taskId,
       status: 5,
       postId: task.posts[0].postId,
     };
-    console.log(params);
+    task.reportTasks.map(async (report) => {
+      const params2 = { reportID: report.reportId, editorID: "" };
+      await reportApi.updateReportEditor(params2);
+    });
     const response = await taskApi.updateStatus(params);
     if (!JSON.stringify(response).includes("error")) {
       console.log("Không tạo tại task");
+    } else {
+      loadTask();
     }
   };
   const resetTask = async () => {
@@ -68,7 +75,6 @@ function Tasks(props) {
         reportId: task.reportTasks.map((report) => report.reportId),
         boardId: task.boardId,
       };
-      console.log(params);
       const response = await taskApi.create(params);
       if (JSON.stringify(response).includes("taskId")) {
         setVisibleModal(false);
@@ -84,7 +90,7 @@ function Tasks(props) {
         if (!JSON.stringify(response).includes("error")) {
           console.log("Bỏ task");
         }
-        // window.location.reload();
+        loadTask();
       } else {
         alert("Tạo thất bại");
       }
@@ -139,7 +145,7 @@ function Tasks(props) {
   };
   useEffect(() => {
     loadTask();
-  }, [tasks]);
+  }, []);
   return (
     <>
       <Modal

@@ -375,20 +375,26 @@ const SendReport = () => {
               Thời điểm:<span className="text-danger">*</span>
             </Label>
           </Col>
-          <Col md="2">
+          <Col md="8">
             <DatetimePickerTrigger
               shortcuts={shortcuts}
               moment={time}
               onChange={handleMoment}
               maxDate={moment()}
             >
-              <input
-                className="pt-1 pb-1"
-                type="text"
-                value={time.format("YYYY-MM-DD HH:mm")}
-                readOnly
-              />
-              <i className="fa fa-calendar p-2 ml-2 border" />
+              <Row>
+                <Col md="6">
+                  <input
+                    className="pt-1 pb-1"
+                    type="text"
+                    value={time.format("YYYY-MM-DD HH:mm")}
+                    readOnly
+                  />
+                </Col>
+                <Col md="6">
+                  <i className="fa fa-calendar p-2 ml-2 border" />
+                </Col>
+              </Row>
             </DatetimePickerTrigger>
             <FormText>
               Lưu ý: <i>Thời điểm xảy ra vụ việc</i>

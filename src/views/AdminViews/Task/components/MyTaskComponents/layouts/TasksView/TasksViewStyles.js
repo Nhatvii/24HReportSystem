@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const TasksContainer = styled.div`
   width: 100%;
-  margin: 40px 0;
+  margin: 10px 0;
   max-height: 80vh;
   overflow-y: auto;
 `;

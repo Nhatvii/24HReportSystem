@@ -25,12 +25,6 @@ import {
   DescriptionContainer,
 } from "./DetailsModalStyles";
 import { Markup } from "interweave";
-import {
-  CommentArea,
-  PostData,
-} from "../../../../../../UserViews/Post/components/styles";
-import { PreviewComment } from "../../../../../Posts/components/PreviewComment";
-import { PreviewDetail } from "../../../../../Posts/components/PreviewDetail";
 import postApi from "../../../../../../../api/postApi";
 import { CBadge, CSmartTable } from "@coreui/react-pro";
 import { ImgUpload, UploadContainer } from "../../../../../Posts/CreatePost";
@@ -99,33 +93,38 @@ const DetailsModal = (props) => {
       key: "index",
       filter: false,
       sorter: false,
+      label: "Thứ tự",
       _style: { width: "5%" },
       _props: { className: "fw-semibold" },
     },
     {
       key: "title",
+      label: "Tiêu đề",
       _style: { width: "20%" },
       _props: { className: "fw-semibold" },
     },
     {
       key: "createTime",
-      _style: { width: "20%" },
+      label: "Ngày tạo",
+      _style: { width: "10%" },
       _props: { className: "fw-semibold" },
     },
     {
       key: "description",
+      label: "Chi tiết",
       _style: { width: "20%" },
       _props: { className: "fw-semibold" },
     },
     {
       key: "status",
+      label: "Trạng thái",
       _style: { width: "5%" },
       _props: { className: "fw-semibold" },
     },
     {
       key: "show_details",
       label: "Options",
-      _style: { width: "5%" },
+      _style: { width: "10%" },
       filter: false,
       sorter: false,
       _props: { className: "fw-semibold" },
@@ -233,6 +232,7 @@ const DetailsModal = (props) => {
     setVisibleReportModal(!visibleReportModal);
     try {
       const param = { id: id };
+      console.log(param);
       const response = await reportApi.find(param);
       const metaDescription = JSON.stringify(response.description)
         .replace(
@@ -259,7 +259,11 @@ const DetailsModal = (props) => {
   async function loadPosts() {
     try {
       const user_info = localStorage.getItem("user_info");
-      const param = { EditorID: JSON.parse(user_info).email, Status: 1 }; //Crafted only
+      const param = {
+        EditorID:
+          JSON.parse(user_info) !== null ? JSON.parse(user_info).email : null,
+        Status: 1,
+      }; //Crafted only
       const response = await postApi.getByIdAndStatus(param);
       setPosts(response);
     } catch (e) {
@@ -268,7 +272,8 @@ const DetailsModal = (props) => {
   }
   useEffect(() => {
     loadPosts();
-  }, [loadPosts, selectedPost]);
+    loadCategory();
+  }, []);
   useEffect(() => {
     if (props.openModal.ifOpen) {
       setDisplay("flex");
@@ -279,10 +284,7 @@ const DetailsModal = (props) => {
       setDescription(usedTask);
       setTimeout(() => setOpacity("1"), 200);
     }
-  }, [props]);
-  useEffect(() => {
-    loadCategory();
-  }, []);
+  }, [props.openModal.ifOpen]);
   return (
     <ModalContainer visible={display} opacity={opacity}>
       <ModalWrapper
@@ -653,7 +655,6 @@ const DetailsModal = (props) => {
                   </b>
                 </Label>
               </Col>
-              {console.log(selectedPost)}
               {selectedPost === undefined ? (
                 <Col md="9">
                   <div className="row pl-1">
@@ -682,14 +683,13 @@ const DetailsModal = (props) => {
                             className="bg-primary"
                             toggle={() => setVisiblePreviewModal(false)}
                           >
-                            Bản xem thử
+                            Chọn bài viết
                           </ModalHeader>
                           <ModalBody style={{ backgroundColor: "#F7F7F7" }}>
                             <CSmartTable
                               noItemsLabel="Đang tải dữ liệu..."
                               draggable
                               activePage={1}
-                              cleaner
                               clickableRows
                               columns={columns}
                               columnFilter
@@ -761,11 +761,11 @@ const DetailsModal = (props) => {
                                   );
                                 },
                               }}
-                              tableFilter
-                              tableProps={{
-                                striped: true,
-                                hover: true,
-                              }}
+                              // tableFilter
+                              // tableProps={{
+                              //   striped: true,
+                              //   hover: true,
+                              // }}
                             />
                           </ModalBody>
                         </Modal>

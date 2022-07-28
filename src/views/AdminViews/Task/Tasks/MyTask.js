@@ -104,7 +104,7 @@ const MyTask = () => {
   useEffect(() => {
     setSelectedOption(1);
     loadAllTasks();
-  }, [setSelectedOption]);
+  }, []);
   return (
     <Container>
       <OptionMenu setSelectedOption={setSelectedOption} />

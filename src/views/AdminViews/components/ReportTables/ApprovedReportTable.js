@@ -144,6 +144,7 @@ const ReportTableNew = () => {
       );
       setEditedDescription(description);
       setDetails(response);
+      loadReports();
     } catch (e) {
       alert(e.message);
     }
@@ -320,7 +321,6 @@ const ReportTableNew = () => {
         <CSmartTable
           noItemsLabel="Không có dữ liệu..."
           activePage={1}
-          cleaner
           clickableRows
           columns={columns}
           columnFilter

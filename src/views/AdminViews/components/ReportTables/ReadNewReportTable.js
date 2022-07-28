@@ -299,7 +299,6 @@ const ReadNewReportTable = () => {
         <CSmartTable
           noItemsLabel="Không có dữ liệu..."
           activePage={1}
-          cleaner
           clickableRows
           columns={columns}
           columnFilter
