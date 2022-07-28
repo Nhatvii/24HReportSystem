@@ -77,6 +77,21 @@ namespace ReportSystemData.Service
             {
                 throw new ErrorResponse("Vui lòng không bình luận từ ngữ phản cảm!!!", (int)HttpStatusCode.Conflict);
             }
+            //Load sample data
+            var sampleData = new _24HReportSystemData.BadwordFilterMLModel.ModelInput()
+            {
+                Text = $@"{comment.CommentTitle}",
+            };
+
+            //Load model and predict output
+            var result = _24HReportSystemData.BadwordFilterMLModel.Predict(sampleData);
+            double totalScore01 = result.Score[0] + result.Score[1];
+
+            if ( (totalScore01 < result.Score[2]) || result.Score[1] > 0.4 || result.Score[2] > 0.3)
+            {
+                throw new ErrorResponse("Bình luận của bạn chứa từ ngữ phản cảm hoặc mang ý nghĩa thù địch!!!", (int)HttpStatusCode.Conflict);
+            }
+
             var checkDupl = Get().Where(p => p.CommentTitle.Equals(comment.CommentTitle) && p.UserId.Equals(comment.UserId) && p.PostId.Equals(comment.PostId)).FirstOrDefault();
             if(checkDupl != null)
             {

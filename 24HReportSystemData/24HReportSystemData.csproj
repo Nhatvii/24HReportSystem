@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>net5.0</TargetFramework>
@@ -7,7 +6,6 @@
     <ApplicationIcon />
     <StartupObject />
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="CloudinaryDotNet" Version="1.19.0" />
@@ -23,7 +21,20 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.ML" Version="1.7.1" />
+    <PackageReference Include="Microsoft.ML.FastTree" Version="1.7.1" />
     <PackageReference Include="System.Linq" Version="4.3.0" />
   </ItemGroup>
-
+  <ItemGroup Label="BadwordFilterMLModel">
+    <None Include="BadwordFilterMLModel.consumption.cs">
+      <DependentUpon>BadwordFilterMLModel.mbconfig</DependentUpon>
+    </None>
+    <None Include="BadwordFilterMLModel.training.cs">
+      <DependentUpon>BadwordFilterMLModel.mbconfig</DependentUpon>
+    </None>
+    <None Include="BadwordFilterMLModel.zip">
+      <DependentUpon>BadwordFilterMLModel.mbconfig</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
