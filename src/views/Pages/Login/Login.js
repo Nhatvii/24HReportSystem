@@ -9,11 +9,9 @@ import {
   Row,
 } from "reactstrap";
 import { useFormik } from "formik";
-
+import { toast } from "react-toastify";
 import loginApi from "../../../api/loginApi";
 import "./styles.css";
-import { firebase, auth } from "../../../firebase/firebase";
-import OtpInput from "react-otp-input";
 
 const Login = (props) => {
   const { history } = props;
@@ -81,7 +79,7 @@ const Login = (props) => {
       }
       setIsLoading(false);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   useEffect(() => {}, []);

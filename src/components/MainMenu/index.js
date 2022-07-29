@@ -11,6 +11,7 @@ import {
   DropdownToggle,
 } from "reactstrap";
 import categoryApi from "../../api/categoryApi";
+import { toast } from "react-toastify";
 const menus = [
   {
     id: 1,
@@ -68,7 +69,7 @@ async function logout() {
     // });
     // this.props.history.push("/");
   } catch (e) {
-    alert(e.message);
+    toast.error(e.message);
   }
 }
 const MainMenu = ({ className, dark }) => {
@@ -92,7 +93,7 @@ const MainMenu = ({ className, dark }) => {
       const response = await categoryApi.getAllRoot(params);
       setRootCategories(response);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   const fetchSubCategoryList = async () => {
@@ -101,7 +102,7 @@ const MainMenu = ({ className, dark }) => {
       const response = await categoryApi.getAllSub(params);
       setSubCategories(response);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   useEffect(() => {

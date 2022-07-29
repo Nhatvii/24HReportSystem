@@ -5,6 +5,7 @@ import UserTable from "../components/UserTables/UserTable";
 import registerApi from "../../../api/registerApi";
 import Select from "react-select";
 import userApi from "../../../api/UserApi";
+import { toast } from "react-toastify";
 const roleList = [
   {
     value: 1,
@@ -86,7 +87,7 @@ const Users = () => {
       }
       setIsLoading(false);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   //

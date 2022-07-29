@@ -8,7 +8,7 @@ import {
   DropdownToggle,
   Progress,
 } from "reactstrap";
-
+import { toast } from "react-toastify";
 const propTypes = {
   notif: PropTypes.bool,
   accnt: PropTypes.bool,
@@ -33,7 +33,7 @@ async function logout() {
     // });
     // this.props.history.push("/");
   } catch (e) {
-    alert(e.message);
+    toast.error(e.message);
   }
 }
 

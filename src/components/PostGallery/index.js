@@ -67,7 +67,7 @@ const PostGallery = (props) => {
                                   alt="thumb"
                                   style={{
                                     width: "100%",
-                                    height: "30rem",
+                                    height: "29.25rem",
                                     display: "inline-block",
                                   }}
                                   class="img-responsive"

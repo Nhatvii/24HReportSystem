@@ -8,6 +8,7 @@ import {
   ModalHeader,
   Row,
 } from "reactstrap";
+import { toast } from "react-toastify";
 import { useFormik } from "formik";
 import registerApi from "../../../api/registerApi";
 import loginApi from "../../../api/loginApi";
@@ -99,7 +100,7 @@ const Register = (props) => {
       }
       setIsLoading(false);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   //

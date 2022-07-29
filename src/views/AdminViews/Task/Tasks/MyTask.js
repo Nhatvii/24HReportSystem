@@ -10,6 +10,7 @@ import {
 import moment from "moment";
 import "moment/locale/vi";
 import taskApi from "../../../../api/TaskApi";
+import { toast } from "react-toastify";
 const MyTask = () => {
   const [selectedOption, setSelectedOption] = useState(1);
   const allOptions = [
@@ -96,7 +97,7 @@ const MyTask = () => {
       localStorage.setItem("task5", response4.length);
       localStorage.setItem("task6", response5.length);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
 

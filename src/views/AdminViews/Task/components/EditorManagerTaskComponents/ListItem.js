@@ -19,12 +19,6 @@ import { Markup } from "interweave";
 import reportApi from "../../../../../api/reportApi";
 import LetteredAvatar from "react-lettered-avatar";
 import { Badge } from "react-bootstrap";
-import {
-  CommentArea,
-  PostData,
-} from "../../../../UserViews/Post/components/styles";
-import { PreviewDetail } from "../../../Posts/components/PreviewDetail";
-import { PreviewComment } from "../../../Posts/components/PreviewComment";
 import postApi from "../../../../../api/postApi";
 import { ImgUpload, UploadContainer } from "../../../Posts/CreatePost";
 import categoryApi from "../../../../../api/categoryApi";
@@ -32,6 +26,7 @@ import BreadCrumb from "../../../../../components/BreadCrumb";
 import FontAwesome from "../../../../../components/uiStyle/FontAwesome";
 import { Link } from "react-router-dom";
 import { Comments } from "../../../../UserViews/Post/components/Comments";
+import { toast } from "react-toastify";
 const Avatar = styled.img`
   height: 30px;
   width: 30px;
@@ -86,7 +81,7 @@ const ListItem = ({ item, index, loadTask }) => {
       const response = await taskApi.getById(params);
       setDetails(response);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   async function loadCategory() {
@@ -95,7 +90,7 @@ const ListItem = ({ item, index, loadTask }) => {
       const response = await categoryApi.getAllSub(params);
       setCategoryList(response);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   const toggleReportDetails = async (id) => {
@@ -120,7 +115,7 @@ const ListItem = ({ item, index, loadTask }) => {
       setEditedDescription(description);
       setReportDetails(response);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   const publicPost = async (id, taskId) => {
@@ -139,7 +134,7 @@ const ListItem = ({ item, index, loadTask }) => {
       await postApi.editStatus(params);
       loadTask();
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   useEffect(() => {

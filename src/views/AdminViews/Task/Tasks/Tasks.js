@@ -7,6 +7,7 @@ import moment from "moment";
 import "moment/locale/vi";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import reportApi from "../../../../api/reportApi";
+import { toast } from "react-toastify";
 const DragDropContextContainer = styled.div`
   padding: 10px;
   border-radius: 6px;
@@ -38,7 +39,7 @@ function Tasks(props) {
           .reverse()
       );
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   const abortTask = async () => {
@@ -93,10 +94,10 @@ function Tasks(props) {
         loadTask();
       } else {
         loadTask();
-        alert("Tạo lại thất bại");
+        toast.error("Tạo lại thất bại");
       }
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
 
@@ -140,7 +141,7 @@ function Tasks(props) {
       }
       loadTask();
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   useEffect(() => {

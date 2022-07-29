@@ -22,7 +22,7 @@ import {
 import categoryApi from "../../../../api/categoryApi";
 import Select from "react-select";
 import { ImgUpload, UploadContainer } from "../../Posts/CreatePost";
-
+import { toast } from "react-toastify";
 //
 const PendingReportTable = () => {
   const [reports, setReports] = useState();
@@ -46,7 +46,7 @@ const PendingReportTable = () => {
           .reverse()
       );
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   async function loadCategory() {
@@ -58,7 +58,7 @@ const PendingReportTable = () => {
         categoryList.push({ value: item.categoryId, label: item.subCategory })
       );
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   async function update_report_status(id, status) {
@@ -84,7 +84,7 @@ const PendingReportTable = () => {
       setVisibleModal(false);
       setSelected();
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   useEffect(() => {
@@ -158,7 +158,7 @@ const PendingReportTable = () => {
       setEditedDescription(description);
       setDetails(response);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   useEffect(() => {}, []);

@@ -1,7 +1,6 @@
 import { CBadge, CSmartTable } from "@coreui/react-pro";
 import React, { Component, useEffect, useState } from "react";
-import { Row } from "react-bootstrap";
-import { Button, Input } from "semantic-ui-react";
+import { toast } from "react-toastify";
 import reportApi from "../../../api/reportApi";
 import { Markup } from "interweave";
 import moment from "moment";
@@ -97,7 +96,7 @@ const SendReport = () => {
           .reverse()
       );
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   const handle_change = (event) => {

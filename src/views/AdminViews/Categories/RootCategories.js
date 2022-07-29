@@ -12,7 +12,7 @@ import {
 } from "reactstrap";
 import categoryApi from "../../../api/categoryApi";
 import RootCategoryTable from "../components/CategoryTables/RootCategoryTable";
-
+import { toast } from "react-toastify";
 const RootCategories = () => {
   const [modal, setModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -33,7 +33,7 @@ const RootCategories = () => {
         setModal(!modal);
       }
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
 

@@ -19,6 +19,7 @@ import {
 } from "reactstrap";
 import categoryApi from "../../../../api/categoryApi";
 import { ImgUpload, UploadContainer } from "../../Posts/CreatePost";
+import { toast } from "react-toastify";
 //
 const ReportTableNew = () => {
   const [reports, setReports] = useState();
@@ -41,7 +42,7 @@ const ReportTableNew = () => {
           .reverse()
       );
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   async function loadCategory() {
@@ -50,7 +51,7 @@ const ReportTableNew = () => {
       const response = await categoryApi.getAllSub(params);
       setCategoryList(response);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   const getStatusById = (id) => {
@@ -146,7 +147,7 @@ const ReportTableNew = () => {
       setDetails(response);
       loadReports();
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   return (

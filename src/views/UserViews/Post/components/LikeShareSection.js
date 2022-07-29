@@ -6,6 +6,7 @@ import emotionApi from "../../../../api/EmotionApi";
 import postApi from "../../../../api/postApi";
 import { OverlayTrigger, Popover } from "react-bootstrap";
 import SocialShare from "./SocialShare";
+import { toast } from "react-toastify";
 //styled component
 const Header = styled.div`
   padding-top: 0.5rem;
@@ -81,7 +82,7 @@ export function LikeShareSection(props) {
       const response = await postApi.updateViewCount(params);
       console.log(response);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   const LoadEmotion = async () => {
@@ -97,7 +98,7 @@ export function LikeShareSection(props) {
         _setIsLiked(response[0].emotionStatus);
       }
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   const LoadNumberOfLike = async () => {
@@ -109,7 +110,7 @@ export function LikeShareSection(props) {
         _setNumberOfLikes(response.length);
       }
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   const Like = async () => {
@@ -126,7 +127,7 @@ export function LikeShareSection(props) {
       //   LoadEmotion();
       // }
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   useEffect(() => {

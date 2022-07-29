@@ -7,13 +7,12 @@ import {
   TaskTitle,
   TaskPriority,
   TaskDate,
-  Checkbox,
   DeadlineDate,
 } from "./TasksViewStyles";
 import taskApi from "../../../../../../../api/TaskApi";
 import { useEffect } from "react";
 import DetailsModal from "../DetailsModal/DetailsModal";
-
+import { toast } from "react-toastify";
 const TasksView = (props) => {
   const [openModal, setOpenModal] = useState({ ifOpen: false, id: "" });
   //Mở ra là đang làm
@@ -29,7 +28,7 @@ const TasksView = (props) => {
         await taskApi.updateStatus(params);
         loadAllTasks(props.id);
       } catch (e) {
-        alert(e.message);
+        toast.error(e.message);
       }
     }
   };
@@ -119,7 +118,7 @@ const TasksView = (props) => {
               .reverse()
       );
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   useEffect(() => {

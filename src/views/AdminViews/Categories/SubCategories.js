@@ -13,7 +13,7 @@ import {
 } from "reactstrap";
 import categoryApi from "../../../api/categoryApi";
 import SubCategoryTable from "../components/CategoryTables/SubCategoryTable";
-
+import { toast } from "react-toastify";
 const SubCategories = () => {
   const [modal, setModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -39,7 +39,7 @@ const SubCategories = () => {
         setModal(!modal);
       }
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   async function loadCategory() {
@@ -53,7 +53,7 @@ const SubCategories = () => {
         })
       );
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   useEffect(() => {

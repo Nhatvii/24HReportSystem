@@ -16,7 +16,7 @@ import {
   Row,
 } from "reactstrap";
 import categoryApi from "../../../../api/categoryApi";
-
+import { toast } from "react-toastify";
 //
 const UserTable = () => {
   const user_info = JSON.parse(localStorage.getItem("user_info"));
@@ -29,7 +29,7 @@ const UserTable = () => {
       const response = await userApi.getAll(param);
       setUsers(response.sort((a, b) => a.email - b.email));
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   const fetchCategoryList = async () => {
@@ -44,7 +44,7 @@ const UserTable = () => {
         )
       );
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   useEffect(() => {
@@ -108,7 +108,7 @@ const UserTable = () => {
       const response = await userApi.getByEmail(param);
       setDetails(response);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   const updateUser = async (email, specialize) => {
@@ -124,7 +124,7 @@ const UserTable = () => {
         loadUsers();
       }
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   useEffect(() => {});

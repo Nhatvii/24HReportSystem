@@ -15,6 +15,7 @@ import {
   ModalHeader,
   Row,
 } from "reactstrap";
+import { toast } from "react-toastify";
 import { DatetimePickerTrigger } from "rc-datetime-picker";
 import * as moment from "moment";
 import reportApi from "../../../../../api/reportApi";
@@ -244,7 +245,7 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
       const response = await categoryApi.getAllSub(params);
       setCategoryList(response);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   async function autoReviewTask() {
@@ -254,12 +255,12 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
       const response = await taskApi.taskReviewFilter(params);
       if (!JSON.stringify(response).includes("error")) {
         //do something
-        alert(response.message);
+        toast.success(response.message);
       } else {
-        alert(response.error.message);
+        toast.error(response.error.message);
       }
     } catch (e) {
-      alert("Error: " + e.message);
+      toast.error("Error: " + e.message);
     }
   }
   async function loadEditors() {
@@ -295,7 +296,7 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
           });
         });
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   async function loadReports() {
@@ -305,7 +306,7 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
       //Lọc báo cáo đã được viết thành bài
       setReports(response.filter((report) => report.editorId === null));
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   const toggleDetails = async (id) => {
@@ -330,7 +331,7 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
       setEditedDescription(description);
       setDetails(response);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   //Tao task
@@ -363,10 +364,10 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
         setIsLoading(false);
         setDescription("");
         setReportIdList([]);
-        alert("Tạo thất bại");
+        toast.error("Tạo thất bại");
       }
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   const openCreateModalOpen = () => {

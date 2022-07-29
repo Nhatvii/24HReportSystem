@@ -18,9 +18,7 @@ import {
 import styled from "styled-components";
 import categoryApi from "../../../api/categoryApi";
 import postApi from "../../../api/postApi";
-import { CommentArea, PostData } from "../../UserViews/Post/components/styles";
-import { PreviewComment } from "./components/PreviewComment";
-import { PreviewDetail } from "./components/PreviewDetail";
+import { toast } from "react-toastify";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import storage from "../../../firebase/firebaseConfig";
 import BreadCrumb from "../../../components/BreadCrumb";
@@ -117,7 +115,7 @@ const CreatePost = () => {
         )
       );
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   //file upload
@@ -202,15 +200,14 @@ const CreatePost = () => {
                 image: url,
                 video: "string",
               };
-              console.log(params);
               const response = await postApi.create(params);
               if (response.statusCode === 200) {
-                alert("Tạo thành công");
+                toast.success("Tạo thành công");
               } else {
-                alert(response);
+                toast.error(response);
               }
             } catch (e) {
-              alert(e.message);
+              toast.error(e.message);
             }
           });
         }

@@ -14,7 +14,7 @@ import {
   ModalBody,
   ModalHeader,
 } from "reactstrap";
-
+import { toast } from "react-toastify";
 //
 const EditorPostTable = () => {
   const [posts, setPosts] = useState();
@@ -28,7 +28,7 @@ const EditorPostTable = () => {
       const response = await postApi.getByIdAndStatus(param);
       setPosts(response);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   useEffect(() => {
@@ -110,7 +110,7 @@ const EditorPostTable = () => {
       setEditedDescription(description);
       setDetails(response);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   useEffect(() => {});

@@ -25,6 +25,7 @@ import { ImgUpload, UploadContainer } from "../../AdminViews/Posts/CreatePost";
 import categoryApi from "../../../api/categoryApi";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import storage from "../../../firebase/firebaseConfig";
+import { toast } from "react-toastify";
 const animatedComponents = makeAnimated();
 //testing
 //multiple select option mock data
@@ -92,7 +93,7 @@ const SendReport = () => {
         categoryList.push({ value: item.categoryId, label: item.subCategory })
       );
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   const shortcuts = {
@@ -155,10 +156,10 @@ const SendReport = () => {
           if (user_info.role.roleId === 1) {
             window.location.href = "/view-report";
           } else {
-            alert("Tạo báo cáo thành công");
+            toast.success("Tạo báo cáo thành công");
           }
         } else {
-          alert("Tạo báo cáo thành công");
+          toast.success("Tạo báo cáo thành công");
           window.location.href = "/";
         }
         setCategoryList([]);
@@ -172,10 +173,10 @@ const SendReport = () => {
         setSelectedFile([]);
         setText("");
       } else {
-        alert("Gửi thất bại");
+        toast.error("Gửi thất bại");
       }
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   const handleMoment = (moment) => {

@@ -20,7 +20,7 @@ const TrendingHashTag = () => {
       console.log(response);
       setCategoryList(response);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   useEffect(() => {

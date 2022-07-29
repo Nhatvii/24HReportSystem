@@ -15,7 +15,7 @@ import {
   Row,
 } from "reactstrap";
 import categoryApi from "../../../../api/categoryApi";
-
+import { toast } from "react-toastify";
 //
 const RootCategoryTable = () => {
   const [modal, setModal] = useState(false);
@@ -45,7 +45,7 @@ const RootCategoryTable = () => {
         setUpdateType("");
       }
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   async function loadCategories() {
@@ -54,7 +54,7 @@ const RootCategoryTable = () => {
       const response = await categoryApi.getAllRoot(param);
       setCategories(response);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   async function deleteCategory(id) {
@@ -68,7 +68,7 @@ const RootCategoryTable = () => {
         setDeletedCategory("");
       }
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   useEffect(() => {
@@ -107,7 +107,7 @@ const RootCategoryTable = () => {
       const response = await categoryApi.getByIdRoot(param);
       setDetails(response);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   useEffect(() => {});

@@ -17,7 +17,7 @@ import {
   Row,
 } from "reactstrap";
 import userApi from "../../../api/UserApi";
-
+import { toast } from "react-toastify";
 export const Profile = () => {
   //Check user
   const user_info = JSON.parse(localStorage.getItem("user_info"));
@@ -92,7 +92,7 @@ export const Profile = () => {
       setViewPassword(false);
       setIsLoading(false);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   //
@@ -126,7 +126,7 @@ export const Profile = () => {
   }, [user_info]);
   return (
     <>
-      <div className="pt-5 pb-5 pl-5 pr-5">
+      <div className="pt-5 pb-5 pl-5 pr-5 fifth_bg">
         <Row>
           <Col md="3" className="mr-5 ml-5">
             <Card className="card-user">

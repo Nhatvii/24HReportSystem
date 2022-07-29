@@ -16,6 +16,7 @@ import {
 } from "react-share";
 import postApi from "../../../../api/postApi";
 import styled from "styled-components";
+import { toast } from "react-toastify";
 const CopyLink = styled.div`
   :hover {
     cursor: pointer;
@@ -43,7 +44,7 @@ export default class SocialShare extends Component {
           // TODO:
         }
       } catch (e) {
-        alert(e.message);
+        toast.error(e.message);
       }
     }
     const ShareList = Passers(

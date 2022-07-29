@@ -5,6 +5,7 @@ import { BoardModal } from "./components/BoardModal";
 import boardApi from "../../../../api/boardApi";
 import { OverlayTrigger, Popover } from "react-bootstrap";
 import { ajaxSettings } from "jquery";
+import { toast } from "react-toastify";
 const Boards = () => {
   const [boards, setBoards] = useState([]);
   const [bgColors, setBgColors] = useState([]);
@@ -31,7 +32,7 @@ const Boards = () => {
       response.map((board) => randomColor(board.boardId));
       setBoards(response);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
 
@@ -39,7 +40,7 @@ const Boards = () => {
     try {
       const response = await boardApi.addBoard(board);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
     setModalVisible(false);
   };

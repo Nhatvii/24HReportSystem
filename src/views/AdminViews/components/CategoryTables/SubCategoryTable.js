@@ -16,7 +16,7 @@ import {
   Row,
 } from "reactstrap";
 import categoryApi from "../../../../api/categoryApi";
-
+import { toast } from "react-toastify";
 //
 const SubCategoryTable = () => {
   const [modal, setModal] = useState(false);
@@ -41,7 +41,7 @@ const SubCategoryTable = () => {
         })
       );
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   const handleTypeChange = (e) => {
@@ -67,7 +67,7 @@ const SubCategoryTable = () => {
         setCategoryList([]);
       }
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   const toggle = () => {
@@ -79,7 +79,7 @@ const SubCategoryTable = () => {
       const response = await categoryApi.getAllSub(param);
       setCategories(response);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   async function deleteCategory(id) {
@@ -94,7 +94,7 @@ const SubCategoryTable = () => {
         setDeletedCategory("");
       }
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   useEffect(() => {
@@ -140,7 +140,7 @@ const SubCategoryTable = () => {
       const response = await categoryApi.getByIdSub(param);
       setDetails(response);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   useEffect(() => {});

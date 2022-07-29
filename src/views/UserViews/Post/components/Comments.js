@@ -12,6 +12,7 @@ import {
   InputsContainer,
   PseudoText,
 } from "./styles";
+import { toast } from "react-toastify";
 import postDetailApi from "../../../../api/postDetailApi";
 import LetteredAvatar from "react-lettered-avatar";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
@@ -100,7 +101,7 @@ export const Comments = (props) => {
         setWarningMessage("");
       }
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   //xóa comment
@@ -116,7 +117,7 @@ export const Comments = (props) => {
         setIsLoading(false);
       }
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   //Sửa comment
@@ -136,7 +137,7 @@ export const Comments = (props) => {
         setIsLoading(false);
       }
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   const handleChange = (e) => {
@@ -441,7 +442,7 @@ export const Comments = (props) => {
                                 </h5>
                                 <button
                                   type="button"
-                                  class="close"
+                                  className="close"
                                   data-dismiss="modal"
                                   aria-label="Close"
                                 >

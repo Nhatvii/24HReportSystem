@@ -24,6 +24,7 @@ import {
   SubmitButtonsContainer,
   DescriptionContainer,
 } from "./DetailsModalStyles";
+import { toast } from "react-toastify";
 import { Markup } from "interweave";
 import postApi from "../../../../../../../api/postApi";
 import { CBadge, CSmartTable } from "@coreui/react-pro";
@@ -76,7 +77,7 @@ const DetailsModal = (props) => {
       setDetails(response);
       props.loadAllTasks(props.id);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   async function loadCategory() {
@@ -85,7 +86,7 @@ const DetailsModal = (props) => {
       const response = await categoryApi.getAllSub(params);
       setCategoryList(response);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   //Function
@@ -200,7 +201,7 @@ const DetailsModal = (props) => {
       localStorage.setItem("task5", response4.length);
       localStorage.setItem("task6", response5.length);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
 
@@ -221,7 +222,7 @@ const DetailsModal = (props) => {
       props.loadAllTasks(props.id);
       // window.location.reload();
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   const handleCloseModal = () => {
@@ -255,7 +256,7 @@ const DetailsModal = (props) => {
       setEditedDescription(description);
       setReportDetails(response);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   const [posts, setPosts] = useState();
@@ -270,7 +271,7 @@ const DetailsModal = (props) => {
       const response = await postApi.getByIdAndStatus(param);
       setPosts(response);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   useEffect(() => {

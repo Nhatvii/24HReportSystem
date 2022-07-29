@@ -18,6 +18,7 @@ import {
   ModalHeader,
 } from "reactstrap";
 import { ImgUpload, UploadContainer } from "../../Posts/CreatePost";
+import { toast } from "react-toastify";
 //
 const ReadNewReportTable = () => {
   const [reports, setReports] = useState();
@@ -48,7 +49,7 @@ const ReadNewReportTable = () => {
           .reverse()
       );
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
 
@@ -65,7 +66,7 @@ const ReadNewReportTable = () => {
       loadReports();
       setVisibleModal(false);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   useEffect(() => {
@@ -138,7 +139,7 @@ const ReadNewReportTable = () => {
       setEditedDescription(description);
       setDetails(response);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   return (

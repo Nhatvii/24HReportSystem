@@ -16,7 +16,7 @@ import {
   ModalHeader,
 } from "reactstrap";
 import moment from "moment";
-
+import { toast } from "react-toastify";
 //
 const UnpublishedPostTable = () => {
   const [posts, setPosts] = useState();
@@ -26,7 +26,7 @@ const UnpublishedPostTable = () => {
       const response = await postApi.getByStatus(param);
       setPosts(response);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   useEffect(() => {
@@ -100,7 +100,7 @@ const UnpublishedPostTable = () => {
       const response = await postApi.editStatus(params);
       console.log(response);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   const toggleDetails = async (id) => {
@@ -125,7 +125,7 @@ const UnpublishedPostTable = () => {
       setEditedDescription(description);
       setDetails(response);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
   useEffect(() => {});

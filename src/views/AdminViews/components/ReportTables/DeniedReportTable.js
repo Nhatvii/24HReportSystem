@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "@coreui/coreui-pro/dist/css/coreui.min.css";
 import "react-bootstrap-table/dist//react-bootstrap-table-all.min.css";
-
 import reportApi from "../../../../api/reportApi";
 import { Button, Col, Row } from "react-bootstrap";
 import { CSmartTable } from "@coreui/react-pro";
@@ -16,6 +15,7 @@ import {
   ModalFooter,
   ModalHeader,
 } from "reactstrap";
+import { toast } from "react-toastify";
 import categoryApi from "../../../../api/categoryApi";
 import { ImgUpload, UploadContainer } from "../../Posts/CreatePost";
 //
@@ -40,7 +40,7 @@ const DeniedReportTable = () => {
           .reverse()
       );
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   async function loadCategory() {
@@ -49,7 +49,7 @@ const DeniedReportTable = () => {
       const response = await categoryApi.getAllSub(params);
       setCategoryList(response);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   }
   useEffect(() => {
@@ -137,7 +137,7 @@ const DeniedReportTable = () => {
       setEditedDescription(description);
       setDetails(response);
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
 
