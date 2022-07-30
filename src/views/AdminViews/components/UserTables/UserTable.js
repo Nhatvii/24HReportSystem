@@ -52,7 +52,7 @@ const UserTable = () => {
   }, []);
   useEffect(() => {
     fetchCategoryList();
-  }, [categoryList]);
+  }, []);
   //
   const [details, setDetails] = useState(null);
   const [visibleModal, setVisibleModal] = useState(false);

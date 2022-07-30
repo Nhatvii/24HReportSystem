@@ -1,14 +1,12 @@
 import React, { Fragment } from "react";
 import { Route } from "react-router-dom";
-import TopBar from "../../components/TopBar";
-import MainMenu from "../../components/MainMenu";
-import FooterArea from "../../components/FooterArea";
-import TopBarTwo from "../../components/TopBarTwo";
-import MainMenuTwo from "../../components/MainMenuTwo";
-import FooterAreaTwo from "../../components/FooterAreaTwo";
-import FooterAreaThree from "../../components/FooterAreaThree";
-
-const PrivateRoute = (props) => {
+// //scss
+// import "../../assets/scss/hope-ui.scss";
+// import "../../assets/scss/dark.scss";
+// import "../../assets/scss/rtl.scss";
+// import "../../assets/scss/custom.scss";
+// import "../../assets/scss/customizer.scss";
+const AdminRoute = (props) => {
   const { component: Component, ...rest } = props;
   return (
     <div className={props.parentClass}>
@@ -19,4 +17,4 @@ const PrivateRoute = (props) => {
     </div>
   );
 };
-export default PrivateRoute;
+export default AdminRoute;

@@ -20,6 +20,7 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import { Container } from "reactstrap";
 import AdminAside from "./AdminAside";
 import AdminFooter from "./AdminFooter";
+
 export const AdminLayout = (props) => {
   const { history } = props;
   const [menu, setMenu] = useState({ items: [] });

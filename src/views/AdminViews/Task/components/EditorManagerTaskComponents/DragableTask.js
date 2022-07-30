@@ -357,6 +357,7 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
         setIsLoading(false);
         setDescription("");
         setReportIdList([]);
+        loadTask();
         // window.location.reload();
       } else {
         setVisibleModal(false);

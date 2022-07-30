@@ -18,6 +18,8 @@ import { toast } from "react-toastify";
 //
 const EditorPostTable = () => {
   const [posts, setPosts] = useState();
+  const [details, setDetails] = useState(null);
+  const [visibleModal, setVisibleModal] = useState(false);
   async function loadPosts() {
     try {
       const user_info = localStorage.getItem("user_info");
@@ -33,10 +35,9 @@ const EditorPostTable = () => {
   }
   useEffect(() => {
     loadPosts();
-  }, [posts]);
+  }, []);
   //
-  const [details, setDetails] = useState(null);
-  const [visibleModal, setVisibleModal] = useState(false);
+
   const columns = [
     {
       key: "index",
@@ -196,78 +197,75 @@ const EditorPostTable = () => {
           </Row>
         )}
       </Modal>
-
-      {posts !== null && (
-        <CSmartTable
-          noItemsLabel="Không có dữ liệu..."
-          draggable
-          activePage={1}
-          cleaner
-          clickableRows
-          columns={columns}
-          columnFilter
-          columnSorter
-          items={posts}
-          itemsPerPageSelect
-          itemsPerPage={10}
-          pagination
-          scopedColumns={{
-            index: (item) => {
-              return <td className="py-2">{item._id + 1}</td>;
-            },
-            description: (item) => {
-              return (
-                <td
-                  className="py"
-                  style={{
-                    textOverflow: "ellipsis",
-                    overflow: "hidden",
-                    whiteSpace: "nowrap",
-                    maxWidth: "20rem",
-                  }}
-                >
-                  <Markup
-                    content={item.description}
-                    allowAttributes
-                    allowElements
-                    blockList={["img", "iframe"]}
-                    noHtml={true}
-                  />
-                </td>
-              );
-            },
-            createTime: (item) => {
-              return (
-                <td className="py">
-                  {JSON.stringify(item.createTime)
-                    .replace("T", " ")
-                    .substring(1, JSON.stringify(item.createTime).length - 1)}
-                </td>
-              );
-            },
-            status: (item) => (
-              <td>
-                <CBadge color={getBadge(item.status.trim())}>
-                  {item.status}
-                </CBadge>
+      <CSmartTable
+        noItemsLabel="Không có dữ liệu..."
+        draggable
+        activePage={1}
+        cleaner
+        clickableRows
+        columns={columns}
+        columnFilter
+        columnSorter
+        items={posts}
+        itemsPerPageSelect
+        itemsPerPage={10}
+        pagination
+        scopedColumns={{
+          index: (item) => {
+            return <td className="py-2">{item._id + 1}</td>;
+          },
+          description: (item) => {
+            return (
+              <td
+                className="py"
+                style={{
+                  textOverflow: "ellipsis",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  maxWidth: "20rem",
+                }}
+              >
+                <Markup
+                  content={item.description}
+                  allowAttributes
+                  allowElements
+                  blockList={["img", "iframe"]}
+                  noHtml={true}
+                />
               </td>
-            ),
-            show_details: (item) => {
-              return (
-                <td className="py-2">
-                  <Button onClick={() => toggleDetails(item.postId)}>
-                    Chi tiết
-                  </Button>
-                </td>
-              );
-            },
-          }}
-          tableFilter
-          tableProps={{
-            hover: true,
-          }}
-        />
-      )}
+            );
+          },
+          createTime: (item) => {
+            return (
+              <td className="py">
+                {JSON.stringify(item.createTime)
+                  .replace("T", " ")
+                  .substring(1, JSON.stringify(item.createTime).length - 1)}
+              </td>
+            );
+          },
+          status: (item) => (
+            <td>
+              <CBadge color={getBadge(item.status.trim())}>
+                {item.status}
+              </CBadge>
+            </td>
+          ),
+          show_details: (item) => {
+            return (
+              <td className="py-2">
+                <Button onClick={() => toggleDetails(item.postId)}>
+                  Chi tiết
+                </Button>
+              </td>
+            );
+          },
+        }}
+        tableFilter
+        // tableProps={{
+        //   hover: true,
+        // }}
+      />
     </div>
   );
 };

@@ -67,6 +67,7 @@ const AllNewReportTable = () => {
   useEffect(() => {
     loadReports();
   }, []);
+
   //
   const [details, setDetails] = useState(null);
   const [editedDescription, setEditedDescription] = useState(null);

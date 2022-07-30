@@ -20,9 +20,11 @@ import { toast } from "react-toastify";
 //
 const PublishedPostTable = () => {
   const [posts, setPosts] = useState();
+  const [details, setDetails] = useState(null);
+  const [visibleModal, setVisibleModal] = useState(false);
   async function loadPosts() {
     try {
-      const param = { Status: 3 }; //Crafted only
+      const param = { Status: 3 }; //Pulished only
       const response = await postApi.getByStatus(param);
       setPosts(response);
     } catch (e) {
@@ -31,10 +33,9 @@ const PublishedPostTable = () => {
   }
   useEffect(() => {
     loadPosts();
-  }, [posts]);
+  }, []);
   //
-  const [details, setDetails] = useState(null);
-  const [visibleModal, setVisibleModal] = useState(false);
+
   const unpublicPost = async (id) => {
     setVisibleModal(!visibleModal);
     try {
@@ -43,7 +44,10 @@ const PublishedPostTable = () => {
         status: 2,
       };
       const response = await postApi.editStatus(params);
-      console.log(response);
+      if (!JSON.stringify(response).includes("error")) {
+        toast.success("Gỡ bài thành công");
+        loadPosts();
+      }
     } catch (e) {
       toast.error(e.message);
     }
@@ -103,7 +107,6 @@ const PublishedPostTable = () => {
     }
   };
   const [editedDescription, setEditedDescription] = useState(null);
-
   const toggleDetails = async (id) => {
     setVisibleModal(!visibleModal);
     try {
@@ -229,10 +232,8 @@ const PublishedPostTable = () => {
       {posts !== null && (
         <CSmartTable
           noItemsLabel="Không có dữ liệu..."
-          draggable
           activePage={1}
           cleaner
-          clickableRows
           columns={columns}
           columnFilter
           columnSorter
@@ -291,10 +292,10 @@ const PublishedPostTable = () => {
               );
             },
           }}
-          tableFilter
-          tableProps={{
-            hover: true,
-          }}
+          // tableFilter
+          // tableProps={{
+          //   hover: true,
+          // }}
         />
       )}
     </>
