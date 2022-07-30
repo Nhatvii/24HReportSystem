@@ -1,39 +1,10 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { TabContent, TabPane, Nav, NavItem, Fade } from "reactstrap";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
-
-import thumb1 from "../../doc/img/header/widget/tab1.jpg";
-import thumb2 from "../../doc/img/header/widget/tab2.jpg";
-import thumb3 from "../../doc/img/header/widget/tab3.jpg";
-import thumb4 from "../../doc/img/header/widget/tab4.jpg";
-
-const data = [
-  {
-    image: thumb1,
-    title: "Copa America:  from devastated US",
-    category: "TECHNOLOGY",
-    date: "March 26, 2020",
-  },
-  {
-    image: thumb2,
-    title: "Nancy Zhang a Chinese busy woman and Dhaka",
-    category: "TECHNOLOGY",
-    date: "March 26, 2020",
-  },
-  {
-    image: thumb3,
-    title: "U.S. Response subash says he will label regions by risk of…",
-    category: "TECHNOLOGY",
-    date: "March 26, 2020",
-  },
-  {
-    image: thumb4,
-    title: "Venezuela elan govt and opposit the property collect",
-    category: "TECHNOLOGY",
-    date: "March 26, 2020",
-  },
-];
+import { toast } from "react-toastify";
+import postApi from "../../api/postApi";
+import moment from "moment";
 
 const WidgetTabPane = ({ arr, a_id, id, dark }) => {
   return (
@@ -45,14 +16,16 @@ const WidgetTabPane = ({ arr, a_id, id, dark }) => {
               <div className="post_img">
                 <div className="img_wrap">
                   <Link to="#">
-                    <img src="https://picsum.photos/200/154" alt="thumb" />
+                    <img src={item.image} alt="thumb" />
                   </Link>
                 </div>
               </div>
               <div className="single_post_text">
                 <div className="meta2 meta_separator1">
-                  <Link to="#">{item.category}</Link>
-                  <Link to="#">{item.date}</Link>
+                  <Link to="#">{item.category.subCategory}</Link>
+                  <Link to="#">
+                    {moment(item.createTime).format("DD.MM.YYYY")}
+                  </Link>
                 </div>
                 <h4>
                   <Link to="/post1">{item.title.substring(0, 45) + "..."}</Link>
@@ -69,9 +42,23 @@ const WidgetTabPane = ({ arr, a_id, id, dark }) => {
 
 const WidgetTab = ({ className, dark }) => {
   const [activeTab, setActiveTab] = useState("1");
+  const [widgetPosts, setWidgetPosts] = useState([]);
   const toggle = (tab) => {
     if (activeTab !== tab) setActiveTab(tab);
   };
+  const loadWidgetPosts = async () => {
+    try {
+      const params = { Status: 3 };
+      const response = await postApi.getByStatus(params);
+      localStorage.setItem("widget-post", JSON.stringify(response.slice(0, 4)));
+      setWidgetPosts(JSON.parse(localStorage.getItem("widget-post")));
+    } catch (e) {
+      toast.error("Không thể tải bài viết");
+    }
+  };
+  useEffect(() => {
+    loadWidgetPosts();
+  }, [widgetPosts]);
   return (
     <>
       <div className={`widget_tab md-mt-30 ${className}`}>
@@ -112,13 +99,28 @@ const WidgetTab = ({ className, dark }) => {
         </Nav>
         <TabContent activeTab={activeTab} style={{ border: "none" }}>
           <TabPane tabId="1">
-            <WidgetTabPane dark={dark} a_id={activeTab} id="1" arr={data} />
+            <WidgetTabPane
+              dark={dark}
+              a_id={activeTab}
+              id="1"
+              arr={widgetPosts}
+            />
           </TabPane>
           <TabPane tabId="2">
-            <WidgetTabPane dark={dark} a_id={activeTab} id="2" arr={data} />
+            <WidgetTabPane
+              dark={dark}
+              a_id={activeTab}
+              id="2"
+              arr={widgetPosts}
+            />
           </TabPane>
           <TabPane tabId="3">
-            <WidgetTabPane dark={dark} a_id={activeTab} id="3" arr={data} />
+            <WidgetTabPane
+              dark={dark}
+              a_id={activeTab}
+              id="3"
+              arr={widgetPosts}
+            />
           </TabPane>
         </TabContent>
       </div>

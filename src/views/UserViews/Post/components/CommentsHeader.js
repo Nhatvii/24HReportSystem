@@ -1,5 +1,4 @@
 import React from "react";
-import { Button, Icon } from "semantic-ui-react";
 import styled from "styled-components";
 const Header = styled.div`
   h4 {

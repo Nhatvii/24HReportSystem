@@ -1,55 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Heading from "../uiStyle/Heading";
 import Swiper from "react-id-swiper";
 
-import fnewsImg2 from "../../doc/img/feature/feature2.jpg";
-import fnewsImg3 from "../../doc/img/feature/feature3.jpg";
-import fnewsImg4 from "../../doc/img/feature/feature4.jpg";
 import { Link } from "react-router-dom";
 import FontAwesome from "../uiStyle/FontAwesome";
-
-const news = [
-  {
-    image: fnewsImg2,
-    category: "TECHNOLOGY",
-    date: "March 26, 2020",
-    title: "Best garden wing supplies for the horticu ltural",
-  },
-  {
-    image: fnewsImg3,
-    category: "TECHNOLOGY",
-    date: "March 26, 2020",
-    title: "Copa America:  from devastated US",
-  },
-  {
-    image: fnewsImg4,
-    category: "TECHNOLOGY",
-    date: "March 26, 2020",
-    title: "Best garden wing supplies for the horticu ltural",
-  },
-  {
-    image: fnewsImg3,
-    category: "TECHNOLOGY",
-    date: "March 26, 2020",
-    title: "Copa America:  from devastated US",
-  },
-  {
-    image: fnewsImg4,
-    category: "TECHNOLOGY",
-    date: "March 26, 2020",
-    title: "Best garden wing supplies for the horticu ltural",
-  },
-  {
-    image: fnewsImg3,
-    category: "TECHNOLOGY",
-    date: "March 26, 2020",
-    title: "Copa America:  from devastated US",
-  },
-];
+import postApi from "../../api/postApi";
+import { toast } from "react-toastify";
+import moment from "moment";
 
 const FeatureNews = ({ className }) => {
   const [swiper, setSwiper] = useState(null);
+  const [Posts, setPosts] = useState([]);
 
+  const loadPosts = async () => {
+    try {
+      const params = { Status: 3 };
+      const response = await postApi.getByStatus(params);
+      setPosts(response.slice(0, 4));
+    } catch (e) {
+      toast.error("Không thể tải bài viết");
+    }
+  };
+  useEffect(() => {
+    loadPosts();
+  }, [Posts]);
   const goNext = () => {
     if (swiper !== null) {
       swiper.slideNext();
@@ -89,7 +63,7 @@ const FeatureNews = ({ className }) => {
       <div className="container">
         <div className="row">
           <div className="col-12">
-            <Heading title="Tin nổi bật" />
+            <Heading title="Tin nhanh" />
           </div>
         </div>
         <div className="row">
@@ -97,21 +71,23 @@ const FeatureNews = ({ className }) => {
             {/*CAROUSEL START*/}
             <div className="feature_carousel nav_style1">
               <Swiper getSwiper={setSwiper} {...params}>
-                {news.map((item, i) => (
+                {Posts.map((item, i) => (
                   <div key={i} className="single_post post_type6 post_type7">
                     <div className="post_img gradient1">
                       <Link to="/">
-                        <img src="https://picsum.photos/700/500" alt="thumb" />
+                        <img src={item.image} alt="thumb" />
                       </Link>
                     </div>
-                    <div className="single_post_text">
+                    <div className="single_post_text_1">
                       <div className="meta5">
-                        <Link to="/">{item.category}</Link>
-                        <Link to="/">{item.date}</Link>
+                        <Link to="/">{item.category.subCategory}</Link>
+                        <Link to="/">
+                          {moment(item.createTime).format("DD.MM.YYYY")}
+                        </Link>
                       </div>
-                      <h4>
-                        <Link to="/post1">{item.title}</Link>
-                      </h4>
+                      <h5>
+                        <Link to="#">{item.title}</Link>
+                      </h5>
                     </div>
                   </div>
                 ))}

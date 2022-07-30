@@ -1158,7 +1158,27 @@ span.tranding {
     border-radius: 50%;
     right: 15px;
   }
+.single_post_text_1 {
+  position: absolute;
+  bottom: 0;
+  z-index: 9;
+  padding: 20px;
+  color: $white;
 
+  p.post-p {
+    font-size: 15px;
+    line-height: 21px;
+    font-weight: 400;
+  }
+
+  .meta {
+    font-weight: 500;
+    font-size: 14px;
+
+    span {
+      color: $white;
+    }
+  }}
   .single_post_text {
     position: absolute;
     bottom: 0;
@@ -1171,11 +1191,12 @@ span.tranding {
       font-size: 15px;
       line-height: 21px;
       font-weight: 400;
+      max-height: 2em;
+      line-height: 1em;
     }
     .meta {
       font-weight: 500;
       font-size: 14px;
-
       span {
         color: $white;
       }
@@ -1530,11 +1551,19 @@ span.tranding {
     }
   }
 }
-
-.single_post_text {
+.single_post_text_1 {
+  h5 a{
+    color: $white;
+    display: block;
+      /* or inline-block */
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    overflow: hidden;
+    max-height: 2em;
+    line-height: 1em;
+  }
   .meta5 {
     margin-bottom: 0;
-
     a {
       font-size: 12px;
       text-transform: capitalize;
@@ -1547,7 +1576,38 @@ span.tranding {
       &:last-child {
         margin-left: 20px;
         font-weight: 400;
+        color: $white;
+        &:before {
+          position: absolute;
+          content: "/";
+          height: 20px;
+          width: 10px;
+          left: -18px;
+          top: 50%;
+          margin-top: -10px;
+          line-height: 20px;
+          color: $white;
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+.single_post_text {
+  .meta5 {
+    margin-bottom: 0;
+    a {
+      font-size: 12px;
+      text-transform: capitalize;
+      position: relative;
+      z-index: 2;
+      line-height: 17px;
+      margin-bottom: 5px;
+      color: $white;
 
+      &:last-child {
+        margin-left: 20px;
+        font-weight: 400;
         &:before {
           position: absolute;
           content: "/";
@@ -1569,7 +1629,6 @@ span.tranding {
 .single_post_text {
   .meta3 {
     margin-bottom: 10px;
-
     a {
       font-size: 14px !important;
       position: relative;

@@ -47,7 +47,7 @@ const config = {
 class FAQ extends Component {
   render() {
     return (
-      <div>
+      <div className="fifth_bg">
         <Card style={{ height: "auto" }}>
           <CardHeader>
             Frequently Asked Questions
