@@ -6,8 +6,6 @@ import WidgetTab from "../../components/WidgetTab";
 import WidgetTrendingNews from "../../components/WidgetTrendingNews";
 import NewsLetter from "../../components/NewsLetter";
 import FollowUs from "../../components/FollowUs";
-import FeatureNewsAll from "../../components/FeatureNewsAll";
-import BannerSection from "../../components/BannerSection";
 
 // images
 import banner2 from "../../doc/img/bg/sidebar-1.png";
@@ -29,7 +27,6 @@ const FeaturePage = () => {
                   </div>
                 </div>
               </div>
-              <FeatureNewsAll />
               <div className="row mt-3">
                 <div className="col-12">
                   <div className="cpagination">
@@ -89,7 +86,6 @@ const FeaturePage = () => {
         </div>
       </div>
       <div className="space-70" />
-      <BannerSection />
     </Fragment>
   );
 };

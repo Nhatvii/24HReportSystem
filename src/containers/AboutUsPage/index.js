@@ -5,10 +5,8 @@ import { Link } from "react-router-dom";
 import WidgetTab from "../../components/WidgetTab";
 import WidgetTrendingNews from "../../components/WidgetTrendingNews";
 import NewsLetter from "../../components/NewsLetter";
-import EntertainmentNews from "../../components/EntertainmentNews";
 import { Fade, Nav, NavItem, TabContent, TabPane } from "reactstrap";
 import MostShareWidget from "../../components/MostShareWidget";
-import BannerSection from "../../components/BannerSection";
 import classnames from "classnames";
 
 // images
@@ -19,6 +17,7 @@ import enter3 from "../../doc/img/entertrainment/enter3.jpg";
 import enter4 from "../../doc/img/entertrainment/enter4.jpg";
 import author1 from "../../doc/img/author/author1.png";
 import calendar from "../../doc/img/icon/calendar.png";
+import RecommendedNews from "../../components/RecommededNews";
 
 const entertainments = [
   {
@@ -193,9 +192,9 @@ const AboutUsPage = () => {
                   <TabPane tabId="1">
                     <Fade in={activeTab === "1"}>
                       <div className="row justify-content-center">
-                        <EntertainmentNews
+                        <RecommendedNews
                           headerHide={true}
-                          entertainments={entertainments}
+                          recommended={entertainments}
                         />
                       </div>
                     </Fade>
@@ -203,9 +202,9 @@ const AboutUsPage = () => {
                   <TabPane tabId="2">
                     <Fade in={activeTab === "2"}>
                       <div className="row justify-content-center">
-                        <EntertainmentNews
+                        <RecommendedNews
                           headerHide={true}
-                          entertainments={entertainments}
+                          recommended={entertainments}
                         />
                       </div>
                     </Fade>
@@ -271,7 +270,6 @@ const AboutUsPage = () => {
         </div>
       </div>
       <div className="space-70" />
-      <BannerSection />
     </Fragment>
   );
 };

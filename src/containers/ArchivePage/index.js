@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import WidgetTab from "../../components/WidgetTab";
 import WidgetTrendingNews from "../../components/WidgetTrendingNews";
 import NewsLetter from "../../components/NewsLetter";
-import EntertainmentNews from "../../components/EntertainmentNews";
 import MostShareWidget from "../../components/MostShareWidget";
 import FollowUs from "../../components/FollowUs";
 
@@ -16,7 +15,7 @@ import enter2 from "../../doc/img/entertrainment/enter2.jpg";
 import enter3 from "../../doc/img/entertrainment/enter3.jpg";
 import enter4 from "../../doc/img/entertrainment/enter4.jpg";
 import calendar from "../../doc/img/icon/calendar.png";
-import BannerSection from "../../components/BannerSection";
+import RecommendedNews from "../../components/RecommededNews";
 
 const entertainments = [
   {
@@ -254,9 +253,9 @@ const ArchivePage = () => {
               </div>
               <div className="about_posts_tab">
                 <div className="row justify-content-center">
-                  <EntertainmentNews
+                  <RecommendedNews
                     headerHide={true}
-                    entertainments={entertainments}
+                    recommended={entertainments}
                   />
                 </div>
               </div>
@@ -320,7 +319,6 @@ const ArchivePage = () => {
         </div>
       </div>
       <div className="space-70" />
-      <BannerSection />
     </Fragment>
   );
 };

@@ -1,22 +1,14 @@
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  Col,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-  Row,
-} from "reactstrap";
+import { Button, Col, Row } from "reactstrap";
 import { useFormik } from "formik";
 import { toast } from "react-toastify";
 import loginApi from "../../../api/loginApi";
 import "./styles.css";
 
 const Login = (props) => {
-  const { history } = props;
+  // const { history } = props;
   const [isLoading, setIsLoading] = useState(false);
-  const [values, setValues] = useState([]);
+  // const [values, setValues] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   //OTP phone login

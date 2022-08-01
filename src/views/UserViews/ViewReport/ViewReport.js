@@ -1,5 +1,5 @@
 import { CBadge, CSmartTable } from "@coreui/react-pro";
-import React, { Component, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import reportApi from "../../../api/reportApi";
 import { Markup } from "interweave";
@@ -99,9 +99,9 @@ const SendReport = () => {
       toast.error(e.message);
     }
   }
-  const handle_change = (event) => {
-    setSearchId(event.target.value);
-  };
+  // const handle_change = (event) => {
+  //   setSearchId(event.target.value);
+  // };
 
   useEffect(() => {
     handle_search();

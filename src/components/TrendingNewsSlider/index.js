@@ -2,32 +2,39 @@ import React, { useState } from "react";
 import FontAwesome from "../uiStyle/FontAwesome";
 import { Link } from "react-router-dom";
 import Swiper from "react-id-swiper";
-
-import trendbig1 from "../../doc/img/trending/trendbig1.jpg";
-import trendbig2 from "../../doc/img/trending/trendbig2.jpg";
+import moment from "moment";
 
 const trendingNews = [
   {
-    category: "TECHNOLOGY",
+    category: { subCategory: "Chiếm đoạt tài sản" },
     date: "March 26, 2020",
-    title: "There may be no consoles in the future ea exec says",
-    body: "The property, complete with 30-seat screening from room, a 100-seat amphitheater and a swimming pond with sandy shower…",
-    image: trendbig1,
+    title: "Lừa đảo sinh viên nghèo",
+    image: "https://picsum.photos/700/500",
+    viewCount: "200",
   },
   {
-    category: "TECHNOLOGY",
+    category: { subCategory: "Chiếm đoạt tài sản" },
     date: "March 26, 2020",
-    title:
-      "Japan’s virus success has puzzled the world. Is its luck running out?",
-    body: "The property, complete with 30-seat screening from room, a 100-seat amphitheater and a swimming pond with sandy shower…",
-    image: trendbig2,
+    title: "Bị lừa khi tìm bạn gái trên Tinder",
+    image:
+      "https://d3jyiu4jpn0ihr.cloudfront.net/wp-content/uploads/sites/6/20190918160006/ve-may-bay-di-sai-gon1.jpg",
+    viewCount: 43,
   },
   {
-    category: "TECHNOLOGY",
+    category: { subCategory: "Chiếm đoạt tài sản" },
     date: "March 26, 2020",
-    title: "There may be no consoles in the future ea exec says",
-    body: "The property, complete with 30-seat screening from room, a 100-seat amphitheater and a swimming pond with sandy shower…",
-    image: trendbig1,
+    title: "Lừa đảo sinh viên nghèo",
+    image:
+      "https://suckhoedoisong.qltns.mediacdn.vn/thumb_w/1200/Images/phamquynh/2021/07/12/sai-gon-mua-thuong-1626066367.jpg",
+    viewCount: 54,
+  },
+  {
+    category: { subCategory: "Chiếm đoạt tài sản" },
+    date: "March 26, 2020",
+    title: "Bị lừa khi tìm bạn gái trên Tinder",
+    image:
+      "https://vnn-imgs-f.vgcloud.vn/2021/11/05/21/thanh-nien-bo-lai-doi-dep-giua-cau-sai-gon-roi-lao-xuong-song-mat-tich-3.jpg",
+    viewCoun: 53,
   },
 ];
 const TrendingNewsSlider = () => {
@@ -74,22 +81,34 @@ const TrendingNewsSlider = () => {
           <div key={i} className="single_post post_type3">
             <div className="post_img">
               <div className="img_wrap">
-                <img src="https://picsum.photos/700/500" alt="thumb" />
+                <img src={item.image} alt="thumb" width={400} height={200} />
               </div>
               <span className="tranding">
-                <FontAwesome name="fa-bolt" />
+                <FontAwesome name="eye" /> {item.viewCount}
               </span>
             </div>
             <div className="single_post_text">
               <div className="meta3">
-                <Link to="/">{item.category}</Link>
-                <Link to="/">{item.date}</Link>
+                <Link
+                  to={{
+                    pathname: "/search",
+                    state: {
+                      title: "Danh mục: " + item.category.subCategory,
+                      CategoryID: item.category.categoryId,
+                    },
+                  }}
+                >
+                  {item.category.subCategory}
+                </Link>
+                <Link to={`/post-detail/${item.postId}`}>
+                  {moment(item.publicTime).format("DD.MM.YYYY")}
+                </Link>
               </div>
               <h4>
-                <Link to="/post1">{item.title}</Link>
+                <Link to={`/post-detail/${item.postId}`}>{item.title}</Link>
               </h4>
               <div className="space-10" />
-              <p className="post-p">{item.body}</p>
+              <p className="post-p">{item.subTitle}</p>
             </div>
           </div>
         ))}

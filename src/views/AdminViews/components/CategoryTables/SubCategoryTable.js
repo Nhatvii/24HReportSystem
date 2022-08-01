@@ -29,6 +29,7 @@ const SubCategoryTable = () => {
   const [categoryList, setCategoryList] = useState([]);
   const [selected, setSelected] = useState(null);
   const [updateType, setUpdateType] = useState("");
+  const [temp, setTemp] = useState(0);
   //
   async function loadCategory() {
     try {
@@ -98,8 +99,13 @@ const SubCategoryTable = () => {
     }
   }
   useEffect(() => {
-    loadCategories();
+    setInterval(() => {
+      setTemp((prevTemp) => prevTemp + 1);
+    }, 5000);
   }, []);
+  useEffect(() => {
+    loadCategories();
+  }, [temp]);
   //
   const [details, setDetails] = useState(null);
   const [visibleModal, setVisibleModal] = useState(false);

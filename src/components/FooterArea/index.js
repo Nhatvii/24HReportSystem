@@ -20,10 +20,8 @@ const FooterArea = ({ className }) => {
         <div className="cta">
           <div className="row">
             <div className="col-md-6 align-self-center">
-              <div className="footer_logo logo">
-                <Link to="/">
-                  <img src={flogo} alt="logo" />
-                </Link>
+              <div>
+                <h1 style={{ color: "white" }}>Report 24h</h1>
               </div>
               <div className="social2">
                 <ul className="inline">

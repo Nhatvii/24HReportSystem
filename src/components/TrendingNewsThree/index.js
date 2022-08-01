@@ -2,7 +2,6 @@ import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
 import FontAwesome from "../../components/uiStyle/FontAwesome";
 
-import trend31 from "../../doc/img/trending/trend31.jpg";
 import trend32 from "../../doc/img/trending/trend32.jpg";
 import trend33 from "../../doc/img/trending/trend33.jpg";
 import trend34 from "../../doc/img/trending/trend34.jpg";

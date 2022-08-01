@@ -71,7 +71,7 @@ const CreatePost = () => {
   const [errorSelectedCategory, setErrorSelectedCategory] = useState("");
 
   //
-  const userID = localStorage.getItem("user_info");
+  // const user_info = localStorage.getItem("user_info");
   const modules = {
     toolbar: [
       ["bold", "italic", "underline", "strike"], // toggled buttons
@@ -204,7 +204,7 @@ const CreatePost = () => {
               if (response.statusCode === 200) {
                 toast.success("Tạo thành công");
               } else {
-                toast.error(response);
+                toast.error(response.message);
               }
             } catch (e) {
               toast.error(e.message);

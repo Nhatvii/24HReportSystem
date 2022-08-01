@@ -1,5 +1,4 @@
 import React from "react";
-import video32 from "../../doc/img/blog/video32.jpg";
 import blog_small1 from "../../doc/img/blog/blog_small1.jpg";
 import FontAwesome from "../uiStyle/FontAwesome";
 import { Link } from "react-router-dom";

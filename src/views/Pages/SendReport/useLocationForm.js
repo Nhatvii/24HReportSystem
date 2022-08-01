@@ -58,8 +58,8 @@ function useLocationForm(shouldFetchInitialLocation) {
     selectedWard: null,
   });
 
-  const { selectedCity, selectedDistrict, selectedWard } = state;
-
+  // const { selectedCity, selectedDistrict, selectedWard } = state;
+  const { selectedCity, selectedDistrict } = state;
   useEffect(() => {
     (async function () {
       if (shouldFetchInitialLocation) {

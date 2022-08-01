@@ -147,7 +147,7 @@ export const PostData = styled.div`
 export const CommentArea = styled.div`
   background-color: #fff;
   backdrop-filter: blur(5px);
-  width: 25vw;
+  width: 100%;
   height: 55rem;
   display: inline-block;
   justify-content: start;
@@ -233,16 +233,9 @@ export const AddComment = styled.div`
 `;
 export const CommentSection = styled.div`
   display: flex;
-  margin: 8px 0;
-
-  .user-image {
-    vertical-align: middle;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-right: 10px;
-  }
-
+  margin-top: 16px;
+  margin-bottom: 10px;
+  width: 150%;
   .user-name {
     font-weight: 600;
     margin-bottom: 4px;
@@ -254,12 +247,8 @@ export const CommentSection = styled.div`
   }
   .comment-actions {
     margin-top: 4px;
-    button {
-      margin-left: 8px;
-    }
   }
   .comment {
-    display: block;
   }
   .settings {
     margin-top: 4px;

@@ -50,7 +50,7 @@ export const AdminLayout = (props) => {
         </AppSidebar>
         <main className="main">
           <AppBreadcrumb appRoutes={routes} />
-          <Container fluid>
+          <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
             <Switch>
               {routes.map((route, idx) => {
                 return route.component &&

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import FontAwesome from "../uiStyle/FontAwesome";
 import Swiper from "react-id-swiper";
-import { mostViewSort } from "../../utils/commonFunctions";
 
 // images
 import popularsm1 from "../../doc/img/popular/popularsm1.jpg";
@@ -13,56 +12,53 @@ import popularsm5 from "../../doc/img/popular/popularsm5.jpg";
 
 import "./style.scss";
 
-const populerPOsts = [
+const popularPost = [
   {
-    image: popularsm1,
-    category: "TECHNOLOGY",
-    title: "The property complete with a 30 seat screen room.",
+    category: { subCategory: "Chiếm đoạt tài sản" },
+    date: "March 26, 2020",
+    title: "Lừa đảo sinh viên nghèo",
+    image: "https://picsum.photos/700/500",
+    viewCount: 45,
   },
   {
-    image: popularsm2,
-    category: "TECHNOLOGY",
-    title: "Cheap smartphone sensor could help you old.",
+    category: { subCategory: "Lừa đảo" },
+    date: "March 26, 2020",
+    title: "Bị lừa khi tìm bạn gái trên Tinder",
+    image:
+      "https://d3jyiu4jpn0ihr.cloudfront.net/wp-content/uploads/sites/6/20190918160006/ve-may-bay-di-sai-gon1.jpg",
+    viewCount: 43,
   },
   {
-    image: popularsm3,
-    category: "TECHNOLOGY",
-    title: "Harbour amid a Slowen the down in singer city",
+    category: { subCategory: "Mạng xã hội" },
+    date: "March 26, 2020",
+    title: "Lừa đảo sinh viên nghèo",
+    image:
+      "https://suckhoedoisong.qltns.mediacdn.vn/thumb_w/1200/Images/phamquynh/2021/07/12/sai-gon-mua-thuong-1626066367.jpg",
+    viewCount: 74,
   },
   {
-    image: popularsm4,
-    category: "TECHNOLOGY",
-    title: "The secret to moving this from sphinx screening",
+    category: { subCategory: "Vay tín dụng đen" },
+    date: "March 26, 2020",
+    title: "Bị lừa khi tìm bạn gái trên Tinder",
+    image:
+      "https://vnn-imgs-f.vgcloud.vn/2021/11/05/21/thanh-nien-bo-lai-doi-dep-giua-cau-sai-gon-roi-lao-xuong-song-mat-tich-3.jpg",
+    viewCount: 54,
   },
   {
-    image: popularsm5,
-    category: "TECHNOLOGY",
-    title: "Harbour amid a Slowen the down in singer city",
+    category: { subCategory: "Mạng xã hội" },
+    date: "March 26, 2020",
+    title: "Lừa đảo sinh viên nghèo",
+    image:
+      "https://suckhoedoisong.qltns.mediacdn.vn/thumb_w/1200/Images/phamquynh/2021/07/12/sai-gon-mua-thuong-1626066367.jpg",
+    viewCount: 46,
   },
   {
-    image: popularsm1,
-    category: "TECHNOLOGY",
-    title: "The property complete with a 30 seat screen room.",
-  },
-  {
-    image: popularsm2,
-    category: "TECHNOLOGY",
-    title: "Cheap smartphone sensor could help you old.",
-  },
-  {
-    image: popularsm3,
-    category: "TECHNOLOGY",
-    title: "Harbour amid a Slowen the down in singer city",
-  },
-  {
-    image: popularsm4,
-    category: "TECHNOLOGY",
-    title: "The secret to moving this from sphinx screening",
-  },
-  {
-    image: popularsm5,
-    category: "TECHNOLOGY",
-    title: "Harbour amid a Slowen the down in singer city",
+    category: { subCategory: "Vay tín dụng đen" },
+    date: "March 26, 2020",
+    title: "Bị lừa khi tìm bạn gái trên Tinder",
+    image:
+      "https://vnn-imgs-f.vgcloud.vn/2021/11/05/21/thanh-nien-bo-lai-doi-dep-giua-cau-sai-gon-roi-lao-xuong-song-mat-tich-3.jpg",
+    viewCount: 53,
   },
 ];
 
@@ -88,26 +84,35 @@ const PopularPosts = () => {
   };
   return (
     <div className="popular_carousel_area mb30 md-mt-30">
-      <h2 className="widget-title">Popular Posts</h2>
+      <h2 className="widget-title">Tin nóng</h2>
       <div className="popular_carousel pt-15 multipleRowCarousel nav_style1">
         {/*CAROUSEL START*/}
         <Swiper getSwiper={setSwiper} {...params}>
-          {mostViewSort(populerPOsts).map((item, i) => (
+          {popularPost.slice(0, 5).map((item, i) => (
             <div key={i} className="single_post type10 widgets_small mb15">
               <div className="post_img">
                 <div className="img_wrap">
-                  <Link to="/">
-                    <img src={item.image} alt="thubm" />
+                  <Link>
+                    <img src={item.image} alt="thumb" height={100} />
                   </Link>
                 </div>
-                <span className="tranding tranding_border">{item.id}</span>
               </div>
               <div className="single_post_text">
                 <h4>
-                  <Link to="/post1">{item.title}</Link>
+                  <Link to={`/post-detail/${item.postId}`}>{item.title}</Link>
                 </h4>
                 <div className="meta4">
-                  <Link to="/">{item.category}</Link>
+                  <Link
+                    to={{
+                      pathname: "/search",
+                      state: {
+                        title: "Danh mục: " + item.category.subCategory,
+                        CategoryID: item.category.categoryId,
+                      },
+                    }}
+                  >
+                    {item.category.subCategory}
+                  </Link>
                 </div>
               </div>
             </div>

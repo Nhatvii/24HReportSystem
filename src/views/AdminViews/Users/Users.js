@@ -34,7 +34,7 @@ const Users = () => {
   const [email, setEmail] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+  // const [successMessage, setSuccessMessage] = useState("");
   const toggle = () => {
     setModal(!modal);
   };
@@ -77,7 +77,7 @@ const Users = () => {
         const response = await registerApi.createUser(json);
         if (!JSON.stringify(response).includes("error")) {
           const params = { email: email, isAuthen: true };
-          const response = await userApi.update(params);
+          await userApi.update(params);
           setModal(false);
         } else {
           setErrorMessage(response.error.message);

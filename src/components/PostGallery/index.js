@@ -1,8 +1,7 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import WidgetTab from "../WidgetTab";
 import "../../../node_modules/slick-carousel/slick/slick.css";
-import FontAwesome from "../uiStyle/FontAwesome";
 import ModalVideo from "react-modal-video";
 
 import "./style.scss";
@@ -18,12 +17,12 @@ const PostGallery = (props) => {
   const [postList, setPostList] = useState([]);
   useEffect(() => {
     loadPostList();
-  }, [postList]);
+  }, []);
 
   const loadPostList = async () => {
     try {
-      const params = { Status: 3 };
-      const response = await postApi.getByStatus(params);
+      const params = { Status: 3, isRecentDate: true };
+      const response = await postApi.getByStatusAndRecent(params);
       localStorage.setItem(
         "carousel-post",
         JSON.stringify(response.slice(0, 4))
@@ -49,59 +48,68 @@ const PostGallery = (props) => {
                     autoplay
                     autoplaySpeed={5000}
                   >
-                    {postList.map((item, i) => (
-                      <div key={i} className="single_post post_type6 xs-mb0">
-                        <div className="post_img gradient1">
-                          <img
-                            src={item.image}
-                            alt="image"
-                            style={{
-                              width: "100%",
-                              height: "29.25rem",
-                              display: "inline-block",
-                            }}
-                            class="img-responsive"
-                          />
-                          {/* <span
+                    {JSON.parse(localStorage.getItem("carousel-post")) &&
+                    JSON.parse(localStorage.getItem("carousel-post")).length > 0
+                      ? JSON.parse(localStorage.getItem("carousel-post")).map(
+                          (item, i) => (
+                            <div
+                              key={i}
+                              className="single_post post_type6 xs-mb0"
+                            >
+                              <div className="post_img gradient1">
+                                <img
+                                  src={item.image}
+                                  alt="image"
+                                  style={{
+                                    width: "100%",
+                                    height: "29.25rem",
+                                    display: "inline-block",
+                                  }}
+                                  class="img-responsive"
+                                />
+                                {/* <span
                               onClick={() => this.modalHandler(true)}
                               className="tranding"
                             >
                               <FontAwesome name="play" />
                             </span> */}
-                        </div>
-                        <div className="single_post_text">
-                          <div className="meta meta_separator1">
-                            <Link
-                              to={{
-                                pathname: "/search",
-                                state: {
-                                  title:
-                                    "Danh mục: " + item.category.subCategory,
-                                  CategoryID: item.category.categoryId,
-                                },
-                              }}
-                            >
-                              {item.category.subCategory}
-                            </Link>
-                            <Link to={`/post-detail/${item.postId}`}>
-                              {moment(item.createTime).format(
-                                "dddd, Do MM YYYY"
-                              )}
-                            </Link>
-                          </div>
-                          <h4>
-                            <Link
-                              className="play_btn"
-                              to={`/post-detail/${item.postId}`}
-                            >
-                              {item.title}
-                            </Link>
-                          </h4>
-                          <div className="space-10" />
-                          <p className="post-p">{item.subTitle}</p>
-                        </div>
-                      </div>
-                    ))}
+                              </div>
+                              <div className="single_post_text">
+                                <div className="meta meta_separator1">
+                                  <Link
+                                    to={{
+                                      pathname: "/search",
+                                      state: {
+                                        title:
+                                          "Danh mục: " +
+                                          item.category.subCategory,
+                                        CategoryID: item.category.categoryId,
+                                      },
+                                    }}
+                                  >
+                                    {item.category.subCategory}
+                                  </Link>
+                                  <Link to={`/post-detail/${item.postId}`}>
+                                    {moment(item.publicTime).format(
+                                      "dddd, Do MM YYYY"
+                                    )}
+                                  </Link>
+                                </div>
+                                <h4>
+                                  <Link
+                                    className="play_btn"
+                                    to={`/post-detail/${item.postId}`}
+                                  >
+                                    {item.title}
+                                  </Link>
+                                </h4>
+                                <div className="space-10" />
+                                <p className="post-p">{item.subTitle}</p>
+                              </div>
+                            </div>
+                          )
+                        )
+                      : null}
                   </Slider>
                 </div>
               </div>

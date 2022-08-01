@@ -5,7 +5,60 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import postApi from "../../api/postApi";
 import moment from "moment";
-
+const widget = [
+  {
+    category: { subCategory: "Chiếm đoạt tài sản" },
+    date: "March 26, 2020",
+    title: "Lừa đảo sinh viên nghèo",
+    image: "https://picsum.photos/700/500",
+    viewCount: 45,
+    likeCount: 12,
+  },
+  {
+    category: { subCategory: "Lừa đảo" },
+    date: "March 26, 2020",
+    title: "Bị lừa khi tìm bạn gái trên Tinder",
+    image:
+      "https://d3jyiu4jpn0ihr.cloudfront.net/wp-content/uploads/sites/6/20190918160006/ve-may-bay-di-sai-gon1.jpg",
+    viewCount: 43,
+    likeCount: 42,
+  },
+  {
+    category: { subCategory: "Mạng xã hội" },
+    date: "March 26, 2020",
+    title: "Lừa đảo sinh viên nghèo",
+    image:
+      "https://suckhoedoisong.qltns.mediacdn.vn/thumb_w/1200/Images/phamquynh/2021/07/12/sai-gon-mua-thuong-1626066367.jpg",
+    viewCount: 74,
+    likeCount: 352,
+  },
+  {
+    category: { subCategory: "Vay tín dụng đen" },
+    date: "March 26, 2020",
+    title: "Bị lừa khi tìm bạn gái trên Tinder",
+    image:
+      "https://vnn-imgs-f.vgcloud.vn/2021/11/05/21/thanh-nien-bo-lai-doi-dep-giua-cau-sai-gon-roi-lao-xuong-song-mat-tich-3.jpg",
+    viewCount: 54,
+    likeCount: 65,
+  },
+  {
+    category: { subCategory: "Mạng xã hội" },
+    date: "March 26, 2020",
+    title: "Lừa đảo sinh viên nghèo",
+    image:
+      "https://suckhoedoisong.qltns.mediacdn.vn/thumb_w/1200/Images/phamquynh/2021/07/12/sai-gon-mua-thuong-1626066367.jpg",
+    viewCount: 46,
+    likeCount: 68,
+  },
+  {
+    category: { subCategory: "Vay tín dụng đen" },
+    date: "March 26, 2020",
+    title: "Bị lừa khi tìm bạn gái trên Tinder",
+    image:
+      "https://vnn-imgs-f.vgcloud.vn/2021/11/05/21/thanh-nien-bo-lai-doi-dep-giua-cau-sai-gon-roi-lao-xuong-song-mat-tich-3.jpg",
+    viewCount: 63,
+  },
+];
 const WidgetTabPane = ({ arr, a_id, id, dark }) => {
   return (
     <Fade in={id === a_id}>
@@ -15,20 +68,32 @@ const WidgetTabPane = ({ arr, a_id, id, dark }) => {
             <div className="single_post widgets_small">
               <div className="post_img">
                 <div className="img_wrap">
-                  <Link to="#">
+                  <Link to={`/post-detail/${item.postId}`}>
                     <img src={item.image} alt="thumb" />
                   </Link>
                 </div>
               </div>
               <div className="single_post_text">
                 <div className="meta2 meta_separator1">
-                  <Link to="#">{item.category.subCategory}</Link>
-                  <Link to="#">
-                    {moment(item.createTime).format("DD.MM.YYYY")}
+                  <Link
+                    to={{
+                      pathname: "/search",
+                      state: {
+                        title: "Danh mục: " + item.category.subCategory,
+                        CategoryID: item.category.categoryId,
+                      },
+                    }}
+                  >
+                    {item.category.subCategory}
+                  </Link>
+                  <Link to={`/post-detail/${item.postId}`}>
+                    {moment(item.publicTime).format("DD.MM.YYYY")}
                   </Link>
                 </div>
                 <h4>
-                  <Link to="/post1">{item.title.substring(0, 45) + "..."}</Link>
+                  <Link to={`/post-detail/${item.postId}`}>
+                    {item.title.substring(0, 45) + "..."}
+                  </Link>
                 </h4>
               </div>
             </div>
@@ -103,7 +168,7 @@ const WidgetTab = ({ className, dark }) => {
               dark={dark}
               a_id={activeTab}
               id="1"
-              arr={widgetPosts}
+              arr={widget.sort((a, b) => a.viewCount - b.viewCount).slice(0, 4)}
             />
           </TabPane>
           <TabPane tabId="2">
@@ -111,7 +176,11 @@ const WidgetTab = ({ className, dark }) => {
               dark={dark}
               a_id={activeTab}
               id="2"
-              arr={widgetPosts}
+              arr={widget
+                .sort(
+                  (a, b) => new moment(a.publicTime) - new moment(b.publicTime)
+                )
+                .slice(0, 4)}
             />
           </TabPane>
           <TabPane tabId="3">
@@ -119,7 +188,7 @@ const WidgetTab = ({ className, dark }) => {
               dark={dark}
               a_id={activeTab}
               id="3"
-              arr={widgetPosts}
+              arr={widget.sort((a, b) => a.likeCount - b.likeCount).slice(0, 4)}
             />
           </TabPane>
         </TabContent>

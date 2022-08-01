@@ -1,5 +1,4 @@
 import React, { Fragment, Component } from "react";
-import BannerSection from "../../components/BannerSection";
 import FontAwesome from "../../components/uiStyle/FontAwesome";
 import NewsLetter from "../../components/NewsLetter";
 import FollowUs from "../../components/FollowUs";
@@ -244,7 +243,6 @@ class ContactUsPage extends Component {
             </div>
           </div>
         </div>
-        <BannerSection />
       </Fragment>
     );
   }

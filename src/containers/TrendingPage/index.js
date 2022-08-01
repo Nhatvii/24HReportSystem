@@ -6,13 +6,12 @@ import WidgetTab from "../../components/WidgetTab";
 import WidgetTrendingNews from "../../components/WidgetTrendingNews";
 import NewsLetter from "../../components/NewsLetter";
 import FollowUs from "../../components/FollowUs";
-import EntertainmentNews from "../../components/EntertainmentNews";
 
 // images
 import banner2 from "../../doc/img/bg/sidebar-1.png";
 import trendbig1 from "../../doc/img/trending/trendbig1.jpg";
 import trendbig2 from "../../doc/img/trending/trendbig2.jpg";
-import BannerSection from "../../components/BannerSection";
+import RecommendedNews from "../../components/RecommededNews";
 
 const trendings = [
   {
@@ -107,9 +106,9 @@ const TrendingPage = () => {
               <div className="entertrainment_carousel">
                 <div className="entertrainment_item">
                   <div className="row justify-content-center">
-                    <EntertainmentNews
+                    <RecommendedNews
                       headerHide={true}
-                      entertainments={trendings}
+                      recommended={trendings}
                     />
                   </div>
                 </div>
@@ -173,7 +172,6 @@ const TrendingPage = () => {
         </div>
       </div>
       <div className="space-70" />
-      <BannerSection />
     </Fragment>
   );
 };

@@ -27,13 +27,6 @@ import FontAwesome from "../../../../../components/uiStyle/FontAwesome";
 import { Link } from "react-router-dom";
 import { Comments } from "../../../../UserViews/Post/components/Comments";
 import { toast } from "react-toastify";
-const Avatar = styled.img`
-  height: 30px;
-  width: 30px;
-  border: 3px solid white;
-  border-radius: 50%;
-`;
-
 const CardHeader = styled.div`
   font-weight: 1000;
   font-size: 16px;

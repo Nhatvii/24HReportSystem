@@ -1,94 +1,76 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import FontAwesome from "../uiStyle/FontAwesome";
 import Swiper from "react-id-swiper";
-
-// images
-import mostsm1 from "../../doc/img/most_view/mostsm1.jpg";
-import mostsm2 from "../../doc/img/most_view/mostsm2.jpg";
-import mostsm3 from "../../doc/img/most_view/mostsm3.jpg";
-import mostsm4 from "../../doc/img/most_view/mostsm4.jpg";
-import mostsm5 from "../../doc/img/most_view/mostsm5.jpg";
-import { mostViewSort } from "../../utils/commonFunctions";
-
+import postApi from "../../api/postApi";
+import { toast } from "react-toastify";
+import moment from "moment";
 const mostView = [
   {
-    image: mostsm1,
-    category: "TECHNOLOGY",
+    category: { subCategory: "Chiếm đoạt tài sản" },
     date: "March 26, 2020",
-    title: "Nancy zhang a chinese busy woman and dhaka",
+    title: "Lừa đảo sinh viên nghèo",
+    image: "https://picsum.photos/700/500",
+    viewCount: 45,
   },
   {
-    image: mostsm2,
-    category: "TECHNOLOGY",
+    category: { subCategory: "Lừa đảo" },
     date: "March 26, 2020",
-    title: "The billionaire Philan thropist read to learn",
+    title: "Bị lừa khi tìm bạn gái trên Tinder",
+    image:
+      "https://d3jyiu4jpn0ihr.cloudfront.net/wp-content/uploads/sites/6/20190918160006/ve-may-bay-di-sai-gon1.jpg",
+    viewCount: 43,
   },
   {
-    image: mostsm3,
-    category: "TECHNOLOGY",
+    category: { subCategory: "Mạng xã hội" },
     date: "March 26, 2020",
-    title: "Cheap smartphone sensor could help you",
+    title: "Lừa đảo sinh viên nghèo",
+    image:
+      "https://suckhoedoisong.qltns.mediacdn.vn/thumb_w/1200/Images/phamquynh/2021/07/12/sai-gon-mua-thuong-1626066367.jpg",
+    viewCount: 74,
   },
   {
-    image: mostsm4,
-    category: "TECHNOLOGY",
+    category: { subCategory: "Vay tín dụng đen" },
     date: "March 26, 2020",
-    title: "Ratiffe to be Director of nation talent Trump",
+    title: "Bị lừa khi tìm bạn gái trên Tinder",
+    image:
+      "https://vnn-imgs-f.vgcloud.vn/2021/11/05/21/thanh-nien-bo-lai-doi-dep-giua-cau-sai-gon-roi-lao-xuong-song-mat-tich-3.jpg",
+    viewCount: 54,
   },
   {
-    image: mostsm5,
-    category: "TECHNOLOGY",
+    category: { subCategory: "Mạng xã hội" },
     date: "March 26, 2020",
-    title: "Nancy zhang a chinese busy woman and dhaka",
+    title: "Lừa đảo sinh viên nghèo",
+    image:
+      "https://suckhoedoisong.qltns.mediacdn.vn/thumb_w/1200/Images/phamquynh/2021/07/12/sai-gon-mua-thuong-1626066367.jpg",
+    viewCount: 46,
   },
   {
-    image: mostsm1,
-    category: "TECHNOLOGY",
+    category: { subCategory: "Vay tín dụng đen" },
     date: "March 26, 2020",
-    title: "The billionaire Philan thropist read to learn",
-  },
-  {
-    image: mostsm1,
-    category: "TECHNOLOGY",
-    date: "March 26, 2020",
-    title: "Nancy zhang a chinese busy woman and dhaka",
-  },
-  {
-    image: mostsm2,
-    category: "TECHNOLOGY",
-    date: "March 26, 2020",
-    title: "The billionaire Philan thropist read to learn",
-  },
-  {
-    image: mostsm3,
-    category: "TECHNOLOGY",
-    date: "March 26, 2020",
-    title: "Cheap smartphone sensor could help you",
-  },
-  {
-    image: mostsm4,
-    category: "TECHNOLOGY",
-    date: "March 26, 2020",
-    title: "Ratiffe to be Director of nation talent Trump",
-  },
-  {
-    image: mostsm5,
-    category: "TECHNOLOGY",
-    date: "March 26, 2020",
-    title: "Nancy zhang a chinese busy woman and dhaka",
-  },
-  {
-    image: mostsm1,
-    category: "TECHNOLOGY",
-    date: "March 26, 2020",
-    title: "The billionaire Philan thropist read to learn",
+    title: "Bị lừa khi tìm bạn gái trên Tinder",
+    image:
+      "https://vnn-imgs-f.vgcloud.vn/2021/11/05/21/thanh-nien-bo-lai-doi-dep-giua-cau-sai-gon-roi-lao-xuong-song-mat-tich-3.jpg",
+    viewCount: 53,
   },
 ];
-
 const MostView = ({ no_margin, title, dark }) => {
   const [swiper, setSwiper] = useState(null);
-
+  const [mostViewPosts, setMostViewPosts] = useState([]);
+  const loadMostViewPosts = async () => {
+    try {
+      const params = { Status: 3 };
+      const response = await postApi.getByStatus(params);
+      setMostViewPosts(
+        response.sort((a, b) => new a.viewCount() - b.viewCount).slice(0, 4)
+      );
+    } catch (e) {
+      toast.error("Không thể tải bài viết");
+    }
+  };
+  useEffect(() => {
+    loadMostViewPosts();
+  }, [mostViewPosts]);
   const goNext = () => {
     if (swiper !== null) {
       swiper.slideNext();
@@ -107,47 +89,62 @@ const MostView = ({ no_margin, title, dark }) => {
   };
   return (
     <div className={`widget tab_widgets ${no_margin ? "" : "mb30"}`}>
-      <h2 className="widget-title">{title ? title : "Most View"}</h2>
+      <h2 className="widget-title">{title ? title : "Xem nhiều"}</h2>
       <div className="post_type2_carousel multipleRowCarousel nav_style1">
         {/*CAROUSEL START*/}
         <Swiper getSwiper={setSwiper} {...params}>
-          {mostViewSort(mostView).map((item, i) => (
-            <div key={i} className="single_post2_carousel">
-              <div className="single_post widgets_small type8">
-                <div className="post_img">
-                  <div className="img_wrap">
-                    <img src="https://picsum.photos/160/128" alt="thumb" />
+          {mostView
+            .sort((a, b) => a.viewCount - b.viewCount)
+            .reverse()
+            .slice(0, 6)
+            .map((item, i) => (
+              <div key={i} className="single_post2_carousel">
+                <div className="single_post widgets_small type8">
+                  <div className="post_img">
+                    <div className="img_wrap">
+                      <img src={item.image} alt="thumb" height={"100px"} />
+                    </div>
                   </div>
-                  <span className="tranding">
-                    <FontAwesome name="bolt" />
-                  </span>
-                </div>
-                <div className="single_post_text">
-                  <div className="meta2">
-                    <Link to="/">{item.category}</Link>
-                    <Link to="/">{item.date}</Link>
+                  <div className="single_post_text">
+                    <div className="meta2">
+                      <Link
+                        to={{
+                          pathname: "/search",
+                          state: {
+                            title: "Danh mục: " + item.category.subCategory,
+                            CategoryID: item.category.categoryId,
+                          },
+                        }}
+                      >
+                        {item.category.subCategory}
+                      </Link>
+                      <Link to={`/post-detail/${item.postId}`}>
+                        {moment(item.publicTime).format("DD-MMMM-YYYY")}
+                      </Link>
+                    </div>
+                    <h6>
+                      <Link to={`/post-detail/${item.postId}`}>
+                        {item.title}
+                      </Link>
+                    </h6>
                   </div>
-                  <h4>
-                    <Link to="/post1">{item.title}</Link>
-                  </h4>
+                  <div className="type8_count">
+                    <h5>{item.viewCount}</h5>
+                  </div>
                 </div>
-                <div className="type8_count">
-                  <h2>{item.id}</h2>
-                </div>
+                {i + 2 < mostViewPosts.length ? (
+                  <Fragment>
+                    <div className="space-15" />
+                    {dark ? (
+                      <div className="border_white" />
+                    ) : (
+                      <div className="border_black" />
+                    )}
+                    <div className="space-15" />
+                  </Fragment>
+                ) : null}
               </div>
-              {i + 2 < mostView.length ? (
-                <Fragment>
-                  <div className="space-15" />
-                  {dark ? (
-                    <div className="border_white" />
-                  ) : (
-                    <div className="border_black" />
-                  )}
-                  <div className="space-15" />
-                </Fragment>
-              ) : null}
-            </div>
-          ))}
+            ))}
         </Swiper>
         <div className="navBtns">
           <div onClick={goPrev} className="navBtn prevtBtn">

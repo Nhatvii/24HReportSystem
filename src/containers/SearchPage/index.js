@@ -1,6 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
 import BreadCrumb from "../../components/BreadCrumb";
-import FontAwesome from "../../components/uiStyle/FontAwesome";
 import { Link } from "react-router-dom";
 import WidgetTab from "../../components/WidgetTab";
 import WidgetTrendingNews from "../../components/WidgetTrendingNews";
@@ -9,9 +8,7 @@ import FollowUs from "../../components/FollowUs";
 
 // images
 import banner2 from "../../doc/img/bg/sidebar-1.png";
-import BannerSection from "../../components/BannerSection";
 import postApi from "../../api/postApi";
-import SearchNews from "../../components/SearchNews";
 
 const SearchPage = (props) => {
   const [posts, setPosts] = useState([]);
@@ -79,11 +76,7 @@ const SearchPage = (props) => {
                     </div>
                   </div>
                 </div>
-                <div className="row">
-                  <div className="col-12">
-                    <SearchNews headerHide={true} searchNews={posts} />
-                  </div>
-                </div>
+
                 {/* <div className="row">
                   <div className="col-12">
                     <div className="cpagination">
@@ -148,7 +141,6 @@ const SearchPage = (props) => {
         </div>
       </div>
       <div className="space-70" />
-      <BannerSection />
     </Fragment>
   );
 };

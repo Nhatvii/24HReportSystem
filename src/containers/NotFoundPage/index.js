@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import WidgetTab from "../../components/WidgetTab";
 import WidgetTrendingNews from "../../components/WidgetTrendingNews";
 import NewsLetter from "../../components/NewsLetter";
-import EntertainmentNews from "../../components/EntertainmentNews";
 import MostShareWidget from "../../components/MostShareWidget";
 import FollowUs from "../../components/FollowUs";
 
@@ -16,7 +15,7 @@ import enter3 from "../../doc/img/entertrainment/enter3.jpg";
 import enter4 from "../../doc/img/entertrainment/enter4.jpg";
 import calendar from "../../doc/img/icon/calendar.png";
 import erroImg from "../../doc/img/bg/404.png";
-import BannerSection from "../../components/BannerSection";
+import RecommendedNews from "../../components/RecommededNews";
 
 const entertainments = [
   {
@@ -158,9 +157,9 @@ const NotFoundPage = () => {
               </div>
               <div className="about_posts_tab">
                 <div className="row justify-content-center">
-                  <EntertainmentNews
+                  <RecommendedNews
                     headerHide={true}
-                    entertainments={entertainments}
+                    recommended={entertainments}
                   />
                 </div>
               </div>
@@ -224,7 +223,6 @@ const NotFoundPage = () => {
         </div>
       </div>
       <div className="space-70" />
-      <BannerSection />
     </Fragment>
   );
 };

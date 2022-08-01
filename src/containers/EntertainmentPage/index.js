@@ -6,7 +6,6 @@ import WidgetTab from "../../components/WidgetTab";
 import WidgetTrendingNews from "../../components/WidgetTrendingNews";
 import NewsLetter from "../../components/NewsLetter";
 import FollowUs from "../../components/FollowUs";
-import EntertainmentNews from "../../components/EntertainmentNews";
 
 // images
 import banner2 from "../../doc/img/bg/sidebar-1.png";
@@ -14,9 +13,9 @@ import enter1 from "../../doc/img/entertrainment/enter1.jpg";
 import enter2 from "../../doc/img/entertrainment/enter2.jpg";
 import enter3 from "../../doc/img/entertrainment/enter3.jpg";
 import enter4 from "../../doc/img/entertrainment/enter4.jpg";
-import BannerSection from "../../components/BannerSection";
+import RecommendedNews from "../../components/RecommededNews";
 
-const entertainments = [
+const recommendeds = [
   {
     image: enter1,
     category: "TECHNOLOGY",
@@ -89,7 +88,7 @@ const entertainments = [
   },
 ];
 
-const EntertainmentPage = () => {
+const RecommendedPage = () => {
   return (
     <Fragment>
       <BreadCrumb title="Business" />
@@ -109,9 +108,9 @@ const EntertainmentPage = () => {
               <div className="entertrainment_carousel">
                 <div className="entertrainment_item">
                   <div className="row justify-content-center">
-                    <EntertainmentNews
+                    <RecommendedNews
                       headerHide={true}
-                      entertainments={entertainments}
+                      recommended={recommendeds}
                     />
                   </div>
                 </div>
@@ -175,9 +174,8 @@ const EntertainmentPage = () => {
         </div>
       </div>
       <div className="space-70" />
-      <BannerSection />
     </Fragment>
   );
 };
 
-export default EntertainmentPage;
+export default RecommendedPage;

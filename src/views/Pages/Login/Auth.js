@@ -1,11 +1,5 @@
 import React, { Component, Fragment } from "react";
-import {
-  HashRouter as Router,
-  Route,
-  NavLink,
-  Redirect,
-  BrowserRouter,
-} from "react-router-dom";
+import { Route, NavLink, BrowserRouter } from "react-router-dom";
 import Register from "../Register/Register";
 import Login from "./Login";
 import "./styles.css";

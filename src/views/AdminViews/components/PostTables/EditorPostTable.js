@@ -15,11 +15,13 @@ import {
   ModalHeader,
 } from "reactstrap";
 import { toast } from "react-toastify";
+import { setInterval } from "core-js";
 //
 const EditorPostTable = () => {
   const [posts, setPosts] = useState();
   const [details, setDetails] = useState(null);
   const [visibleModal, setVisibleModal] = useState(false);
+  const [temp, setTemp] = useState(0);
   async function loadPosts() {
     try {
       const user_info = localStorage.getItem("user_info");
@@ -34,8 +36,13 @@ const EditorPostTable = () => {
     }
   }
   useEffect(() => {
-    loadPosts();
+    setInterval(() => {
+      setTemp((prevTemp) => prevTemp + 1);
+    }, 5000);
   }, []);
+  useEffect(() => {
+    loadPosts();
+  }, [temp]);
   //
 
   const columns = [

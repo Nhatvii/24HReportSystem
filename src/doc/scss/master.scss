@@ -837,6 +837,7 @@ span.tranding.tranding_border {
 
 .img_wrap {
   overflow: hidden;
+  height: inherit;
   /*height: -webkit-fill-available;
   width: -webkit-fill-available;
   */
@@ -918,7 +919,7 @@ span.tranding {
   font-size: 10px;
   line-height: 24px;
   border-radius: 50%;
-  background: $trading_bg;
+  background: #1091FF;
   color: $white;
   position: absolute;
   left: 5px;
@@ -932,10 +933,10 @@ span.tranding {
 
   .post_img {
     span.tranding {
-      height: 30px;
-      width: 30px;
+      height: 40px;
+      width: 40px;
       font-size: 12px;
-      line-height: 30px;
+      line-height: 40px;
       left: 10px;
       top: 10px;
     }
@@ -1032,23 +1033,19 @@ span.tranding {
       color: $body_color;
       opacity: .3;
       font-size: $extra_small;
-
       i {
         margin-right: 3px;
       }
 
     }
-
     &:last-child {
       margin-left: 10px;
       padding-left: 10px;
-
       &:after {
         position: absolute;
         content: "";
         height: 10px;
         width: 2px;
-        background: $share_number_color;
         left: -5px;
         top: 50%;
         margin-top: -5px;
@@ -1277,10 +1274,10 @@ span.tranding {
 /*POST TYPE-7*/
 
 .type8 {
-  padding-right: 40px;
+  padding-right: 20px;
   min-height: 64px;
-  padding-left: 100px;
-
+  padding-left: 90px;
+  margin-bottom: 10px;
   .post_img {
     height: 64px;
     width: 80px;
@@ -1298,11 +1295,11 @@ span.tranding {
   margin-top: -25px;
 }
 
-.type8_count h2 {
+.type8_count h5 {
   line-height: 50px;
   color: $type8_counter_color;
-  font-size: $heading2;
-  font-weight: $wightMedium;
+  font-size: 20;
+  font-weight: $wightRegular;
 }
 
 /*POST TYPE-9*/
@@ -1365,11 +1362,12 @@ span.tranding {
 
 .type10 {
   .widgets_small {
-    min-height: 56.25px;
+    min-height: 70px;
   }
 
   .post_img {
-    height: 56.25px;
+    height: inherit;
+
   }
 
   .meta.meta2 {

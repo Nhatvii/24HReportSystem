@@ -598,7 +598,6 @@ const SendReport = () => {
               <Button
                 isDisabled
                 style={{
-                  background: "linear-gradient(to right,#56CCF2,#2F80ED)",
                   color: "white",
                   marginTop: "2rem",
                 }}

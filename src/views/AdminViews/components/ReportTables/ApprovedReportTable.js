@@ -63,10 +63,16 @@ const ReportTableNew = () => {
       return categoryList.find((c) => c.categoryId === id).subCategory;
     }
   };
+  const [temp, setTemp] = useState(0);
+  useEffect(() => {
+    setInterval(() => {
+      setTemp((prevTemp) => prevTemp + 1);
+    }, 5000);
+  }, []);
   useEffect(() => {
     loadReports();
     loadCategory();
-  }, []);
+  }, [temp]);
   //
   const [details, setDetails] = useState(null);
   const [visibleModal, setVisibleModal] = useState(false);

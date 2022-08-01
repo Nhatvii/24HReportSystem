@@ -17,11 +17,13 @@ import {
 } from "reactstrap";
 import moment from "moment";
 import { toast } from "react-toastify";
+import { setInterval } from "core-js";
 //
 const UnpublishedPostTable = () => {
   const [posts, setPosts] = useState([]);
   const [details, setDetails] = useState(null);
   const [visibleModal, setVisibleModal] = useState(false);
+  const [temp, setTemp] = useState(0);
   async function loadPosts() {
     try {
       const param = { Status: 2 }; //Hidden only
@@ -31,9 +33,15 @@ const UnpublishedPostTable = () => {
       toast.error(e.message);
     }
   }
+  // update after 5 seconds
+  useEffect(() => {
+    setInterval(() => {
+      setTemp((prevTemp) => prevTemp + 1);
+    }, 5000);
+  }, []);
   useEffect(() => {
     loadPosts();
-  }, []);
+  }, [temp]);
   //
 
   const columns = [

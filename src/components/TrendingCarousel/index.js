@@ -10,8 +10,6 @@ import trends3 from "../../doc/img/trending/transm25.jpg";
 import trends4 from "../../doc/img/trending/transm26.jpg";
 import trends5 from "../../doc/img/trending/transm27.jpg";
 
-import { mostViewSort } from "../../utils/commonFunctions";
-
 const trends = [
   {
     image: trends1,
@@ -97,7 +95,7 @@ const TrendingCarousel = () => {
   return (
     <div className="popular_carousel multipleRowCarousel nav_style1">
       <Swiper getSwiper={setSwiper} {...params}>
-        {mostViewSort(trends).map((item, i) => (
+        {trends.map((item, i) => (
           <div
             key={i}
             className={`single_post type10 type16 widgets_small ${

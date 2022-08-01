@@ -65,7 +65,7 @@ export function PreviewComment(props) {
       <CommentSection>
         <LetteredAvatar
           name="Test"
-          className=""
+          style={{ display: "inline-block" }}
           size={40}
           radius={100}
           color="#fff"

@@ -37,7 +37,6 @@ const App = (props) => {
       //
     })
     .catch((error) => console.log(error));
-
   return (
     <Fragment>
       {props.loading && <h1>loading...</h1>}

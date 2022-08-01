@@ -69,9 +69,15 @@ const UnreadNewReportTable = () => {
       toast.error(e.message);
     }
   }
+  const [temp, setTemp] = useState(0);
+  useEffect(() => {
+    setInterval(() => {
+      setTemp((prevTemp) => prevTemp + 1);
+    }, 5000);
+  }, []);
   useEffect(() => {
     loadReports();
-  }, []);
+  }, [temp]);
   //
   const [details, setDetails] = useState(null);
   const [editedDescription, setEditedDescription] = useState(null);
@@ -107,7 +113,6 @@ const UnreadNewReportTable = () => {
     {
       key: "show_details",
       label: "Thêm",
-      label: "Options",
       _style: { width: "5%" },
       filter: false,
       sorter: false,

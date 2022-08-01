@@ -4,48 +4,53 @@ import TrendingNewsSlider from "../TrendingNewsSlider";
 import { Link } from "react-router-dom";
 import FontAwesome from "../uiStyle/FontAwesome";
 
-import transm1 from "../../doc/img/trending/transm1.jpg";
-import transm2 from "../../doc/img/trending/transm2.jpg";
-import transm4 from "../../doc/img/trending/transm4.jpg";
-import transm5 from "../../doc/img/trending/transm5.jpg";
-import transm6 from "../../doc/img/trending/transm6.jpg";
-
 const trendingNews = [
   {
-    image: transm1,
-    category: "TECHNOLOGY",
+    category: { subCategory: "Chiếm đoạt tài sản" },
     date: "March 26, 2020",
-    title: "Nancy Zhang a Chinese busy woman and Dhaka",
+    title: "Lừa đảo sinh viên nghèo",
+    image: "https://picsum.photos/700/500",
+    viewCount: "200",
   },
   {
-    image: transm2,
-    category: "TECHNOLOGY",
+    category: { subCategory: "Lừa đảo" },
     date: "March 26, 2020",
-    title: "U.S. Response subash says he will label regions by risk of…",
+    title: "Bị lừa khi tìm bạn gái trên Tinder",
+    image:
+      "https://d3jyiu4jpn0ihr.cloudfront.net/wp-content/uploads/sites/6/20190918160006/ve-may-bay-di-sai-gon1.jpg",
+    viewCount: 43,
   },
   {
-    image: transm4,
-    category: "TECHNOLOGY",
+    category: { subCategory: "Mạng xã hội" },
     date: "March 26, 2020",
-    title: "Venezuela elan govt and opposit the property collect",
+    title: "Lừa đảo sinh viên nghèo",
+    image:
+      "https://suckhoedoisong.qltns.mediacdn.vn/thumb_w/1200/Images/phamquynh/2021/07/12/sai-gon-mua-thuong-1626066367.jpg",
+    viewCount: 54,
   },
   {
-    image: transm5,
-    category: "TECHNOLOGY",
+    category: { subCategory: "Vay tín dụng đen" },
     date: "March 26, 2020",
-    title: "Nancy Zhang a Chinese busy woman and Dhaka",
+    title: "Bị lừa khi tìm bạn gái trên Tinder",
+    image:
+      "https://vnn-imgs-f.vgcloud.vn/2021/11/05/21/thanh-nien-bo-lai-doi-dep-giua-cau-sai-gon-roi-lao-xuong-song-mat-tich-3.jpg",
+    viewCoun: 53,
   },
   {
-    image: transm6,
-    category: "TECHNOLOGY",
+    category: { subCategory: "Mạng xã hội" },
     date: "March 26, 2020",
-    title: "U.S. Response subash says he will label regions by risk of…",
+    title: "Lừa đảo sinh viên nghèo",
+    image:
+      "https://suckhoedoisong.qltns.mediacdn.vn/thumb_w/1200/Images/phamquynh/2021/07/12/sai-gon-mua-thuong-1626066367.jpg",
+    viewCount: 54,
   },
   {
-    image: transm4,
-    category: "TECHNOLOGY",
+    category: { subCategory: "Vay tín dụng đen" },
     date: "March 26, 2020",
-    title: "Venezuela elan govt and opposit the property collect",
+    title: "Bị lừa khi tìm bạn gái trên Tinder",
+    image:
+      "https://vnn-imgs-f.vgcloud.vn/2021/11/05/21/thanh-nien-bo-lai-doi-dep-giua-cau-sai-gon-roi-lao-xuong-song-mat-tich-3.jpg",
+    viewCoun: 53,
   },
 ];
 
@@ -67,19 +72,34 @@ const TrendingNews = ({ dark }) => {
               <div className="single_post widgets_small">
                 <div className="post_img">
                   <div className="img_wrap">
-                    <img src="https://picsum.photos/700/500" alt="thumb" />
+                    <img
+                      src={item.image}
+                      alt="thumb"
+                      height={"100%"}
+                      width={"100%"}
+                    />
                   </div>
                   <span className="tranding">
-                    <FontAwesome name="bolt" />
+                    <FontAwesome name="eye" />
                   </span>
                 </div>
                 <div className="single_post_text">
                   <div className="meta2">
-                    <Link to="/">{item.category}</Link>
-                    <Link to="/">{item.date}</Link>
+                    <Link
+                      to={{
+                        pathname: "/search",
+                        state: {
+                          title: "Danh mục: " + item.category.subCategory,
+                          CategoryID: item.category.categoryId,
+                        },
+                      }}
+                    >
+                      {item.category.subCategory}
+                    </Link>
+                    <Link to={`/post-detail/${item.postId}`}>{item.date}</Link>
                   </div>
                   <h4>
-                    <Link to="/post1">{item.title}</Link>
+                    <Link to={`/post-detail/${item.postId}`}>{item.title}</Link>
                   </h4>
                 </div>
               </div>
@@ -99,19 +119,36 @@ const TrendingNews = ({ dark }) => {
               <div className="single_post widgets_small">
                 <div className="post_img">
                   <div className="img_wrap">
-                    <img src="https://picsum.photos/700/500" alt="thumb" />
+                    <img
+                      src={item.image}
+                      alt="thumb"
+                      height={"100%"}
+                      width={"100%"}
+                    />
                   </div>
                   <span className="tranding">
-                    <FontAwesome name="bolt" />
+                    <FontAwesome name="eye" />
                   </span>
                 </div>
                 <div className="single_post_text">
                   <div className="meta2">
-                    <Link to="/">{item.category}</Link>
-                    <Link to="/">{item.date}</Link>
+                    <Link
+                      to={{
+                        pathname: "/search",
+                        state: {
+                          title: "Danh mục: " + item.category.subCategory,
+                          CategoryID: item.category.categoryId,
+                        },
+                      }}
+                    >
+                      {item.category.subCategory}
+                    </Link>
+                    <Link to={`/post-detail/${item.postId}`}>
+                      {item.publicTime}
+                    </Link>
                   </div>
                   <h4>
-                    <Link to="/post1">{item.title}</Link>
+                    <Link to={`/post-detail/${item.postId}`}>{item.title}</Link>
                   </h4>
                 </div>
               </div>

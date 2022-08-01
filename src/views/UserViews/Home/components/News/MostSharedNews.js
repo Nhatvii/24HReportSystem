@@ -15,7 +15,6 @@ export default function MostSharedNews() {
       console.log(err);
     }
   };
-
   useEffect(() => {
     fetchPostList();
   }, []);

@@ -1,7 +1,6 @@
 import React from "react";
 import Loadable from "react-loadable";
 import { Row } from "reactstrap";
-import { AdminLayout } from "./containers";
 
 function Loading() {
   return (

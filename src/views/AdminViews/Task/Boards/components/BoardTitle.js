@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import moment from "moment";
 import "moment/locale/vi";
@@ -7,7 +7,6 @@ import "moment/locale/vi";
 export const BoardTitle = ({
   title,
   date,
-  bgColors,
   managerId,
   handleBoardClick,
   addition,

@@ -17,11 +17,13 @@ import {
 } from "reactstrap";
 import moment from "moment";
 import { toast } from "react-toastify";
+import { setInterval } from "core-js";
 //
 const PublishedPostTable = () => {
   const [posts, setPosts] = useState();
   const [details, setDetails] = useState(null);
   const [visibleModal, setVisibleModal] = useState(false);
+  const [temp, setTemp] = useState(0);
   async function loadPosts() {
     try {
       const param = { Status: 3 }; //Pulished only
@@ -31,9 +33,15 @@ const PublishedPostTable = () => {
       toast.error(e.message);
     }
   }
+  //Fake realtime load after 5 second
+  useEffect(() => {
+    setInterval(() => {
+      setTemp((prevTemp) => prevTemp + 1);
+    }, 5000);
+  }, []);
   useEffect(() => {
     loadPosts();
-  }, []);
+  }, [temp]);
   //
 
   const unpublicPost = async (id) => {

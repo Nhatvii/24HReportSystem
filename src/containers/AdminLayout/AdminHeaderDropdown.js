@@ -21,7 +21,7 @@ const defaultProps = {
   tasks: false,
   mssgs: false,
 };
-const user_info = JSON.parse(localStorage.getItem("user_info"));
+// const user_info = JSON.parse(localStorage.getItem("user_info"));
 async function logout() {
   try {
     window.location.href = "/";

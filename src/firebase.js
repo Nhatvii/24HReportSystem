@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getToken, getMessaging, onMessage } from "firebase/messaging";
-const user_info = JSON.parse(localStorage.getItem("user_info"));
+// const user_info = JSON.parse(localStorage.getItem("user_info"));
 var firebaseConfig = {
   apiKey: "AIzaSyAgaeSeRcOqy7jZdEujk1LF-IXmRzkZV1Y",
   authDomain: "capstone-project-2102c.firebaseapp.com",

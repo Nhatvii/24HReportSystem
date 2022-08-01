@@ -152,12 +152,20 @@ export const Comments = (props) => {
   useEffect(() => {
     if (props.postId) fetchPostDetail();
     if (props.postId) fetchComments();
-    console.log(JSON.parse(user_info));
     JSON.parse(user_info) !== null &&
       (JSON.parse(user_info).accountInfo.username !== null
         ? randomColor(JSON.parse(user_info).accountInfo.username)
         : randomColor(JSON.parse(user_info).email));
   }, []);
+  const [temp, setTemp] = useState(0);
+  useEffect(() => {
+    setInterval(() => {
+      setTemp((prevTemp) => prevTemp + 1);
+    }, 5000);
+  }, []);
+  useEffect(() => {
+    if (props.postId) fetchComments();
+  }, [temp]);
 
   return (
     <div>
@@ -314,7 +322,7 @@ export const Comments = (props) => {
                 }
                 className=""
                 size={40}
-                radius={100}
+                radius={50}
                 color="#fff"
                 backgroundColor={
                   avatarColor.filter(

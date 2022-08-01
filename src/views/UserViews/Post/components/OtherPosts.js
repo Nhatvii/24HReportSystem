@@ -46,6 +46,7 @@ export function OtherPosts() {
                       class="img-responsive"
                       height=" 300rem"
                       className="card-img mb-2"
+                      alt="image"
                     />
                   </a>
                   <a

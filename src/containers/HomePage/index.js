@@ -1,92 +1,74 @@
 import React, { Fragment } from "react";
 import PostGallery from "../../components/PostGallery";
-import FeatureNews from "../../components/FeatureNews";
 import TrendingNews from "../../components/TrendingNews";
 import FollowUs from "../../components/FollowUs";
 import MostView from "../../components/MostView";
 import MixCarousel from "../../components/MixCarousel";
-import VideoPost from "../../components/VideoPost";
-import EntertainmentNews from "../../components/EntertainmentNews";
 import { Link } from "react-router-dom";
-import SportsNews from "../../components/SportsNews";
 import MostShareWidget from "../../components/MostShareWidget";
-import UpcomingMatches from "../../components/UpcomingMatches";
 import NewsLetter from "../../components/NewsLetter";
 import CategoriesWidget from "../../components/CategoriesWidget";
 
 // images
 import banner1 from "../../doc/img/bg/banner1.png";
 import banner2 from "../../doc/img/bg/sidebar-1.png";
-import business1 from "../../doc/img/business/business1.jpg";
-import business2 from "../../doc/img/business/business2.jpg";
-import business3 from "../../doc/img/business/business3.jpg";
-import enter1 from "../../doc/img/entertrainment/enter1.jpg";
-import enter2 from "../../doc/img/entertrainment/enter2.jpg";
-import enter3 from "../../doc/img/entertrainment/enter3.jpg";
-import enter4 from "../../doc/img/entertrainment/enter4.jpg";
-import SearchNews from "../../components/SearchNews";
+import LastestPost from "../../components/LastestPost";
+import RecommendedNews from "../../components/RecommededNews";
 
-const entertainments = [
+const recommendeds = [
   {
-    image: enter1,
-    category: "TECHNOLOGY",
+    category: { subCategory: "Chiếm đoạt tài sản" },
     date: "March 26, 2020",
-    title: "There may be no consoles in the future ea exec says",
-    body: "The property, complete with 30-seat screening from room, a 100-seat amphitheater and a swimming pond with sandy shower…",
+    title: "Lừa đảo sinh viên nghèo",
+    image: "https://picsum.photos/700/500",
+    viewCount: 45,
   },
   {
-    image: enter2,
-    category: "TECHNOLOGY",
+    category: { subCategory: "Lừa đảo" },
     date: "March 26, 2020",
-    title: "There may be no consoles in the future ea exec says",
-    body: "The property, complete with 30-seat screening from room, a 100-seat amphitheater and a swimming pond with sandy shower…",
+    title: "Bị lừa khi tìm bạn gái trên Tinder",
+    image:
+      "https://d3jyiu4jpn0ihr.cloudfront.net/wp-content/uploads/sites/6/20190918160006/ve-may-bay-di-sai-gon1.jpg",
+    viewCount: 43,
   },
   {
-    image: enter3,
-    category: "TECHNOLOGY",
+    category: { subCategory: "Mạng xã hội" },
     date: "March 26, 2020",
-    title: "There may be no consoles in the future ea exec says",
-    body: "The property, complete with 30-seat screening from room, a 100-seat amphitheater and a swimming pond with sandy shower…",
+    title: "Lừa đảo sinh viên nghèo",
+    image:
+      "https://suckhoedoisong.qltns.mediacdn.vn/thumb_w/1200/Images/phamquynh/2021/07/12/sai-gon-mua-thuong-1626066367.jpg",
+    viewCount: 74,
   },
   {
-    image: enter4,
-    category: "TECHNOLOGY",
+    category: { subCategory: "Vay tín dụng đen" },
     date: "March 26, 2020",
-    title: "There may be no consoles in the future ea exec says",
-    body: "The property, complete with 30-seat screening from room, a 100-seat amphitheater and a swimming pond with sandy shower…",
-  },
-];
-
-const businessNews = [
-  {
-    image: business1,
-    category: "uiux.subash",
-    date: "March 26, 2020",
-    title: "Copa America:  from devastated US",
-    body: "The property, complete with 30-seat screening from room, a 100-seat amphitheater and a swimming pond with…",
+    title: "Bị lừa khi tìm bạn gái trên Tinder",
+    image:
+      "https://vnn-imgs-f.vgcloud.vn/2021/11/05/21/thanh-nien-bo-lai-doi-dep-giua-cau-sai-gon-roi-lao-xuong-song-mat-tich-3.jpg",
+    viewCount: 54,
   },
   {
-    image: business2,
-    category: "uiux.subash",
+    category: { subCategory: "Mạng xã hội" },
     date: "March 26, 2020",
-    title: "Copa America:  from devastated US",
-    body: "The property, complete with 30-seat screening from room, a 100-seat amphitheater and a swimming pond with…",
+    title: "Lừa đảo sinh viên nghèo",
+    image:
+      "https://suckhoedoisong.qltns.mediacdn.vn/thumb_w/1200/Images/phamquynh/2021/07/12/sai-gon-mua-thuong-1626066367.jpg",
+    viewCount: 46,
   },
   {
-    image: business3,
-    category: "uiux.subash",
+    category: { subCategory: "Vay tín dụng đen" },
     date: "March 26, 2020",
-    title: "Copa America:  from devastated US",
-    body: "The property, complete with 30-seat screening from room, a 100-seat amphitheater and a swimming pond with…",
+    title: "Bị lừa khi tìm bạn gái trên Tinder",
+    image:
+      "https://vnn-imgs-f.vgcloud.vn/2021/11/05/21/thanh-nien-bo-lai-doi-dep-giua-cau-sai-gon-roi-lao-xuong-song-mat-tich-3.jpg",
+    viewCount: 53,
   },
 ];
 
 const HomePage = () => {
   return (
     <Fragment>
-      {/* <PostCarousel className="fifth_bg" /> */}
       <PostGallery className="fifth_bg" />
-      <FeatureNews />
       <div className="container">
         <div className="row">
           <div className="col-lg-8">
@@ -99,7 +81,7 @@ const HomePage = () => {
         </div>
       </div>
       <MixCarousel className="half_bg1" />
-      <VideoPost className="pt30 half_bg60" />
+      <LastestPost className="pt30 half_bg60" />
       <div className="entertrainments">
         <div className="container">
           <div className="row">
@@ -107,7 +89,7 @@ const HomePage = () => {
               <div className="row">
                 <div className="col-12">
                   <div className="heading">
-                    <h2 className="widget-title">Tin giải trí</h2>
+                    <h2 className="widget-title">Tin đề xuất</h2>
                   </div>
                 </div>
               </div>
@@ -115,18 +97,11 @@ const HomePage = () => {
               <div className="entertrainment_carousel mb30">
                 <div className="entertrainment_item">
                   <div className="row justify-content-center">
-                    <EntertainmentNews entertainments={entertainments} />
+                    <RecommendedNews recommended={recommendeds} />
                   </div>
                 </div>
               </div>
               {/*CAROUSEL END*/}
-              <SportsNews />
-              <div className="banner_area mt50 mb60 xs-mt60">
-                <Link to="/">
-                  <img src={banner1} alt="banner1" />
-                </Link>
-              </div>
-              <SearchNews searchNews={businessNews} />
             </div>
             <div className="col-lg-4">
               <div className="row">
@@ -134,20 +109,7 @@ const HomePage = () => {
                   <MostShareWidget title="Chia sẻ nhiều" />
                 </div>
                 <div className="col-lg-12">
-                  <UpcomingMatches />
-                </div>
-                <div className="col-lg-12">
                   <NewsLetter />
-                </div>
-                <div className="col-lg-12">
-                  <CategoriesWidget />
-                </div>
-                <div className="col-lg-12">
-                  <div className="banner2 mb30">
-                    <Link to="/">
-                      <img src={banner2} alt="thumb" />
-                    </Link>
-                  </div>
                 </div>
               </div>
             </div>

@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Row } from "reactstrap";
 import styled from "styled-components";
-import { BsFillSuitHeartFill, BsSuitHeart } from "react-icons/bs";
 import emotionApi from "../../../../api/EmotionApi";
 import postApi from "../../../../api/postApi";
 import { OverlayTrigger, Popover } from "react-bootstrap";

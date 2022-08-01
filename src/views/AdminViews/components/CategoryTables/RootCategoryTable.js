@@ -16,6 +16,7 @@ import {
 } from "reactstrap";
 import categoryApi from "../../../../api/categoryApi";
 import { toast } from "react-toastify";
+import { setInterval } from "core-js";
 //
 const RootCategoryTable = () => {
   const [modal, setModal] = useState(false);
@@ -25,6 +26,7 @@ const RootCategoryTable = () => {
   const [deletedCategory, setDeletedCategory] = useState("");
   const [updateType, setUpdateType] = useState("");
   const [isTypeUpdate, setIsTypeUpdate] = useState(false);
+  const [temp, setTemp] = useState(0);
   const toggle = () => {
     setModal(!modal);
   };
@@ -72,8 +74,13 @@ const RootCategoryTable = () => {
     }
   }
   useEffect(() => {
-    loadCategories();
+    setInterval(() => {
+      setTemp((prevTemp) => prevTemp + 1);
+    }, 5000);
   }, []);
+  useEffect(() => {
+    loadCategories();
+  }, [temp]);
   //
   const [details, setDetails] = useState(null);
   const [visibleModal, setVisibleModal] = useState(false);
