@@ -40,7 +40,8 @@ class NewPost extends StatelessWidget {
                   enableInfiniteScroll: false,
                   viewportFraction: 0.95,
                 ),
-                itemCount: snapshot.data!.length < 5 ? snapshot.data!.length : 5,
+                itemCount:
+                    snapshot.data!.length < 5 ? snapshot.data!.length : 5,
                 itemBuilder: (context, index, realIndex) {
                   return newPostSlide(snapshot.data![index], context);
                 },
@@ -99,10 +100,15 @@ class NewPost extends StatelessWidget {
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(15.r),
                           topRight: Radius.circular(15.r)),
-                      child: Image.network(
-                        post.image,
-                        fit: BoxFit.cover,
-                      )),
+                      child: post.image == 'string'
+                          ? Image.asset(
+                              'assets/images/default_image.jpg',
+                              fit: BoxFit.cover,
+                            )
+                          : Image.network(
+                              post.image,
+                              fit: BoxFit.cover,
+                            )),
                 ),
                 Container(
                     padding: EdgeInsets.all(0.015.sh),

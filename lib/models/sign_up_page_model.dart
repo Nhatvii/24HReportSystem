@@ -37,7 +37,7 @@ class SignUpPageModel {
     isShowPass = true;
     isShowConPass = true;
     isLoading = false;
-    otpPhone = true;
+    otpPhone = false;
   }
 
   String twoDigits(int num) {

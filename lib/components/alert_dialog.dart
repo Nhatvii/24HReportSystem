@@ -19,8 +19,13 @@ class AlertDialogCustom extends StatelessWidget {
       title: title,
       content: content,
       actions: [
-        confirmFunction,
-        cancelFunction,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            confirmFunction,
+            cancelFunction,
+          ],
+        ),
       ],
     );
   }

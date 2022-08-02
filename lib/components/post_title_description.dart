@@ -31,10 +31,15 @@ class PostTitleDescription extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius:
                         BorderRadius.horizontal(left: Radius.circular(10.r)),
-                    child: Image.network(
-                      post.image,
-                      fit: BoxFit.cover,
-                    ),
+                    child: post.image == 'string'
+                        ? Image.asset(
+                            'assets/images/default_image.jpg',
+                            fit: BoxFit.cover,
+                          )
+                        : Image.network(
+                            post.image,
+                            fit: BoxFit.cover,
+                          ),
                   )),
               Container(
                 padding: EdgeInsets.all(0.008.sh),

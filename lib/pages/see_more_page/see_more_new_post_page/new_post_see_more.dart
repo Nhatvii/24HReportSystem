@@ -23,7 +23,7 @@ class NewPostSeeMore extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Container(
-              height: 0.82.sh,
+              height: 0.78.sh,
               alignment: Alignment.center,
               child: const CircularProgressIndicator(),
             );
@@ -31,7 +31,7 @@ class NewPostSeeMore extends StatelessWidget {
           if (snapshot.hasData) {
             if (snapshot.data!.isNotEmpty) {
               return SizedBox(
-                height: 0.82.sh,
+                height: 0.78.sh,
                 width: 1.sw,
                 child: ListView.builder(
                   itemBuilder: (context, index) {
@@ -43,7 +43,7 @@ class NewPostSeeMore extends StatelessWidget {
               );
             } else {
               return SizedBox(
-                  height: 0.82.sh,
+                  height: 0.78.sh,
                   child: Center(
                     child: Text(
                       'Không có bài viết nào!',
@@ -55,7 +55,7 @@ class NewPostSeeMore extends StatelessWidget {
           }
           if (snapshot.hasError) {
             return SizedBox(
-              height: 0.82.sh,
+              height: 0.78.sh,
               child: Center(
                   child: Text(
                 'Xảy ra lỗi: Không thể tải được bài viết',
@@ -64,7 +64,7 @@ class NewPostSeeMore extends StatelessWidget {
             );
           }
           return Container(
-            height: 0.82.sh,
+            height: 0.78.sh,
           );
         });
   }

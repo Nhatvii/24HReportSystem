@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:capstone_project/entities/account_info.dart';
-import 'package:capstone_project/entities/role.dart';
+// import 'package:capstone_project/entities/role.dart';
 
 Account accountFromJson(String str) => Account.fromJson(json.decode(str));
 

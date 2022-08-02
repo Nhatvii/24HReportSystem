@@ -56,7 +56,7 @@ class Post {
             : DateTime.parse(json["publicTime"]),
         description: json["description"],
         video: json["video"],
-        image: json["image"],
+        image: json["image"] ?? '',
         viewCount: json["viewCount"] ?? 0,
         likeCount: json["likeCount"] ?? 0,
         commentCount: json["commentCount"] ?? 0,
