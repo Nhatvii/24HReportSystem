@@ -22,6 +22,7 @@ namespace _24HReportSystemData.Models
         public bool IsDelete { get; set; }
         public string BoardId { get; set; }
         public string Description { get; set; }
+        public string SubTaskId { get; set; }
 
         [JsonIgnore]
         public virtual Board Board { get; set; }

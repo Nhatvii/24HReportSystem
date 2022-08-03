@@ -213,7 +213,16 @@ namespace ReportSystemData.Service
         public SuccessResponse TaskReviewFilter(double percent)
         {
             Random random = new Random();
-            var listTaskReview = Get().Where(p => p.Status.Equals("Review")).ToList();
+            var listTask = Get().Where(p => p.Status.Equals("Review")).ToList();
+            List<Task> listTaskReview = new List<Task>();
+            foreach (var item in listTask)
+            {
+                var acc = _accountInfoService.GetAccountInfoByID(item.EditorId);
+                if(acc.Specialize != null)
+                {
+                    listTaskReview.Add(item);
+                }
+            }
             int numFIlter = (int)(percent * listTaskReview.Count());
             var listRand = listTaskReview.OrderBy(x => random.Next(0, numFIlter)).Take(numFIlter);
             foreach (var item in listRand)
@@ -228,7 +237,6 @@ namespace ReportSystemData.Service
                     Status = 3
                 };
                 _postService.UpdatePublicPost(model);
-                Console.WriteLine(post.PostId);
             }
             return new SuccessResponse((int)HttpStatusCode.OK, "Cập nhật thành công");
         }

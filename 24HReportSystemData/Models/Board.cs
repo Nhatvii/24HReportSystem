@@ -19,6 +19,7 @@ namespace _24HReportSystemData.Models
         public bool IsDelete { get; set; }
         public DateTime CreateTime { get; set; }
 
+        public virtual Account Manager { get; set; }
         [JsonIgnore]
         public virtual ICollection<Task> Tasks { get; set; }
     }

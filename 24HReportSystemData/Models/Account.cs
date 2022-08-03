@@ -10,6 +10,7 @@ namespace _24HReportSystemData.Models
     {
         public Account()
         {
+            Boards = new HashSet<Board>();
             Comments = new HashSet<Comment>();
             Emotions = new HashSet<Emotion>();
             Posts = new HashSet<Post>();
@@ -20,6 +21,7 @@ namespace _24HReportSystemData.Models
             Tasks = new HashSet<Task>();
         }
 
+        public string AccountId { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
         [JsonIgnore]
@@ -28,6 +30,8 @@ namespace _24HReportSystemData.Models
 
         public virtual Role Role { get; set; }
         public virtual AccountInfo AccountInfo { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<Board> Boards { get; set; }
         [JsonIgnore]
         public virtual ICollection<Comment> Comments { get; set; }
         [JsonIgnore]

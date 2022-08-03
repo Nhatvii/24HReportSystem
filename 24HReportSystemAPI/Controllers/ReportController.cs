@@ -92,17 +92,17 @@ namespace ReportSystemAPI.Controllers
         {
             return Ok(_repository.UpdateReportEditor(reportID, editorID));
         }
-        [HttpPost]
-        [Produces("application/json")]
-        [Route("UploadFile")]
-        public async Task<ActionResult> GetfileUrl(string clientToken, string title, string body)
-        {
-            //    Console.WriteLine(file);
-            //    using (var img = Video.FromStream(memoryStream))
-            //    {
-            //        // TODO: ResizeImage(img, 100, 100);
-            //    }
-            return Ok(await _repository.NotifyAsync(clientToken, title, body));
-        }
+        //[HttpPost]
+        //[Produces("application/json")]
+        //[Route("UploadFile")]
+        //public async Task<ActionResult> GetfileUrl(string clientToken, string title, string body)
+        //{
+        //    //    Console.WriteLine(file);
+        //    //    using (var img = Video.FromStream(memoryStream))
+        //    //    {
+        //    //        // TODO: ResizeImage(img, 100, 100);
+        //    //    }
+        //    return Ok(await _repository.NotifyAsync(clientToken, title, body));
+        //}
     }
 }

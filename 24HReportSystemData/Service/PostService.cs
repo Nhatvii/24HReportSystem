@@ -62,7 +62,11 @@ namespace ReportSystemData.Service
             }
             if (postParameters.RootCategoryID.HasValue && postParameters.RootCategoryID > 0)
             {
-                post = post.Where(p => p.Category.RootCategoryNavigation.RootCategoryId == postParameters.RootCategoryID).ToList();
+                post = post.Where(p => p.Category.RootCategory == postParameters.RootCategoryID).ToList();
+            }
+            if(postParameters.SubCategoryID.HasValue && postParameters.SubCategoryID > 0)
+            {
+                post = post.Where(p => p.Category.CategoryId == postParameters.SubCategoryID).ToList();
             }
             if (postParameters.SearchContent != null)
             {

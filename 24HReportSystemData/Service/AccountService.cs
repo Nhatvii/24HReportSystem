@@ -88,7 +88,7 @@ namespace ReportSystemData.Service
         }
         public Account GetAccountByID(string email)
         {
-            var acc = Get().Where(ac => ac.Email.Equals(email))
+            var acc = Get().Where(ac => ac.AccountId.Equals(email))
                 .Include(r => r.AccountInfo)
                 .ThenInclude(p => p.SpecializeNavigation)
                 .Include(r => r.Role)
@@ -127,7 +127,7 @@ namespace ReportSystemData.Service
             var listAccount = Get().ToList();
             foreach (Account account in listAccount)
             {
-                if (account.Email.Equals(email))
+                if (account.AccountId.Equals(email))
                 {
                     return true;
                 }
@@ -136,64 +136,63 @@ namespace ReportSystemData.Service
         }
         public async Task<Account> RegisterAsync(CreateAccountViewModel account)
         {
-            var checkAccount = CheckAvaiAccount(account.Email);
-            if (!checkAccount)
+            if (account.Email != null)
             {
                 bool isEmail = Regex.IsMatch(account.Email, @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z", RegexOptions.IgnoreCase);
                 if (!isEmail)
                 {
                     throw new ErrorResponse("Sai định dạng Email!!!", (int)HttpStatusCode.NotFound);
                 }
-                if (account.PhoneNumber != null)
+            }
+            if (account.PhoneNumber != null)
+            {
+                bool isPhoneNumber = Regex.IsMatch(account.PhoneNumber, @"^[0-9]{10}$", RegexOptions.IgnoreCase);
+                if (!isPhoneNumber)
                 {
-                    bool isPhoneNumber = Regex.IsMatch(account.PhoneNumber, @"^[0-9]{10}$", RegexOptions.IgnoreCase);
-                    if (!isPhoneNumber)
-                    {
-                        throw new ErrorResponse("Sai định dạng Số điện thoại!!!", (int)HttpStatusCode.NotFound);
-                    }
+                    throw new ErrorResponse("Sai định dạng Số điện thoại!!!", (int)HttpStatusCode.NotFound);
                 }
-                if (account.IdentityCard != null)
+            }
+            if (account.IdentityCard != null)
+            {
+                bool isIdentityCard = Regex.IsMatch(account.IdentityCard, @"[0-9]{9}", RegexOptions.IgnoreCase);
+                if (!isIdentityCard)
                 {
-                    bool isIdentityCard = Regex.IsMatch(account.IdentityCard, @"[0-9]{9}", RegexOptions.IgnoreCase);
-                    if (!isIdentityCard)
-                    {
-                        throw new ErrorResponse("Sai định dạng chứng minh nhân dân!!!", (int)HttpStatusCode.NotFound);
-                    }
+                    throw new ErrorResponse("Sai định dạng chứng minh nhân dân!!!", (int)HttpStatusCode.NotFound);
                 }
-                var accountTmp = new Account()
+            }
+            var accountTmp = new Account()
+            {
+                AccountId = Guid.NewGuid().ToString(),
+                Email = account.Email,
+                Password = account.Password,
+                RoleId = account.RoleId,
+                PhoneNumber = account.PhoneNumber
+            };
+            var accountInfoTmp = new AccountInfo()
+            {
+                AccountId = accountTmp.AccountId,
+                Username = account.Username,
+                Address = account.Address,
+                IdentityCard = account.IdentityCard,
+                WorkLoad = 0
+            };
+            await CreateAsyn(accountTmp);
+            var check = await _accountInfoService.CreateAccountInfoAsync(accountInfoTmp);
+            if (check)
+            {
+                var acc = GetAccountByID(accountTmp.AccountId);
+                if (acc != null)
                 {
-                    Email = account.Email,
-                    Password = account.Password,
-                    RoleId = account.RoleId,
-                    PhoneNumber = account.PhoneNumber
-                };
-                var accountInfoTmp = new AccountInfo()
-                {
-                    Email = account.Email,
-                    Username = account.Username,
-                    Address = account.Address,
-                    IdentityCard = account.IdentityCard,
-                    WorkLoad = 0
-                };
-                await CreateAsyn(accountTmp);
-                var check = await _accountInfoService.CreateAccountInfoAsync(accountInfoTmp);
-                if (check)
-                {
-                    var acc = GetAccountByID(account.Email);
-                    if (acc != null)
-                    {
-                        return acc;
-                    }
-                    throw new ErrorResponse("Không tìm thấy Email!!!", (int)HttpStatusCode.NotFound);
+                    return acc;
                 }
-                throw new ErrorResponse("Email này đã tồn tại. Vui lòng chọn Email khác!!!", (int)HttpStatusCode.NoContent);
+                throw new ErrorResponse("Không tìm thấy Email!!!", (int)HttpStatusCode.NotFound);
             }
             throw new ErrorResponse("Email này đã tồn tại. Vui lòng chọn Email khác!!!", (int)HttpStatusCode.NoContent);
         }
 
         public SuccessResponse UpdateAccount(UpdateAccountViewModel model)
         {
-            var account = GetAccountByID(model.Email);
+            var account = GetAccountByID(model.AccountID);
             if (account != null)
             {
                 if (model.Email != null)
@@ -245,7 +244,7 @@ namespace ReportSystemData.Service
             {
                 foreach (var items in listAcc)
                 {
-                    if(item.Email.Equals(items.Email) && item.Specialize == rootCate)
+                    if(item.AccountId.Equals(items.AccountId) && item.Specialize == rootCate)
                     {
                         return items;
                     }

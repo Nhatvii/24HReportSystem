@@ -42,12 +42,17 @@ namespace _24HReportSystemData.Models
 
             modelBuilder.Entity<Account>(entity =>
             {
-                entity.HasKey(e => e.Email);
-
                 entity.ToTable("Account");
 
-                entity.HasIndex(e => e.PhoneNumber, "IX_Account")
+                entity.HasIndex(e => e.Email, "IX_Email")
                     .IsUnique();
+
+                entity.HasIndex(e => e.PhoneNumber, "IX_PhoneNumber")
+                    .IsUnique();
+
+                entity.Property(e => e.AccountId)
+                    .HasMaxLength(50)
+                    .HasColumnName("Account_ID");
 
                 entity.Property(e => e.Email).HasMaxLength(50);
 
@@ -56,7 +61,6 @@ namespace _24HReportSystemData.Models
                     .HasMaxLength(50);
 
                 entity.Property(e => e.PhoneNumber)
-                    .IsRequired()
                     .HasMaxLength(10)
                     .HasColumnName("Phone_Number")
                     .IsFixedLength(true);
@@ -72,11 +76,13 @@ namespace _24HReportSystemData.Models
 
             modelBuilder.Entity<AccountInfo>(entity =>
             {
-                entity.HasKey(e => e.Email);
+                entity.HasKey(e => e.AccountId);
 
                 entity.ToTable("Account_Info");
 
-                entity.Property(e => e.Email).HasMaxLength(50);
+                entity.Property(e => e.AccountId)
+                    .HasMaxLength(50)
+                    .HasColumnName("Account_ID");
 
                 entity.Property(e => e.Address).HasMaxLength(200);
 
@@ -87,11 +93,13 @@ namespace _24HReportSystemData.Models
 
                 entity.Property(e => e.IsAuthen).HasColumnName("Is_Authen");
 
-                entity.Property(e => e.Username).HasMaxLength(30);
+                entity.Property(e => e.Username)
+                    .IsRequired()
+                    .HasMaxLength(30);
 
-                entity.HasOne(d => d.EmailNavigation)
+                entity.HasOne(d => d.Account)
                     .WithOne(p => p.AccountInfo)
-                    .HasForeignKey<AccountInfo>(d => d.Email)
+                    .HasForeignKey<AccountInfo>(d => d.AccountId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Account_Info_Account");
 
@@ -124,6 +132,12 @@ namespace _24HReportSystemData.Models
                     .IsRequired()
                     .HasMaxLength(50)
                     .HasColumnName("Manager_ID");
+
+                entity.HasOne(d => d.Manager)
+                    .WithMany(p => p.Boards)
+                    .HasForeignKey(d => d.ManagerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Board_Account");
             });
 
             modelBuilder.Entity<Category>(entity =>
@@ -365,17 +379,17 @@ namespace _24HReportSystemData.Models
                 entity.HasOne(d => d.Editor)
                     .WithMany(p => p.ReportEditors)
                     .HasForeignKey(d => d.EditorId)
-                    .HasConstraintName("FK_Report_Account2");
+                    .HasConstraintName("FK_Report_Account5");
 
                 entity.HasOne(d => d.Staff)
                     .WithMany(p => p.ReportStaffs)
                     .HasForeignKey(d => d.StaffId)
-                    .HasConstraintName("FK_Report_Account1");
+                    .HasConstraintName("FK_Report_Account3");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.ReportUsers)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_Report_Account");
+                    .HasConstraintName("FK_Report_Account4");
             });
 
             modelBuilder.Entity<ReportDetail>(entity =>
@@ -526,6 +540,10 @@ namespace _24HReportSystemData.Models
                     .IsRequired()
                     .HasMaxLength(20)
                     .IsUnicode(false);
+
+                entity.Property(e => e.SubTaskId)
+                    .HasMaxLength(50)
+                    .HasColumnName("Sub_Task_ID");
 
                 entity.HasOne(d => d.Board)
                     .WithMany(p => p.Tasks)

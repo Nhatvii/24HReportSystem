@@ -40,7 +40,7 @@ namespace ReportSystemData.Service
         SuccessResponse UpdateReportEditor(string reportID, string editorID);
         List<ReportResponseWithUserID> ListReportWithUserID(string UserID);
         string UploadFileGenerater(ChangeReportStatusViewModel data);
-        Task<bool> NotifyAsync(string to, string title, string body);
+        //Task<bool> NotifyAsync(string to, string title, string body);
     }
     public partial class ReportService : BaseService<Report>, IReportService
     {
@@ -70,6 +70,9 @@ namespace ReportSystemData.Service
             var reports = Get().Where(r => r.IsDelete == false)
                 .Include(detail => detail.ReportDetails)
                 .Include(c => c.ReportViews)
+                .Include(c => c.Staff)
+                .Include(c => c.User)
+                .Include(c => c.Editor)
                 .Include(cate => cate.Category).ThenInclude(c => c.RootCategoryNavigation).ToList();
             if (reportParameters.Status.HasValue && reportParameters.Status > 0)
             {
@@ -136,85 +139,85 @@ namespace ReportSystemData.Service
             var uploadResult = cloudinary.Upload(uploadParams);
             return uploadResult.SecureUrl.ToString();
         }
-        public async Task<bool> NotifyAsync(string to, string title, string body)
-        {
-            try
-            {
-                // Get the server key from FCM console
-                //var serverKey = string.Format("key={0}", "AAAA18R_leU:APA91bFs4IswdpTTW64y8Y5YyhZ43JAMr74vDjdnC1no4wWPraCQsgK5s4kfxT_BB1OIb2TeOibIIwno-mf5RtUp_88aoOQzj3lFG9EXiONntpxV0eEMMAbk-oKlt6ZKoikyG-ET5BOE");
+        //public async Task<bool> NotifyAsync(string to, string title, string body)
+        //{
+        //    try
+        //    {
+        //        // Get the server key from FCM console
+        //        //var serverKey = string.Format("key={0}", "AAAA18R_leU:APA91bFs4IswdpTTW64y8Y5YyhZ43JAMr74vDjdnC1no4wWPraCQsgK5s4kfxT_BB1OIb2TeOibIIwno-mf5RtUp_88aoOQzj3lFG9EXiONntpxV0eEMMAbk-oKlt6ZKoikyG-ET5BOE");
 
-                //// Get the sender id from FCM console
-                //var senderId = string.Format("id={0}", "926714664421");
+        //        //// Get the sender id from FCM console
+        //        //var senderId = string.Format("id={0}", "926714664421");
 
-                //var data = new
-                //{
-                //    to, // Recipient device token
-                //    notification = new { title, body }
-                //};
+        //        //var data = new
+        //        //{
+        //        //    to, // Recipient device token
+        //        //    notification = new { title, body }
+        //        //};
 
-                //// Using Newtonsoft.Json
-                //var jsonBody = JsonConvert.SerializeObject(data);
+        //        //// Using Newtonsoft.Json
+        //        //var jsonBody = JsonConvert.SerializeObject(data);
 
-                //using (var httpRequest = new HttpRequestMessage(System.Net.Http.HttpMethod.Post, "https://fcm.googleapis.com/fcm/send"))
-                //{
-                //    httpRequest.Headers.TryAddWithoutValidation("Authorization", serverKey);
-                //    httpRequest.Headers.TryAddWithoutValidation("Sender", senderId);
-                //    httpRequest.Content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+        //        //using (var httpRequest = new HttpRequestMessage(System.Net.Http.HttpMethod.Post, "https://fcm.googleapis.com/fcm/send"))
+        //        //{
+        //        //    httpRequest.Headers.TryAddWithoutValidation("Authorization", serverKey);
+        //        //    httpRequest.Headers.TryAddWithoutValidation("Sender", senderId);
+        //        //    httpRequest.Content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
 
-                //    using (var httpClient = new HttpClient())
-                //    {
-                //        var result = await httpClient.SendAsync(httpRequest);
+        //        //    using (var httpClient = new HttpClient())
+        //        //    {
+        //        //        var result = await httpClient.SendAsync(httpRequest);
 
-                //        if (result.IsSuccessStatusCode)
-                //        {
-                //            return true;
-                //        }
-                //        else
-                //        {
-                //            // Use result.StatusCode to handle failure
-                //            // Your custom error handler here
-                //            //_logger.LogError($"Error sending notification. Status Code: {result.StatusCode}");
-                //            Console.WriteLine($"Error sending notification. Status Code: {result.StatusCode}");
-                //        }
-                //    }
-                //}
-                var value = body;
-                WebRequest tRequest = WebRequest.Create("https://fcm.googleapis.com/fcm/send");
-                tRequest.Method = "post";
-                tRequest.ContentType = "application/x-www-form-urlencoded;charset=UTF-8";
-                tRequest.Headers.Add(string.Format("Authorization: key={0}", "AAAA18R_leU:APA91bFs4IswdpTTW64y8Y5YyhZ43JAMr74vDjdnC1no4wWPraCQsgK5s4kfxT_BB1OIb2TeOibIIwno-mf5RtUp_88aoOQzj3lFG9EXiONntpxV0eEMMAbk-oKlt6ZKoikyG-ET5BOE"));
-                tRequest.Headers.Add(string.Format("Sender: id={0}", "926714664421"));
+        //        //        if (result.IsSuccessStatusCode)
+        //        //        {
+        //        //            return true;
+        //        //        }
+        //        //        else
+        //        //        {
+        //        //            // Use result.StatusCode to handle failure
+        //        //            // Your custom error handler here
+        //        //            //_logger.LogError($"Error sending notification. Status Code: {result.StatusCode}");
+        //        //            Console.WriteLine($"Error sending notification. Status Code: {result.StatusCode}");
+        //        //        }
+        //        //    }
+        //        //}
+        //        var value = body;
+        //        WebRequest tRequest = WebRequest.Create("https://fcm.googleapis.com/fcm/send");
+        //        tRequest.Method = "post";
+        //        tRequest.ContentType = "application/x-www-form-urlencoded;charset=UTF-8";
+        //        tRequest.Headers.Add(string.Format("Authorization: key={0}", "AAAA18R_leU:APA91bFs4IswdpTTW64y8Y5YyhZ43JAMr74vDjdnC1no4wWPraCQsgK5s4kfxT_BB1OIb2TeOibIIwno-mf5RtUp_88aoOQzj3lFG9EXiONntpxV0eEMMAbk-oKlt6ZKoikyG-ET5BOE"));
+        //        tRequest.Headers.Add(string.Format("Sender: id={0}", "926714664421"));
 
-                string postData = "collapse_key=score_update&time_to_live=108&delay_while_idle=1&data.message=" + value + "&data.time=" + System.DateTime.Now.ToString() + "&registration_id=" + "d_d_etc6Tge_-Lr9ijDcFX:APA91bGq5danLu8IIn2tnTdtjZJjySnDboqw6IUMxCo8O4B5fUOSVuIeYCI4KvMS4CNZ3fCHVSzs624O8bLaV-ETaBRdqU5tyiqckJyJBtkE1dhF3ZEX-8O0e53CTC0ETRb5vunyiHdN" + "";
+        //        string postData = "collapse_key=score_update&time_to_live=108&delay_while_idle=1&data.message=" + value + "&data.time=" + System.DateTime.Now.ToString() + "&registration_id=" + "d_d_etc6Tge_-Lr9ijDcFX:APA91bGq5danLu8IIn2tnTdtjZJjySnDboqw6IUMxCo8O4B5fUOSVuIeYCI4KvMS4CNZ3fCHVSzs624O8bLaV-ETaBRdqU5tyiqckJyJBtkE1dhF3ZEX-8O0e53CTC0ETRb5vunyiHdN" + "";
 
-                Byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-                tRequest.ContentLength = byteArray.Length;
+        //        Byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+        //        tRequest.ContentLength = byteArray.Length;
 
-                using (Stream dataStream = tRequest.GetRequestStream())
-                {
-                    dataStream.Write(byteArray, 0, byteArray.Length);
+        //        using (Stream dataStream = tRequest.GetRequestStream())
+        //        {
+        //            dataStream.Write(byteArray, 0, byteArray.Length);
 
-                    using (WebResponse tResponse = tRequest.GetResponse())
-                    {
-                        using (Stream dataStreamResponse = tResponse.GetResponseStream())
-                        {
-                            using (StreamReader tReader = new StreamReader(dataStreamResponse))
-                            {
-                                String sResponseFromServer = tReader.ReadToEnd();
-                                //result.Response = sResponseFromServer;
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Exception thrown in Notify Service: {ex}");
-                //_logger.LogError($"Exception thrown in Notify Service: {ex}");
-            }
+        //            using (WebResponse tResponse = tRequest.GetResponse())
+        //            {
+        //                using (Stream dataStreamResponse = tResponse.GetResponseStream())
+        //                {
+        //                    using (StreamReader tReader = new StreamReader(dataStreamResponse))
+        //                    {
+        //                        String sResponseFromServer = tReader.ReadToEnd();
+        //                        //result.Response = sResponseFromServer;
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"Exception thrown in Notify Service: {ex}");
+        //        //_logger.LogError($"Exception thrown in Notify Service: {ex}");
+        //    }
 
-            return false;
-        }
+        //    return false;
+        //}
         public async Task<SuccessResponse> CreateReportAsync(CreateReportViewModel report)
         {
             if (report.StaffID == null )
@@ -288,6 +291,9 @@ namespace ReportSystemData.Service
             var report = Get().Where(r => r.ReportId == id && r.IsDelete == false)
                 .Include(detail => detail.ReportDetails)
                 .Include(cate => cate.Category)
+                .Include(c => c.Staff)
+                .Include(c => c.User)
+                .Include(c => c.Editor)
                 .Include(c => c.ReportViews).FirstOrDefault();
             return report;
         }
@@ -350,14 +356,14 @@ namespace ReportSystemData.Service
                         var board = _boardService.GetLastedBoard();
                         var createTask = new CreateTaskViewModel()
                         {
-                            EditorId = acc.Email,
+                            EditorId = acc.AccountId,
                             DeadlineTime = newTime,
-                            Description = "Đây là Task của " + acc.Email,
+                            Description = "Đây là Task của " + acc.Email == null ? acc.PhoneNumber : acc.Email,
                             BoardId = board.BoardId,
                             ReportId = new List<string>() { model.ReportId }.ToArray()
                         };
                         var task = _taskService.CreateTask(createTask);
-                        UpdateReportEditor(model.ReportId, acc.Email);
+                        UpdateReportEditor(model.ReportId, acc.AccountId);
                     }
                     if(report.CategoryId == 1)
                     {

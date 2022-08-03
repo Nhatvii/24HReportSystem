@@ -30,7 +30,7 @@ namespace _24HReportSystemData.Service
         }
         public List<Board> GetAllBoard()
         {
-            var board = Get().Include(p => p.Tasks).OrderByDescending(p => p.CreateTime).ToList();
+            var board = Get().Include(p => p.Tasks).Include(b => b.Manager).OrderByDescending(p => p.CreateTime).ToList();
             return board;
         }
 

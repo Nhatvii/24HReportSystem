@@ -32,7 +32,7 @@ namespace ReportSystemData.Service
 
         public async Task<bool> CreateAccountInfoAsync(AccountInfo accInfo)
         {
-            var checkAccountInfo = CheckAvaiAccountInfo(accInfo.Email);
+            var checkAccountInfo = CheckAvaiAccountInfo(accInfo.AccountId);
             if (!checkAccountInfo)
             {
                 await CreateAsyn(accInfo);
@@ -41,18 +41,18 @@ namespace ReportSystemData.Service
             return false;
         }
 
-        public bool CheckAvaiAccountInfo(string email)
+        public bool CheckAvaiAccountInfo(string accountID)
         {
-            var check = Get().Where(acc => acc.Email.Equals(email)).FirstOrDefault();
+            var check = Get().Where(acc => acc.AccountId.Equals(accountID)).FirstOrDefault();
             if (check != null)
             {
                 return true;
             }
             return false;
         }
-        public AccountInfo GetAccountInfoByID(string email)
+        public AccountInfo GetAccountInfoByID(string accountID)
         {
-            var accountInfo = Get().Where(p => p.Email.Equals(email)).FirstOrDefault();
+            var accountInfo = Get().Where(p => p.AccountId.Equals(accountID)).FirstOrDefault();
             if (accountInfo != null)
             {
                 return accountInfo;
@@ -62,7 +62,7 @@ namespace ReportSystemData.Service
 
         public bool UpdateAccountInfo(UpdateAccountViewModel accountInfo)
         {
-            var accInfo = GetAccountInfoByID(accountInfo.Email);
+            var accInfo = GetAccountInfoByID(accountInfo.AccountID);
             if (accInfo != null)
             {
                 if (accountInfo.Username != null)

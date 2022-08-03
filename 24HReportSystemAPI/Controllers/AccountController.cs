@@ -34,14 +34,14 @@ namespace _24HReportSystemAPI.Controllers
         [HttpGet]
         [Route("GetAccount")]
         [Produces("application/json")]
-        public ActionResult<Report> GetAccountByID(string email)
+        public ActionResult<Report> GetAccountByID(string UserId)
         {
-            return Ok(_repository.GetAccountByID(email));
+            return Ok(_repository.GetAccountByID(UserId));
         }
         [HttpGet]
         [Route("CheckAccountRegister")]
         [Produces("application/json")]
-        public ActionResult<Report> CheckAccountRegister([Required]string email, [Required]string phoneNumber)
+        public ActionResult<Report> CheckAccountRegister(string email, string phoneNumber)
         {
             return Ok(_repository.CheckAccountRegister(email, phoneNumber));
         }

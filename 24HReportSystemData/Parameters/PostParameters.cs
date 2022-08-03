@@ -12,6 +12,7 @@ namespace _24HReportSystemData.Parameters
         public string SearchContent { get; set; }
         public int? Status { get; set; }
         public int? RootCategoryID { get; set; }
+        public int? SubCategoryID { get; set; }
         public bool? isRecentDate { get; set; }
         public bool? isViewCount { get; set; }
     }

@@ -73,7 +73,7 @@ namespace ReportSystemData.Service
             {
                 throw new ErrorResponse("Bình luận phải lớn hơn 16 từ!!!", (int)HttpStatusCode.Conflict);
             }
-            if (CheckBadWords(comment.CommentTitle))
+            if (CheckBadWords(comment.CommentTitle.ToLower()))
             {
                 throw new ErrorResponse("Vui lòng không bình luận từ ngữ phản cảm!!!", (int)HttpStatusCode.Conflict);
             }
