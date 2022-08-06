@@ -126,6 +126,9 @@ const MainMenu = ({ className, dark }) => {
         submenu: rootcategories.map((root, rootId) => ({
           id: 40 + rootId,
           child: true,
+          link: "/search",
+          searchByCategory: true,
+          rootCategoryId: root.rootCategoryId,
           linkText: root.type,
           third_menu: subCategories
             .filter(
@@ -235,8 +238,17 @@ const MainMenu = ({ className, dark }) => {
                                     >
                                       {sub_item.child ? (
                                         <NavLink
-                                          onClick={(e) => e.preventDefault()}
-                                          to="/"
+                                          // onClick={(e) => e.preventDefault()}
+                                          to={{
+                                            pathname: sub_item.link,
+                                            state: {
+                                              title:
+                                                "Danh mục: " +
+                                                sub_item.linkText,
+                                              RootCategoryID:
+                                                sub_item.rootCategoryId,
+                                            },
+                                          }}
                                         >
                                           {sub_item.linkText}
                                         </NavLink>
