@@ -201,6 +201,10 @@ namespace ReportSystemData.Service
                     if (!isEmail)
                     {
                         throw new ErrorResponse("Sai định dạng Email!!!", (int)HttpStatusCode.NotFound);
+                    }else
+                    {
+                        account.Email = model.Email;
+                        Update(account);
                     }
                 }
                 if (model.PhoneNumber != null)
@@ -210,8 +214,11 @@ namespace ReportSystemData.Service
                     {
                         throw new ErrorResponse("Sai định dạng Số điện thoại!!!", (int)HttpStatusCode.NotFound);
                     }
-                    account.PhoneNumber = model.PhoneNumber;
-                    Update(account);
+                    else
+                    {
+                        account.PhoneNumber = model.PhoneNumber;
+                        Update(account);
+                    }
                 }
                 if (model.IdentityCard != null)
                 {

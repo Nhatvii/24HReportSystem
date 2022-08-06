@@ -83,6 +83,17 @@ namespace ReportSystemData.Service
                     post = post.OrderBy(p => p.ViewCount).ToList();
                 }
             }
+            if (postParameters.isShareCount != null)
+            {
+                if ((bool)postParameters.isShareCount)
+                {
+                    post = post.OrderByDescending(p => p.ShareCount).ToList();
+                }
+                else
+                {
+                    post = post.OrderBy(p => p.ShareCount).ToList();
+                }
+            }
             if (postParameters.isRecentDate != null)
             {
                 if ((bool)postParameters.isRecentDate)

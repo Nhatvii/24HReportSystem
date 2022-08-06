@@ -44,12 +44,6 @@ namespace _24HReportSystemData.Models
             {
                 entity.ToTable("Account");
 
-                entity.HasIndex(e => e.Email, "IX_Email")
-                    .IsUnique();
-
-                entity.HasIndex(e => e.PhoneNumber, "IX_PhoneNumber")
-                    .IsUnique();
-
                 entity.Property(e => e.AccountId)
                     .HasMaxLength(50)
                     .HasColumnName("Account_ID");

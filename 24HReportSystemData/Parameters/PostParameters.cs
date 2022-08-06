@@ -15,5 +15,6 @@ namespace _24HReportSystemData.Parameters
         public int? SubCategoryID { get; set; }
         public bool? isRecentDate { get; set; }
         public bool? isViewCount { get; set; }
+        public bool? isShareCount { get; set; }
     }
 }
