@@ -14,25 +14,8 @@ const PostGallery = (props) => {
   const [nav2, setNav2] = useState(null);
   const [vModal, setVModal] = useState(false);
   const [videoId, setVideoId] = useState("0r6C3z3TEKw");
-  const [postList, setPostList] = useState([]);
-  useEffect(() => {
-    loadPostList();
-  }, []);
 
-  const loadPostList = async () => {
-    try {
-      const params = { Status: 3, isRecentDate: true };
-      const response = await postApi.getByStatusAndRecent(params);
-      localStorage.setItem(
-        "carousel-post",
-        JSON.stringify(response.slice(0, 4))
-      );
-      setPostList(JSON.parse(localStorage.getItem("carousel-post")));
-    } catch (err) {
-      console.log(err.message);
-    }
-  };
-  const { className } = props;
+  const { className,data } = props;
   return (
     <div className={`post_gallary_area mb20 ${className}`}>
       <div className="container">
@@ -58,7 +41,11 @@ const PostGallery = (props) => {
                             >
                               <div className="post_img gradient1">
                                 <img
-                                  src={item.image}
+                                  src={
+                                    item.image.includes("http")
+                                      ? item.image
+                                      : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQMAAADCCAMAAAB6zFdcAAAAQlBMVEX///+hoaGenp6ampr39/fHx8fOzs7j4+P8/Pyvr6/d3d3FxcX29va6urqYmJjs7OzU1NSlpaW1tbWtra3n5+e/v78TS0zBAAACkUlEQVR4nO3b63KCMBCGYUwUUVEO6v3fagWVY4LYZMbZnff51xaZ5jON7CZNEgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABQb5tvI8qzX4/nH84XG5Upfj2ir2V2E5fZ/XpIX9saMnhkYLIkiyRJjdgMoiEDMmiQgfwM8rSu77ew2wnPoLTmwdZBs0J2BuXrYckcQm4nOoP+WcmWAbcTnUHZPy9eA24nOoN7n0HI54ToDM5k8PjluwyqgNuJzqDoaugPg8gWZ4noDAYLwuIg75fLeeHHsjNIzrZJwWwW+0DNsmEWPjiEZ5AcD8ZUu8VZ8HyQMifvBdIz+PS33i8adu+7Qn4Gn1Tdupl7rlCfQb9seosK7RkcBy1o30iVZ5CPOtDW3WhQnsF13IV3v0p3BqfJRoSpXVepzmA/24+yqeMyzRm4tqOs44lSUwa3yfgOri25av5CPRnklR33VlPnrqSZV09qMsiqSWV082xOz1uPajJ49pTM/f115k6guWa6JGjJ4N1lt8fXN2rv/vysjFaSQdFXBc/KKF04ptFPliclGVR9Bu27XCyeVOkmy5OODAZN9rYyyip/AIPJ8qIig+PoXbf7YdPdncFoSdCQQT4ZceV+MhiFMBy0hgyu0yGvOLI17KwpyGBaHK5jtt0N5GcwLw7XZdB31sRn8O+ziqYro8Vn4CwOV+k6a9Iz+PwRsKC7h+gMfMXhKu/OmuwM/MXhKq8yWnYG/uJw5Uxoy2jRGZTBZ/jboxuSM1guDtdNhKazJjiDbNMe0AxzKUVnkO+jEJxBxNtJzWCTxlNLzSB8KehJ/H+mJGYAjaDjzj9SnHZRuXZiAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAECXP1XDHv7U4SNFAAAAAElFTkSuQmCC"
+                                  }
                                   alt="image"
                                   style={{
                                     width: "100%",
@@ -67,12 +54,6 @@ const PostGallery = (props) => {
                                   }}
                                   class="img-responsive"
                                 />
-                                {/* <span
-                              onClick={() => this.modalHandler(true)}
-                              className="tranding"
-                            >
-                              <FontAwesome name="play" />
-                            </span> */}
                               </div>
                               <div className="single_post_text">
                                 <div className="meta meta_separator1">
@@ -114,7 +95,7 @@ const PostGallery = (props) => {
                 </div>
               </div>
               <div className="col-xl-4">
-                <WidgetTab dark={false} />
+                <WidgetTab dark={false} data={data} />
               </div>
             </div>
           </div>

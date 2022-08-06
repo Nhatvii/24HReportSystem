@@ -51,27 +51,37 @@ const MyTask = () => {
     try {
       const params = {
         EditorID:
-          JSON.parse(user_info) !== null ? JSON.parse(user_info).email : null,
+          JSON.parse(user_info) !== null
+            ? JSON.parse(user_info).accountId
+            : null,
         status: "",
       };
       const params2 = {
         EditorID:
-          JSON.parse(user_info) !== null ? JSON.parse(user_info).email : null,
+          JSON.parse(user_info) !== null
+            ? JSON.parse(user_info).accountId
+            : null,
         status: 2,
       };
       const params3 = {
         EditorID:
-          JSON.parse(user_info) !== null ? JSON.parse(user_info).email : null,
+          JSON.parse(user_info) !== null
+            ? JSON.parse(user_info).accountId
+            : null,
         status: 5,
       };
       const params4 = {
         EditorID:
-          JSON.parse(user_info) !== null ? JSON.parse(user_info).email : null,
+          JSON.parse(user_info) !== null
+            ? JSON.parse(user_info).accountId
+            : null,
         status: 3,
       };
       const params5 = {
         EditorID:
-          JSON.parse(user_info) !== null ? JSON.parse(user_info).email : null,
+          JSON.parse(user_info) !== null
+            ? JSON.parse(user_info).accountId
+            : null,
         status: 4,
       };
       const response = await taskApi.getAllByIdAndStatus(params);

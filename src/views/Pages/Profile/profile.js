@@ -27,6 +27,8 @@ export const Profile = () => {
   //State
   const [isLoading, setIsLoading] = useState(false);
   const [viewPassword, setViewPassword] = useState(false);
+  const [updateEmail, setUpdateEmail] = useState(false);
+  const [updatePhone, setUpdatePhone] = useState(false);
   const [message, setMessage] = useState("");
   //Validate the input
   const validate = (values) => {
@@ -73,7 +75,9 @@ export const Profile = () => {
     setIsLoading(true);
     try {
       const json = JSON.stringify({
+        accountID: user_info.accountId,
         email: values.email,
+        phoneNumber: values.phone,
         username: values.username,
         address: values.address ? values.address : "",
         identityCard: values.idcard ? values.idcard : null,
@@ -81,14 +85,17 @@ export const Profile = () => {
       });
       const response = await userApi.update(json);
       if (response.statusCode === 200) {
-        const params = { email: values.email };
+        const params = { userId: user_info.accountId };
         const updated_info = await userApi.getUser(params);
         if (!JSON.stringify(updated_info).includes("error")) {
           localStorage.setItem("user_info", JSON.stringify(updated_info));
+          toast.success("Cập nhật thành công");
         } else {
-          setMessage(response.error.message);
+          toast.error(response.error.message);
         }
       }
+      setUpdateEmail(false);
+      setUpdateEmail(false);
       setViewPassword(false);
       setIsLoading(false);
     } catch (e) {
@@ -119,6 +126,12 @@ export const Profile = () => {
   const renderPassword = () => {
     setViewPassword(!viewPassword);
   };
+  const renderEmail = () => {
+    setUpdateEmail(!updateEmail);
+  };
+  const renderPhone = () => {
+    setUpdatePhone(!updatePhone);
+  };
   useEffect(() => {
     if (localStorage.getItem("user_info") === null) {
       window.location.href = "/login";
@@ -134,7 +147,7 @@ export const Profile = () => {
                 <img
                   alt="..."
                   src={
-                    "https://haycafe.vn/wp-content/uploads/2021/11/Anh-avatar-dep-chat-lam-hinh-dai-dien.jpg"
+                    "https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg"
                   }
                   width={200}
                   height={200}
@@ -158,7 +171,9 @@ export const Profile = () => {
           <Col md="8" className="">
             <Card>
               <CardHeader style={{ backgroundColor: "#6464ff" }}>
-                <div className="h4">Sửa hồ sơ</div>
+                <div className="h4" style={{ color: "#fff" }}>
+                  Sửa hồ sơ
+                </div>
               </CardHeader>
               <CardBody>
                 <p className="text-danger">{message}</p>
@@ -192,13 +207,42 @@ export const Profile = () => {
                             Email<span className="text-danger">*</span>{" "}
                           </b>
                         </label>
-                        <Input
-                          defaultValue={user_info.email}
-                          placeholder="Email"
-                          type="email"
-                          id="email"
-                          disabled
-                        />
+                        {updateEmail ? (
+                          <InputGroup>
+                            <Input
+                              defaultValue={user_info.email}
+                              placeholder="Email"
+                              type="email"
+                              id="email"
+                            />
+                            <InputGroupAddon
+                              addonType="prepend"
+                              onClick={() => renderEmail()}
+                            >
+                              <InputGroupText>
+                                <i class="fa fa-solid fa-pencil"></i>
+                              </InputGroupText>
+                            </InputGroupAddon>
+                          </InputGroup>
+                        ) : (
+                          <InputGroup>
+                            <Input
+                              defaultValue={user_info.email}
+                              placeholder="Email"
+                              type="email"
+                              id="email"
+                              disabled
+                            />
+                            <InputGroupAddon
+                              addonType="prepend"
+                              onClick={() => renderEmail()}
+                            >
+                              <InputGroupText>
+                                <i class="fa fa-solid fa-pencil"></i>
+                              </InputGroupText>
+                            </InputGroupAddon>
+                          </InputGroup>
+                        )}
                       </FormGroup>
                     </Col>
                     <Col className="pl-1" md="4">
@@ -281,15 +325,47 @@ export const Profile = () => {
                         <label className="pb-1 pt-1">
                           <b>Số điện thoại</b>
                         </label>
-                        <Input
-                          disabled
-                          defaultValue={user_info.phoneNumber}
-                          placeholder="Số điện thoại"
-                          type="text"
-                          id="phone"
-                          value={formik.values.phone}
-                          onChange={formik.handleChange}
-                        />
+                        {updatePhone ? (
+                          <InputGroup>
+                            <Input
+                              defaultValue={user_info.phoneNumber}
+                              placeholder="Số điện thoại"
+                              type="text"
+                              id="phone"
+                              value={formik.values.phone}
+                              onChange={formik.handleChange}
+                            />
+                            <InputGroupAddon
+                              addonType="prepend"
+                              onClick={() => renderPhone()}
+                            >
+                              <InputGroupText>
+                                <i class="fa fa-solid fa-pencil"></i>
+                              </InputGroupText>
+                            </InputGroupAddon>
+                          </InputGroup>
+                        ) : (
+                          <InputGroup>
+                            <Input
+                              defaultValue={user_info.phoneNumber}
+                              placeholder="Số điện thoại"
+                              type="text"
+                              id="phone"
+                              disabled
+                              value={formik.values.phone}
+                              onChange={formik.handleChange}
+                            />
+                            <InputGroupAddon
+                              addonType="prepend"
+                              onClick={() => renderPhone()}
+                            >
+                              <InputGroupText>
+                                <i class="fa fa-solid fa-pencil"></i>
+                              </InputGroupText>
+                            </InputGroupAddon>
+                          </InputGroup>
+                        )}
+
                         <p className="text-warning field_validate_label">
                           {formik.errors.phoneError
                             ? formik.errors.phoneError
@@ -338,7 +414,7 @@ export const Profile = () => {
                     <Button
                       className="btn-fill pull-right mt-2"
                       type="submit"
-                      color="info"
+                      style={{ backgroundColor: "#6464FF", color: "#fff" }}
                     >
                       Cập nhật hồ sơ
                     </Button>

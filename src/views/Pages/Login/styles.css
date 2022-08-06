@@ -7,22 +7,21 @@
 .appAside {
     width: 60%;
     background-color: #fff;
-    background-image: url("https://dewey.tailorbrands.com/production/brand_version_mockup_image/209/7405193209_dafd8c3c-9a54-4e9e-87b7-9b4257430f5e.png?cb=1654526260"),url("../../../assets/img/bg.svg"), url("../../../assets/img/wave.png");
+    background-image: url("../../../assets/img/bg.svg"),url("../../../assets/img/wave.png"),url("https://dewey.tailorbrands.com/production/brand_version_mockup_image/209/7405193209_dafd8c3c-9a54-4e9e-87b7-9b4257430f5e.png?cb=1654526260");
     background-repeat: no-repeat, no-repeat, no-repeat;
-    background-size: 8rem, 70rem, cover;
-    background-position: 50% 32%, center, center;
+    background-size:  70rem, cover,8rem;
+    background-position:  center, center,50% 32%;
 }
 .google-app{
     position: absolute;
     left: 26%;
-    top: 35.5%;
+    top: 30.5%;
 }
 .itune-app{
     position: absolute;
     left: 26.5%;
-    top: 42%;
+    top: 38%;
 }
-
 .appForm {
     background-color: transparent;
     width: 40%;

@@ -26,9 +26,7 @@ import categoryApi from "../../../api/categoryApi";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import storage from "../../../firebase/firebaseConfig";
 import { toast } from "react-toastify";
-const animatedComponents = makeAnimated();
 //testing
-//multiple select option mock data
 
 const SendReport = () => {
   const user_info = JSON.parse(localStorage.getItem("user_info"));
@@ -320,7 +318,7 @@ const SendReport = () => {
     <div className="fifth_bg">
       <Card className=" ml-5 mr-5 mb-4 pb-2">
         <CardHeader className="bg-primary">
-          <h5>Gửi báo cáo </h5>
+          <h5 style={{ color: "#fff" }}>Gửi báo cáo </h5>
         </CardHeader>
         <CardBody>
           <FormGroup row>

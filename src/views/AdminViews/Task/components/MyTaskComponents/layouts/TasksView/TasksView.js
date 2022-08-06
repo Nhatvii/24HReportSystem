@@ -72,31 +72,31 @@ const TasksView = (props) => {
       if (selected === 1 || selected === 2 || selected === 3) {
         params = {
           EditorID:
-            JSON.parse(user_info) !== null ? JSON.parse(user_info).email : null,
+            JSON.parse(user_info) !== null ? JSON.parse(user_info).accountId : null,
           status: "",
         };
       } else if (selected === 4) {
         params = {
           EditorID:
-            JSON.parse(user_info) !== null ? JSON.parse(user_info).email : null,
+            JSON.parse(user_info) !== null ? JSON.parse(user_info).accountId : null,
           status: 5,
         };
       } else if (selected === 5) {
         params = {
           EditorID:
-            JSON.parse(user_info) !== null ? JSON.parse(user_info).email : null,
+            JSON.parse(user_info) !== null ? JSON.parse(user_info).accountId : null,
           status: 3,
         };
       } else if (selected === 6) {
         params = {
           EditorID:
-            JSON.parse(user_info) !== null ? JSON.parse(user_info).email : null,
+            JSON.parse(user_info) !== null ? JSON.parse(user_info).accountId : null,
           status: 4,
         };
       } else {
         params = {
           EditorID:
-            JSON.parse(user_info) !== null ? JSON.parse(user_info).email : null,
+            JSON.parse(user_info) !== null ? JSON.parse(user_info).accountId : null,
           status: 2,
         };
       }

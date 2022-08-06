@@ -31,12 +31,13 @@ const PendingReportTable = () => {
   const user_info = localStorage.getItem("user_info");
   async function loadReports() {
     try {
-      const param = { status: 2, staffID: JSON.parse(user_info).email };
+      const param = { status: 2, staffID: JSON.parse(user_info).accountId };
       const response = await reportApi.getByStatusAndStaffID(param);
       const editedResponse = response.map((item) =>
         item.reportViews.length > 0 &&
-        item.reportViews.filter((e) => e.userId === JSON.parse(user_info).email)
-          .length > 0
+        item.reportViews.filter(
+          (e) => e.userId === JSON.parse(user_info).accountId
+        ).length > 0
           ? { ...item }
           : { ...item, _props: { color: "info", align: "middle" } }
       );
@@ -66,12 +67,12 @@ const PendingReportTable = () => {
       const params = {
         reportId: id,
         status: status,
-        staffId: JSON.parse(user_info).email,
+        staffId: JSON.parse(user_info).accountId,
       };
       const params2 = {
         id: id,
         categoryId: selected ? selected.value : 1,
-        staffId: JSON.parse(user_info).email,
+        staffId: JSON.parse(user_info).accountId,
       };
       console.log(params);
       console.log(params2);
@@ -143,7 +144,7 @@ const PendingReportTable = () => {
     setVisibleModal(!visibleModal);
     try {
       const param = { id: id };
-      const param2 = { reportId: id, userId: JSON.parse(user_info).email };
+      const param2 = { reportId: id, userId: JSON.parse(user_info).accountId };
       const response = await reportApi.find(param);
       await reportApi.reportViewUpdate(param2);
       const metaDescription = JSON.stringify(response.description)

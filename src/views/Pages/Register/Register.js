@@ -24,6 +24,7 @@ const Register = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [values, setValues] = useState([]);
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -40,29 +41,39 @@ const Register = (props) => {
   };
   //Validate the input
   const validate = (values) => {
+    console.log(values.username);
     const errors = {};
+    if (!values.username) {
+      errors.username = "Cần nhập tên người dùng";
+    } else if (!/[0-9a-zA-Z ]{5,}/.test(values.username)) {
+      errors.username = "Tên người dùng cần ít nhất 5 kí tự";
+    }
     if (!values.password) {
       errors.password = "Cần nhập mật khẩu";
     } else if (!/[0-9a-zA-Z]{6,}/.test(values.password)) {
       errors.password = "Mật khẩu cần ít nhất 6 kí tự";
-    }
-    if (!values.email) {
-      errors.email = "Cần nhập email";
-    } else if (
-      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-    ) {
-      errors.email = "Email không đúng";
     }
     if (!values.repeatPassword) {
       errors.repeatPassword = "Cần xác nhận mật khẩu";
     } else if (values.repeatPassword !== values.password) {
       errors.repeatPassword = "Mật khẩu không khớp";
     }
-    if (!values.phone) {
-      errors.phoneError = "Cần số điện thoại để nhận mã xác nhận.";
-    } else if (!/((09|03|07|08|05)+([0-9]{8})\b)/g.test(values.phone)) {
-      errors.phoneError = "Số điện thoại không đúng.";
+    if (!values.account) {
+      errors.account = "Cần nhập email / số điện thoại";
+    } else if (isNaN(values.account) === true) {
+      if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.account)) {
+        errors.account = "Không đúng định dạng email ";
+      } else {
+        setEmail(values.account);
+      }
+    } else if (isNaN(values.account) === false) {
+      if (!/((09|03|07|08|05)+([0-9]{8})\b)/g.test(values.account)) {
+        errors.account = "Không đúng định dạng số điện thoại ";
+      } else {
+        setPhone(values.account);
+      }
     }
+    console.log(errors);
     return errors;
   };
 
@@ -70,34 +81,68 @@ const Register = (props) => {
   async function register_user(values) {
     setIsLoading(true);
     try {
-      const json = JSON.stringify({
-        email: values.email,
+      const json1 = JSON.stringify({
+        email: values.account,
         roleId: 1,
-        phoneNumber: values.phone,
         password: values.password,
+        username: values.username,
         isAuthen: false,
       });
-      const response = await registerApi.createUser(json);
-      if (!JSON.stringify(response).includes("error")) {
-        const params = { email: email, isAuthen: true };
-        const response = await userApi.update(params);
+      const json2 = JSON.stringify({
+        roleId: 1,
+        phoneNumber: values.account,
+        password: values.password,
+        username: values.username,
+        isAuthen: false,
+      });
+      if (phone !== "") {
+        const response = await registerApi.createUser(json2);
+        console.log(response);
         if (!JSON.stringify(response).includes("error")) {
-          const params = {
-            account: email,
-            password: password,
-          };
-          const loginResponse = await loginApi.getAll(params);
-          console.log(loginResponse);
-          if (!JSON.stringify(loginResponse).includes("error")) {
-            //lấy dữ liệu đăng Nhập
-            localStorage.setItem("user_info", JSON.stringify(loginResponse));
-            setIsLoading(false);
-            window.location.href = "/";
+          console.log(response);
+          const params = { accountID: response.accountId, isAuthen: true };
+          const updateResponse = await userApi.update(params);
+          if (!JSON.stringify(updateResponse).includes("error")) {
+            const params = {
+              account: phone,
+              password: password,
+            };
+            const loginResponse = await loginApi.getAll(params);
+            console.log(loginResponse);
+            if (!JSON.stringify(loginResponse).includes("error")) {
+              //lấy dữ liệu đăng Nhập
+              localStorage.setItem("user_info", JSON.stringify(loginResponse));
+              setIsLoading(false);
+              window.location.href = "/";
+            }
           }
+        } else {
+          toast.error(response.error.message);
         }
-      } else {
-        setErrorMessage(response.error.message);
+      } else if (email !== "") {
+        const response = await registerApi.createUser(json1);
+        if (!JSON.stringify(response).includes("error")) {
+          const params = { accountID: response.accountId, isAuthen: true };
+          const updateResponse = await userApi.update(params);
+          if (!JSON.stringify(updateResponse).includes("error")) {
+            const params = {
+              account: email,
+              password: password,
+            };
+            const loginResponse = await loginApi.getAll(params);
+            console.log(loginResponse);
+            if (!JSON.stringify(loginResponse).includes("error")) {
+              //lấy dữ liệu đăng Nhập
+              localStorage.setItem("user_info", JSON.stringify(loginResponse));
+              setIsLoading(false);
+              window.location.href = "/";
+            }
+          }
+        } else {
+          toast.error(response.error.message);
+        }
       }
+
       setIsLoading(false);
     } catch (e) {
       toast.error(e.message);
@@ -106,48 +151,54 @@ const Register = (props) => {
   //
   const formik = useFormik({
     initialValues: {
-      email: "",
+      username: "",
+      account: "",
       password: "",
     },
     validate,
     onSubmit: async (values) => {
-      const params = { email: values.email, phone: values.phone };
+      const params = { email: email, phone: phone };
       const response = await registerApi.checkUserRegister(params);
       if (
         JSON.stringify(response).includes(
           "Email & Phone Number already exist!!!"
         )
       ) {
-        setErrorMessage(response.error.message);
+        toast.error(response.error.message);
       } else if (
         JSON.stringify(response).includes("Phone Number already exist!!!")
       ) {
-        setErrorMessage(response.error.message);
+        toast.error(response.error.message);
       } else if (
         JSON.stringify(response).includes(
           "Email này đã tồn tại. Vui lòng chọn Email khác!!!"
         )
       ) {
-        setErrorMessage(response.error.message);
+        toast.error(response.error.message);
       } else {
         setEmail(values.email);
         setPassword(values.password);
         setShow(true);
-        setSuccessMessage("Xin xác nhận số điện thoại");
-        auth
-          .signInWithPhoneNumber(
-            "+84" + values.phone.substring(1, values.phone),
-            window.recaptchaVerifier
-          )
-          .then((result) => {
-            setResetTime(30);
-            setResult(result);
-            setModal(!modal);
-            setValues(values);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+        if (phone !== "") {
+          toast.success("Xin xác nhận số điện thoại");
+          auth
+            .signInWithPhoneNumber(
+              "+84" + values.phone.substring(1, values.phone),
+              window.recaptchaVerifier
+            )
+            .then((result) => {
+              setResetTime(30);
+              setResult(result);
+              setModal(!modal);
+              setValues(values);
+            })
+            .catch((err) => {
+              toast.error(err);
+            });
+        } else {
+          //Gửi mail
+          register_user(values);
+        }
       }
     },
   });
@@ -175,13 +226,13 @@ const Register = (props) => {
       .confirm(otp)
       .then(async (result) => {
         setErrorMessage("");
-        setSuccessMessage("Xác thực thành công");
+        toast.success("Xác thực thành công");
         //Đăng kí
         register_user(values);
       })
       .catch((err) => {
         setSuccessMessage("");
-        setErrorMessage("Mã xác thực không đúng. Xác thực thất bại.");
+        toast.error("Mã xác thực không đúng. Xác thực thất bại.");
       });
   };
 
@@ -192,7 +243,6 @@ const Register = (props) => {
         size: "invisible",
       }
     );
-    console.log(resetTime);
     if (resetTime !== undefined) {
       if (resetTime > 0) {
         setTimeout(() => setResetTime(resetTime - 1), 1000);
@@ -274,39 +324,41 @@ const Register = (props) => {
           <h2>Đăng kí</h2>
           <p className="text-danger">{errorMessage}</p>
           <div className="formField">
-            <label className="formFieldLabel" for="email">
-              Email <span className="text-danger">*</span>
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="Email"
-              autoComplete="email"
-              value={formik.values.email}
-              onChange={formik.handleChange}
-              className="formFieldInput"
-            />
+            <div className="formField">
+              <label className="formFieldLabel" for="account">
+                Họ và tên<span className="text-danger">*</span>
+              </label>
+              <input
+                id="username"
+                name="username"
+                type="text"
+                className="formFieldInput"
+                placeholder="Họ và tên"
+                value={formik.values.username}
+                onChange={formik.handleChange}
+              />
+            </div>
             <p className="text-warning field_validate_label">
-              {formik.errors.email ? formik.errors.email : null}{" "}
+              {formik.errors.username ? formik.errors.username : null}{" "}
             </p>
           </div>
           <div className="formField">
-            <label className="formFieldLabel" for="email">
-              Số điện thoại: <span className="text-danger">*</span>
-            </label>
-            <input
-              id="phone"
-              name="phone"
-              type="text"
-              placeholder="Số điện thoại"
-              autoComplete="phone"
-              value={formik.values.phone}
-              onChange={formik.handleChange}
-              className="formFieldInput"
-            />
+            <div className="formField">
+              <label className="formFieldLabel" for="account">
+                Email / Số điện thoại<span className="text-danger">*</span>
+              </label>
+              <input
+                id="account"
+                name="account"
+                type="text"
+                className="formFieldInput"
+                placeholder="Email / Số điện thoại"
+                value={formik.values.account}
+                onChange={formik.handleChange}
+              />
+            </div>
             <p className="text-warning field_validate_label">
-              {formik.errors.phoneError ? formik.errors.phoneError : null}{" "}
+              {formik.errors.account ? formik.errors.account : null}{" "}
             </p>
           </div>
           <div className="formField">
@@ -350,20 +402,29 @@ const Register = (props) => {
           <div id="recaptcha-container"></div>
           <Row>
             {/* Tạo loading button */}
-            {isLoading ? (
-              <Col md="6">
-                <Button type="submit" color="primary" className="float-left">
-                  <span
-                    class="spinner-border spinner-border-sm"
-                    role="status"
-                    aria-hidden="true"
-                  ></span>{" "}
-                  Đang tạo tài khoản
-                </Button>
-              </Col>
+
+            {JSON.stringify(formik.errors) === "{}" ? (
+              isLoading ? (
+                <Col md="6">
+                  <Button type="submit" color="primary" className="float-left">
+                    <span
+                      class="spinner-border spinner-border-sm"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>{" "}
+                    Đang tạo tài khoản
+                  </Button>
+                </Col>
+              ) : (
+                <Col md="6">
+                  <Button type="submit" color="primary" className="float-left">
+                    Tạo tài khoản
+                  </Button>
+                </Col>
+              )
             ) : (
               <Col md="6">
-                <Button type="submit" color="primary" className="float-left">
+                <Button disabled className="float-left">
                   Tạo tài khoản
                 </Button>
               </Col>

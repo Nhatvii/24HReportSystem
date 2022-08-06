@@ -3,132 +3,34 @@ import Heading from "../uiStyle/Heading";
 import TrendingNewsSlider from "../TrendingNewsSlider";
 import { Link } from "react-router-dom";
 import FontAwesome from "../uiStyle/FontAwesome";
+import moment from "moment";
 
-const trendingNews = [
-  {
-    category: { subCategory: "Chiếm đoạt tài sản" },
-    date: "March 26, 2020",
-    title: "Lừa đảo sinh viên nghèo",
-    image: "https://picsum.photos/700/500",
-    viewCount: "200",
-  },
-  {
-    category: { subCategory: "Lừa đảo" },
-    date: "March 26, 2020",
-    title: "Bị lừa khi tìm bạn gái trên Tinder",
-    image:
-      "https://d3jyiu4jpn0ihr.cloudfront.net/wp-content/uploads/sites/6/20190918160006/ve-may-bay-di-sai-gon1.jpg",
-    viewCount: 43,
-  },
-  {
-    category: { subCategory: "Mạng xã hội" },
-    date: "March 26, 2020",
-    title: "Lừa đảo sinh viên nghèo",
-    image:
-      "https://suckhoedoisong.qltns.mediacdn.vn/thumb_w/1200/Images/phamquynh/2021/07/12/sai-gon-mua-thuong-1626066367.jpg",
-    viewCount: 54,
-  },
-  {
-    category: { subCategory: "Vay tín dụng đen" },
-    date: "March 26, 2020",
-    title: "Bị lừa khi tìm bạn gái trên Tinder",
-    image:
-      "https://vnn-imgs-f.vgcloud.vn/2021/11/05/21/thanh-nien-bo-lai-doi-dep-giua-cau-sai-gon-roi-lao-xuong-song-mat-tich-3.jpg",
-    viewCoun: 53,
-  },
-  {
-    category: { subCategory: "Mạng xã hội" },
-    date: "March 26, 2020",
-    title: "Lừa đảo sinh viên nghèo",
-    image:
-      "https://suckhoedoisong.qltns.mediacdn.vn/thumb_w/1200/Images/phamquynh/2021/07/12/sai-gon-mua-thuong-1626066367.jpg",
-    viewCount: 54,
-  },
-  {
-    category: { subCategory: "Vay tín dụng đen" },
-    date: "March 26, 2020",
-    title: "Bị lừa khi tìm bạn gái trên Tinder",
-    image:
-      "https://vnn-imgs-f.vgcloud.vn/2021/11/05/21/thanh-nien-bo-lai-doi-dep-giua-cau-sai-gon-roi-lao-xuong-song-mat-tich-3.jpg",
-    viewCoun: 53,
-  },
-];
-
-const TrendingNews = ({ dark }) => {
+const TrendingNews = (props) => {
+  const { data } = props;
   return (
     <Fragment>
       <Heading title="Tin nổi bật" />
-      <TrendingNewsSlider />
-      {dark ? (
-        <div className="border_white" />
-      ) : (
-        <div className="border_black" />
-      )}
+      <TrendingNewsSlider data={data} />
+      <div className="border_black" />
       <div className="space-30" />
       <div className="row">
         <div className="col-lg-6">
-          {trendingNews.slice(0, 3).map((item, i) => (
+          {data.slice(0, 2).map((item, i) => (
             <Fragment key={i}>
               <div className="single_post widgets_small">
                 <div className="post_img">
                   <div className="img_wrap">
                     <img
-                      src={item.image}
+                      src={
+                        item.image.includes("http")
+                          ? item.image
+                          : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQMAAADCCAMAAAB6zFdcAAAAQlBMVEX///+hoaGenp6ampr39/fHx8fOzs7j4+P8/Pyvr6/d3d3FxcX29va6urqYmJjs7OzU1NSlpaW1tbWtra3n5+e/v78TS0zBAAACkUlEQVR4nO3b63KCMBCGYUwUUVEO6v3fagWVY4LYZMbZnff51xaZ5jON7CZNEgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABQb5tvI8qzX4/nH84XG5Upfj2ir2V2E5fZ/XpIX9saMnhkYLIkiyRJjdgMoiEDMmiQgfwM8rSu77ew2wnPoLTmwdZBs0J2BuXrYckcQm4nOoP+WcmWAbcTnUHZPy9eA24nOoN7n0HI54ToDM5k8PjluwyqgNuJzqDoaugPg8gWZ4noDAYLwuIg75fLeeHHsjNIzrZJwWwW+0DNsmEWPjiEZ5AcD8ZUu8VZ8HyQMifvBdIz+PS33i8adu+7Qn4Gn1Tdupl7rlCfQb9seosK7RkcBy1o30iVZ5CPOtDW3WhQnsF13IV3v0p3BqfJRoSpXVepzmA/24+yqeMyzRm4tqOs44lSUwa3yfgOri25av5CPRnklR33VlPnrqSZV09qMsiqSWV082xOz1uPajJ49pTM/f115k6guWa6JGjJ4N1lt8fXN2rv/vysjFaSQdFXBc/KKF04ptFPliclGVR9Bu27XCyeVOkmy5OODAZN9rYyyip/AIPJ8qIig+PoXbf7YdPdncFoSdCQQT4ZceV+MhiFMBy0hgyu0yGvOLI17KwpyGBaHK5jtt0N5GcwLw7XZdB31sRn8O+ziqYro8Vn4CwOV+k6a9Iz+PwRsKC7h+gMfMXhKu/OmuwM/MXhKq8yWnYG/uJw5Uxoy2jRGZTBZ/jboxuSM1guDtdNhKazJjiDbNMe0AxzKUVnkO+jEJxBxNtJzWCTxlNLzSB8KehJ/H+mJGYAjaDjzj9SnHZRuXZiAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAECXP1XDHv7U4SNFAAAAAElFTkSuQmCC"
+                      }
                       alt="thumb"
                       height={"100%"}
                       width={"100%"}
                     />
                   </div>
-                  <span className="tranding">
-                    <FontAwesome name="eye" />
-                  </span>
-                </div>
-                <div className="single_post_text">
-                  <div className="meta2">
-                    <Link
-                      to={{
-                        pathname: "/search",
-                        state: {
-                          title: "Danh mục: " + item.category.subCategory,
-                          CategoryID: item.category.categoryId,
-                        },
-                      }}
-                    >
-                      {item.category.subCategory}
-                    </Link>
-                    <Link to={`/post-detail/${item.postId}`}>{item.date}</Link>
-                  </div>
-                  <h4>
-                    <Link to={`/post-detail/${item.postId}`}>{item.title}</Link>
-                  </h4>
-                </div>
-              </div>
-              <div className="space-15" />
-              {dark ? (
-                <div className="border_white" />
-              ) : (
-                <div className="border_black" />
-              )}
-              <div className="space-15" />
-            </Fragment>
-          ))}
-        </div>
-        <div className="col-lg-6">
-          {trendingNews.slice(3, 6).map((item, i) => (
-            <Fragment key={i}>
-              <div className="single_post widgets_small">
-                <div className="post_img">
-                  <div className="img_wrap">
-                    <img
-                      src={item.image}
-                      alt="thumb"
-                      height={"100%"}
-                      width={"100%"}
-                    />
-                  </div>
-                  <span className="tranding">
-                    <FontAwesome name="eye" />
-                  </span>
                 </div>
                 <div className="single_post_text">
                   <div className="meta2">
@@ -144,20 +46,62 @@ const TrendingNews = ({ dark }) => {
                       {item.category.subCategory}
                     </Link>
                     <Link to={`/post-detail/${item.postId}`}>
-                      {item.publicTime}
+                      {moment(item.publicTime).format("DD.MM.YYYY")}
                     </Link>
                   </div>
                   <h4>
-                    <Link to={`/post-detail/${item.postId}`}>{item.title}</Link>
+                    <Link to={`/post-detail/${item.postId}`}>
+                      {item.title.substring(0, 80) + "..."}
+                    </Link>
                   </h4>
                 </div>
               </div>
               <div className="space-15" />
-              {dark ? (
-                <div className="border_white" />
-              ) : (
-                <div className="border_black" />
-              )}
+              <div className="border_black" />
+              <div className="space-15" />
+            </Fragment>
+          ))}
+        </div>
+        <div className="col-lg-6">
+          {data.slice(2, 4).map((item, i) => (
+            <Fragment key={i}>
+              <div className="single_post widgets_small">
+                <div className="post_img">
+                  <div className="img_wrap">
+                    <img
+                      src={item.image}
+                      alt="thumb"
+                      height={"100%"}
+                      width={"100%"}
+                    />
+                  </div>
+                </div>
+                <div className="single_post_text">
+                  <div className="meta2">
+                    <Link
+                      to={{
+                        pathname: "/search",
+                        state: {
+                          title: "Danh mục: " + item.category.subCategory,
+                          CategoryID: item.category.categoryId,
+                        },
+                      }}
+                    >
+                      {item.category.subCategory}
+                    </Link>
+                    <Link to={`/post-detail/${item.postId}`}>
+                      {moment(item.publicTime).format("DD.MM.YYYY")}
+                    </Link>
+                  </div>
+                  <h4>
+                    <Link to={`/post-detail/${item.postId}`}>
+                      {item.title.substring(0, 80) + "..."}
+                    </Link>
+                  </h4>
+                </div>
+              </div>
+              <div className="space-15" />
+              <div className="border_black" />
               <div className="space-15" />
             </Fragment>
           ))}

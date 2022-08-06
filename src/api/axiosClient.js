@@ -1,8 +1,8 @@
 import axios from "axios";
 // import queryString from "query-string";
 const axiosClient = axios.create({
-  baseURL: "http://ec2-52-221-205-151.ap-southeast-1.compute.amazonaws.com/api",
-  // baseURL: process.env.REACT_APP_API_URL,
+  // baseURL: "http://ec2-52-221-205-151.ap-southeast-1.compute.amazonaws.com/api",
+  baseURL: process.env.REACT_APP_API_URL,
   headers: {
     "Content-Type": "application/json",
   },

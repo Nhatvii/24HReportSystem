@@ -11,7 +11,6 @@ import PostOnePagination from "../../components/PostOnePagination";
 import { Markup } from "interweave";
 
 // images
-import banner2 from "../../doc/img/bg/sidebar-1.png";
 import author2 from "../../doc/img/author/author2.png";
 
 import OurBlogSection from "../../components/OurBlogSection";
@@ -32,8 +31,9 @@ const PostOnePage = (props) => {
     }
   };
   useEffect(() => {
+    console.log(props);
     fetchPostDetail();
-  }, []);
+  }, [props]);
   return (
     <Fragment>
       <div className="fifth_bg archives post post1">
@@ -74,7 +74,9 @@ const PostOnePage = (props) => {
                 <div className="single_post_heading">
                   <h1>{postDetail.title}</h1>
                   <div className="space-10" />
-                  <p>{postDetail.subTitle}</p>
+                  <p>
+                    <b>{postDetail.subTitle}</b>
+                  </p>
                 </div>
                 <div className="space-40" />
                 <img
@@ -155,18 +157,16 @@ const PostOnePage = (props) => {
                 {/* Comment like share */}
                 <Comments className="comments" postId={props.match.params.id} />
                 <div className="space-60" />
-                <PostOnePagination />
               </div>
               <div className="col-md-6 col-lg-4">
-                <WidgetTab />
+                <WidgetTab
+                  data={JSON.parse(localStorage.getItem("carousel-post"))}
+                />
                 <FollowUs title="Theo dõi chúng tôi" />
-                <WidgetTrendingNews />
-                <div className="banner2 mb30">
-                  <Link to="/">
-                    <img src={banner2} alt="thumb" />
-                  </Link>
-                </div>
-                <MostShareWidget title="Chia sẻ nhiều" />
+                <MostShareWidget
+                  title="Chia sẻ nhiều"
+                  data={JSON.parse(localStorage.getItem("carousel-post"))}
+                />
                 <NewsLetter />
               </div>
             </div>
@@ -174,7 +174,9 @@ const PostOnePage = (props) => {
         )}
       </div>
       <div className="space-60" />
-      <OurBlogSection />
+      <OurBlogSection
+        data={JSON.parse(localStorage.getItem("carousel-post"))}
+      />
       <div className="space-100" />
     </Fragment>
   );

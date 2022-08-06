@@ -2,75 +2,13 @@ import React, { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import FontAwesome from "../uiStyle/FontAwesome";
 import Swiper from "react-id-swiper";
-import postApi from "../../api/postApi";
-import { toast } from "react-toastify";
 import moment from "moment";
-const mostView = [
-  {
-    category: { subCategory: "Chiếm đoạt tài sản" },
-    date: "March 26, 2020",
-    title: "Lừa đảo sinh viên nghèo",
-    image: "https://picsum.photos/700/500",
-    viewCount: 45,
-  },
-  {
-    category: { subCategory: "Lừa đảo" },
-    date: "March 26, 2020",
-    title: "Bị lừa khi tìm bạn gái trên Tinder",
-    image:
-      "https://d3jyiu4jpn0ihr.cloudfront.net/wp-content/uploads/sites/6/20190918160006/ve-may-bay-di-sai-gon1.jpg",
-    viewCount: 43,
-  },
-  {
-    category: { subCategory: "Mạng xã hội" },
-    date: "March 26, 2020",
-    title: "Lừa đảo sinh viên nghèo",
-    image:
-      "https://suckhoedoisong.qltns.mediacdn.vn/thumb_w/1200/Images/phamquynh/2021/07/12/sai-gon-mua-thuong-1626066367.jpg",
-    viewCount: 74,
-  },
-  {
-    category: { subCategory: "Vay tín dụng đen" },
-    date: "March 26, 2020",
-    title: "Bị lừa khi tìm bạn gái trên Tinder",
-    image:
-      "https://vnn-imgs-f.vgcloud.vn/2021/11/05/21/thanh-nien-bo-lai-doi-dep-giua-cau-sai-gon-roi-lao-xuong-song-mat-tich-3.jpg",
-    viewCount: 54,
-  },
-  {
-    category: { subCategory: "Mạng xã hội" },
-    date: "March 26, 2020",
-    title: "Lừa đảo sinh viên nghèo",
-    image:
-      "https://suckhoedoisong.qltns.mediacdn.vn/thumb_w/1200/Images/phamquynh/2021/07/12/sai-gon-mua-thuong-1626066367.jpg",
-    viewCount: 46,
-  },
-  {
-    category: { subCategory: "Vay tín dụng đen" },
-    date: "March 26, 2020",
-    title: "Bị lừa khi tìm bạn gái trên Tinder",
-    image:
-      "https://vnn-imgs-f.vgcloud.vn/2021/11/05/21/thanh-nien-bo-lai-doi-dep-giua-cau-sai-gon-roi-lao-xuong-song-mat-tich-3.jpg",
-    viewCount: 53,
-  },
-];
-const MostView = ({ no_margin, title, dark }) => {
+
+const MostView = ({ no_margin, title, data }) => {
+  // const { data } = props;
   const [swiper, setSwiper] = useState(null);
   const [mostViewPosts, setMostViewPosts] = useState([]);
-  const loadMostViewPosts = async () => {
-    try {
-      const params = { Status: 3 };
-      const response = await postApi.getByStatus(params);
-      setMostViewPosts(
-        response.sort((a, b) => new a.viewCount() - b.viewCount).slice(0, 4)
-      );
-    } catch (e) {
-      toast.error("Không thể tải bài viết");
-    }
-  };
-  useEffect(() => {
-    loadMostViewPosts();
-  }, [mostViewPosts]);
+
   const goNext = () => {
     if (swiper !== null) {
       swiper.slideNext();
@@ -92,8 +30,8 @@ const MostView = ({ no_margin, title, dark }) => {
       <h2 className="widget-title">{title ? title : "Xem nhiều"}</h2>
       <div className="post_type2_carousel multipleRowCarousel nav_style1">
         {/*CAROUSEL START*/}
-        <Swiper getSwiper={setSwiper} {...params}>
-          {mostView
+        <Swiper getSwiper={setSwiper} {...params} observer observeParents>
+          {data
             .sort((a, b) => a.viewCount - b.viewCount)
             .reverse()
             .slice(0, 6)
@@ -102,7 +40,15 @@ const MostView = ({ no_margin, title, dark }) => {
                 <div className="single_post widgets_small type8">
                   <div className="post_img">
                     <div className="img_wrap">
-                      <img src={item.image} alt="thumb" height={"100px"} />
+                      <img
+                        src={
+                          item.image.includes("http")
+                            ? item.image
+                            : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQMAAADCCAMAAAB6zFdcAAAAQlBMVEX///+hoaGenp6ampr39/fHx8fOzs7j4+P8/Pyvr6/d3d3FxcX29va6urqYmJjs7OzU1NSlpaW1tbWtra3n5+e/v78TS0zBAAACkUlEQVR4nO3b63KCMBCGYUwUUVEO6v3fagWVY4LYZMbZnff51xaZ5jON7CZNEgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABQb5tvI8qzX4/nH84XG5Upfj2ir2V2E5fZ/XpIX9saMnhkYLIkiyRJjdgMoiEDMmiQgfwM8rSu77ew2wnPoLTmwdZBs0J2BuXrYckcQm4nOoP+WcmWAbcTnUHZPy9eA24nOoN7n0HI54ToDM5k8PjluwyqgNuJzqDoaugPg8gWZ4noDAYLwuIg75fLeeHHsjNIzrZJwWwW+0DNsmEWPjiEZ5AcD8ZUu8VZ8HyQMifvBdIz+PS33i8adu+7Qn4Gn1Tdupl7rlCfQb9seosK7RkcBy1o30iVZ5CPOtDW3WhQnsF13IV3v0p3BqfJRoSpXVepzmA/24+yqeMyzRm4tqOs44lSUwa3yfgOri25av5CPRnklR33VlPnrqSZV09qMsiqSWV082xOz1uPajJ49pTM/f115k6guWa6JGjJ4N1lt8fXN2rv/vysjFaSQdFXBc/KKF04ptFPliclGVR9Bu27XCyeVOkmy5OODAZN9rYyyip/AIPJ8qIig+PoXbf7YdPdncFoSdCQQT4ZceV+MhiFMBy0hgyu0yGvOLI17KwpyGBaHK5jtt0N5GcwLw7XZdB31sRn8O+ziqYro8Vn4CwOV+k6a9Iz+PwRsKC7h+gMfMXhKu/OmuwM/MXhKq8yWnYG/uJw5Uxoy2jRGZTBZ/jboxuSM1guDtdNhKazJjiDbNMe0AxzKUVnkO+jEJxBxNtJzWCTxlNLzSB8KehJ/H+mJGYAjaDjzj9SnHZRuXZiAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAECXP1XDHv7U4SNFAAAAAElFTkSuQmCC"
+                        }
+                        alt="thumb"
+                        height={"100px"}
+                      />
                     </div>
                   </div>
                   <div className="single_post_text">
@@ -124,22 +70,21 @@ const MostView = ({ no_margin, title, dark }) => {
                     </div>
                     <h6>
                       <Link to={`/post-detail/${item.postId}`}>
-                        {item.title}
+                        {item.title.substring(0, 50) + "..."}
                       </Link>
                     </h6>
                   </div>
-                  <div className="type8_count">
-                    <h5>{item.viewCount}</h5>
-                  </div>
+                  {/* <div className="type8_count">
+                    <h5>
+                      {item.viewCount}{" "}
+                      <FontAwesome name="eye" style={{ fontSize: " 0.73em" }} />
+                    </h5>
+                  </div> */}
                 </div>
                 {i + 2 < mostViewPosts.length ? (
                   <Fragment>
                     <div className="space-15" />
-                    {dark ? (
-                      <div className="border_white" />
-                    ) : (
-                      <div className="border_black" />
-                    )}
+                    <div className="border_black" />
                     <div className="space-15" />
                   </Fragment>
                 ) : null}

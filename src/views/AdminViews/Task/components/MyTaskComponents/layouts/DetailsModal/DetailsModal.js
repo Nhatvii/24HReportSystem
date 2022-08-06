@@ -148,27 +148,27 @@ const DetailsModal = (props) => {
     try {
       const params = {
         EditorID:
-          JSON.parse(user_info) !== null ? JSON.parse(user_info).email : null,
+          JSON.parse(user_info) !== null ? JSON.parse(user_info).accountId : null,
         status: "",
       };
       const params2 = {
         EditorID:
-          JSON.parse(user_info) !== null ? JSON.parse(user_info).email : null,
+          JSON.parse(user_info) !== null ? JSON.parse(user_info).accountId : null,
         status: 2,
       };
       const params3 = {
         EditorID:
-          JSON.parse(user_info) !== null ? JSON.parse(user_info).email : null,
+          JSON.parse(user_info) !== null ? JSON.parse(user_info).accountId : null,
         status: 5,
       };
       const params4 = {
         EditorID:
-          JSON.parse(user_info) !== null ? JSON.parse(user_info).email : null,
+          JSON.parse(user_info) !== null ? JSON.parse(user_info).accountId : null,
         status: 3,
       };
       const params5 = {
         EditorID:
-          JSON.parse(user_info) !== null ? JSON.parse(user_info).email : null,
+          JSON.parse(user_info) !== null ? JSON.parse(user_info).accountId : null,
         status: 4,
       };
 
@@ -265,7 +265,7 @@ const DetailsModal = (props) => {
       const user_info = localStorage.getItem("user_info");
       const param = {
         EditorID:
-          JSON.parse(user_info) !== null ? JSON.parse(user_info).email : null,
+          JSON.parse(user_info) !== null ? JSON.parse(user_info).accountId : null,
         Status: 1,
       }; //Crafted only
       const response = await postApi.getByIdAndStatus(param);

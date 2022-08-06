@@ -16,7 +16,7 @@ class UserApi {
     return axiosClient.put(url, params);
   };
   getUser = (params) => {
-    const url = "/Account/GetAccount?email=" + params.email;
+    const url = "/Account/GetAccount?UserId=" + params.userId;
     return axiosClient.get(url);
   };
 }

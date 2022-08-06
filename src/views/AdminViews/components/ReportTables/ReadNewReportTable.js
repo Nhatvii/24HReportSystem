@@ -32,7 +32,7 @@ const ReadNewReportTable = () => {
         .map((item) =>
           item.reportViews.length > 0 &&
           item.reportViews.filter(
-            (e) => e.userId === JSON.parse(user_info).email
+            (e) => e.userId === JSON.parse(user_info).accountId
           ).length > 0
             ? { ...item }
             : { ...item, _props: { color: "info", align: "middle" } }
@@ -40,7 +40,7 @@ const ReadNewReportTable = () => {
         .filter(
           (report) =>
             report.reportViews.filter(
-              (e) => e.userId === JSON.parse(user_info).email
+              (e) => e.userId === JSON.parse(user_info).accountId
             ).length > 0
         );
       setReports(
@@ -58,7 +58,7 @@ const ReadNewReportTable = () => {
       const param = {
         reportId: id,
         status: status,
-        staffId: JSON.parse(user_info).email,
+        staffId: JSON.parse(user_info).accountId,
       };
       const response = await updateReportApi.update(param);
       console.log("Response", response);
@@ -124,7 +124,7 @@ const ReadNewReportTable = () => {
     setVisibleModal(!visibleModal);
     try {
       const param = { id: id };
-      const param2 = { reportId: id, userId: JSON.parse(user_info).email };
+      const param2 = { reportId: id, userId: JSON.parse(user_info).accountId };
       const response = await reportApi.find(param);
       await reportApi.reportViewUpdate(param2);
       const metaDescription = JSON.stringify(response.description)

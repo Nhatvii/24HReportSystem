@@ -15,7 +15,14 @@ import {
 import { toast } from "react-toastify";
 import postDetailApi from "../../../../api/postDetailApi";
 import LetteredAvatar from "react-lettered-avatar";
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import {
+  Button,
+  Input,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+} from "reactstrap";
 const MIN_LENGTH_DESCRIPTION = 10;
 const MAX_LENGTH_DESCRIPTION = 100;
 
@@ -33,13 +40,13 @@ export const Comments = (props) => {
   const [avatarColor, setAvatarColor] = useState([]);
   //
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const [openUpdateModal, setOpenUpdateModal] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
   const toggle = () => {
     setOpenDeleteModal(!openDeleteModal);
     setIsLoading(false);
   };
   const toggle2 = () => {
-    setOpenUpdateModal(!openUpdateModal);
+    setIsUpdating(!isUpdating);
     setIsLoading(false);
   };
   const randomColor = (name) => {
@@ -66,13 +73,7 @@ export const Comments = (props) => {
     try {
       const response = await commentApi.getByPostId(props.postId);
       setComments(response);
-      response.map((comment) =>
-        randomColor(
-          comment.user.accountInfo.username !== null
-            ? comment.user.accountInfo.username
-            : comment.user.email
-        )
-      );
+      response.map((comment) => randomColor(comment.user.accountInfo.username));
       _setNumberOfComments(response.length); //
     } catch (err) {
       console.log("Error", err);
@@ -83,7 +84,7 @@ export const Comments = (props) => {
     try {
       setIsLoading(true);
       const params = {
-        userId: JSON.parse(user_info).email,
+        userId: JSON.parse(user_info).accountId,
         postId: props.postId,
         commentTitle: commentTitle,
       };
@@ -91,14 +92,12 @@ export const Comments = (props) => {
       if (JSON.stringify(response).includes("error")) {
         setIsLoading(false);
         fetchComments();
-        setCommentTitle("");
-        setWarningMessage(response.error.message);
+        toast.error(response.error.message);
       }
       if (response.statusCode === 200) {
         setIsLoading(false);
         fetchComments();
         setCommentTitle("");
-        setWarningMessage("");
       }
     } catch (e) {
       toast.error(e.message);
@@ -133,7 +132,7 @@ export const Comments = (props) => {
       if (response.statusCode === 200) {
         fetchComments();
         setSelectedId("");
-        setOpenUpdateModal(false);
+        setIsUpdating(false);
         setIsLoading(false);
       }
     } catch (e) {
@@ -155,7 +154,7 @@ export const Comments = (props) => {
     JSON.parse(user_info) !== null &&
       (JSON.parse(user_info).accountInfo.username !== null
         ? randomColor(JSON.parse(user_info).accountInfo.username)
-        : randomColor(JSON.parse(user_info).email));
+        : randomColor(JSON.parse(user_info).accountId));
   }, []);
   const [temp, setTemp] = useState(0);
   useEffect(() => {
@@ -190,9 +189,13 @@ export const Comments = (props) => {
                         " "
                       ) + 2
                     )
-                  : JSON.parse(user_info).email.substring(
-                      JSON.parse(user_info).email.lastIndexOf(" "),
-                      JSON.parse(user_info).email.lastIndexOf(" ") + 2
+                  : JSON.parse(user_info).accountInfo.username.substring(
+                      JSON.parse(user_info).accountInfo.username.lastIndexOf(
+                        " "
+                      ),
+                      JSON.parse(user_info).accountInfo.username.lastIndexOf(
+                        " "
+                      ) + 2
                     )
               }
               className=""
@@ -205,7 +208,7 @@ export const Comments = (props) => {
                     e.name ===
                     (JSON.parse(user_info).accountInfo.username !== null
                       ? JSON.parse(user_info).accountInfo.username
-                      : JSON.parse(user_info).email)
+                      : JSON.parse(user_info).accountId)
                 ).color
               }
             />
@@ -315,9 +318,9 @@ export const Comments = (props) => {
                         comment.user.accountInfo.username.lastIndexOf(" "),
                         comment.user.accountInfo.username.lastIndexOf(" ") + 2
                       )
-                    : comment.user.email.substring(
-                        comment.user.email.lastIndexOf(" "),
-                        comment.user.email.lastIndexOf(" ") + 2
+                    : comment.user.accountId.substring(
+                        comment.user.accountId.lastIndexOf(" "),
+                        comment.user.accountId.lastIndexOf(" ") + 2
                       )
                 }
                 className=""
@@ -330,7 +333,7 @@ export const Comments = (props) => {
                       e.name ===
                       (comment.user.accountInfo.username !== null
                         ? comment.user.accountInfo.username
-                        : comment.user.email)
+                        : comment.user.accountId)
                   ).color
                 }
               />
@@ -339,200 +342,120 @@ export const Comments = (props) => {
                   <div className="user-name">
                     {comment.user.accountInfo.username !== null
                       ? comment.user.accountInfo.username
-                      : comment.user.email}
+                      : comment.user.accountId}
                   </div>{" "}
                   <div className="date">
                     - {moment(comment.createTime).locale("vi").fromNow()}
                   </div>
-                  <div
-                    className="comment"
-                    style={{ overflowWrap: "break-word", width: "25rem" }}
-                  >
-                    {comment.commentTitle}
-                  </div>
+                  {isUpdating && comment.commentId === selectedId ? (
+                    <Input
+                      type="text"
+                      name="comment"
+                      value={updatedComment}
+                      onChange={(e) => handleUpdateChange(e)}
+                    />
+                  ) : (
+                    <div
+                      className="comment"
+                      style={{ overflowWrap: "break-word", width: "25rem" }}
+                    >
+                      {comment.commentTitle}
+                    </div>
+                  )}
                   {JSON.parse(user_info) !== null ? (
-                    comment.user.email === JSON.parse(user_info).email ? (
-                      <div className="settings">
-                        <div
-                          className="delete"
-                          data-toggle="modal"
-                          data-target="#confirmDelete"
-                          onClick={() => (
-                            setSelectedId(comment.commentId),
-                            setOpenDeleteModal(true)
-                          )}
-                        >
-                          Xóa
-                        </div>
-                        <div
-                          className="modify"
-                          data-toggle="modal"
-                          data-target="#updateComment"
-                          onClick={() => (
-                            setOpenUpdateModal(true),
-                            setSelectedId(comment.commentId)
-                          )}
-                        >
-                          Chỉnh sửa
-                        </div>
-                        {/* Popup model update*/}
-                        <Modal
-                          isOpen={openUpdateModal}
-                          toggle={() => toggle2()}
-                          className=""
-                          size="lg"
-                          style={{
-                            maxWidth: "400px",
-                            width: "40%",
-                            paddingTop: "15rem",
-                          }}
-                        >
-                          <ModalHeader
-                            className="bg-primary"
-                            toggle={() => toggle2()}
-                          >
-                            Sửa bình luận
-                          </ModalHeader>
-                          <ModalBody>
-                            <CFormTextarea
-                              rows="3"
-                              className="input-lg w-200 mb-1"
-                              type="text"
-                              id="update"
-                              value={updatedComment}
-                              onChange={handleUpdateChange}
-                              placeholder="Viết bình luận..."
-                            />
-                          </ModalBody>
-                          <ModalFooter>
-                            {isLoading ? (
-                              <Button color="primary">
-                                <span
-                                  class="spinner-border spinner-border-sm"
-                                  role="status"
-                                  aria-hidden="true"
-                                ></span>{" "}
-                                Đang sửa
-                              </Button>
-                            ) : (
-                              <Button
-                                color="primary"
-                                onClick={() => updateComment(selectedId)}
-                              >
-                                Sửa
-                              </Button>
-                            )}
-                            <Button color="secondary" onClick={() => toggle2()}>
-                              Hủy
-                            </Button>
-                          </ModalFooter>
-                        </Modal>
-                        <div
-                          class="modal fade"
-                          id="updateComment"
-                          tabindex="-1"
-                          role="dialog"
-                          aria-labelledby="updateCommentTitle"
-                          aria-hidden="true"
-                          data-backdrop="false"
-                        >
+                    comment.user.accountId ===
+                    JSON.parse(user_info).accountId ? (
+                      !(isUpdating && comment.commentId === selectedId) ? (
+                        <div className="settings">
                           <div
-                            class="modal-dialog modal-dialog-centered"
-                            role="document"
+                            className="delete"
+                            data-toggle="modal"
+                            data-target="#confirmDelete"
+                            onClick={() => (
+                              setSelectedId(comment.commentId),
+                              setOpenDeleteModal(true)
+                            )}
                           >
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h5
-                                  class="modal-title"
-                                  id="exampleModalLongTitle"
+                            Xóa
+                          </div>
+                          <div
+                            className="modify"
+                            data-toggle="modal"
+                            data-target="#updateComment"
+                            onClick={() => (
+                              setIsUpdating(true),
+                              setSelectedId(comment.commentId),
+                              setUpdatedComment(comment.commentTitle)
+                            )}
+                          >
+                            Chỉnh sửa
+                          </div>
+                          {/* Popup modal delete*/}
+                          <Modal
+                            isOpen={openDeleteModal}
+                            toggle={() => toggle()}
+                            className=""
+                            size="lg"
+                            style={{
+                              maxWidth: "400px",
+                              width: "40%",
+                              paddingTop: "15rem",
+                            }}
+                          >
+                            <ModalHeader
+                              className="bg-danger"
+                              toggle={() => toggle()}
+                            >
+                              Bạn chắc không?
+                            </ModalHeader>
+                            <ModalBody>
+                              Bạn chắc chắn muốn xóa bình luận của mình?
+                            </ModalBody>
+                            <ModalFooter>
+                              {isLoading ? (
+                                <Button color="primary">
+                                  <span
+                                    class="spinner-border spinner-border-sm"
+                                    role="status"
+                                    aria-hidden="true"
+                                  ></span>{" "}
+                                  Đang Xóa
+                                </Button>
+                              ) : (
+                                <Button
+                                  color="primary"
+                                  onClick={() => deleteComment(selectedId)}
                                 >
-                                  Sửa bình luận
-                                </h5>
-                                <button
-                                  type="button"
-                                  className="close"
-                                  data-dismiss="modal"
-                                  aria-label="Close"
-                                >
-                                  <span aria-hidden="true">&times;</span>
-                                </button>
-                              </div>
-                              <div class="modal-body">
-                                <CFormTextarea
-                                  rows="3"
-                                  className="input-lg w-200 mb-1"
-                                  type="text"
-                                  id="update"
-                                  value={updatedComment}
-                                  onChange={handleUpdateChange}
-                                  placeholder="Viết bình luận..."
-                                />
-                              </div>
-                              <div class="modal-footer">
-                                <button
-                                  type="button"
-                                  class="btn btn-secondary"
-                                  data-dismiss="modal"
-                                >
-                                  Đóng
-                                </button>
-                                <button
-                                  type="button"
-                                  class="btn btn-primary"
-                                  data-dismiss="modal"
-                                  onClick={() => updateComment(selectedId)}
-                                >
-                                  Sửa
-                                </button>
-                              </div>
+                                  Xóa
+                                </Button>
+                              )}
+                              <Button
+                                color="secondary"
+                                onClick={() => toggle()}
+                              >
+                                Hủy
+                              </Button>
+                            </ModalFooter>
+                          </Modal>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="settings">
+                            <div
+                              className="delete"
+                              onClick={() => setIsUpdating(false)}
+                            >
+                              Hủy
+                            </div>
+                            <div
+                              className="modify"
+                              onClick={() => updateComment(selectedId)}
+                            >
+                              Chỉnh sửa
                             </div>
                           </div>
-                        </div>
-                        {/* Popup model delete*/}
-                        <Modal
-                          isOpen={openDeleteModal}
-                          toggle={() => toggle()}
-                          className=""
-                          size="lg"
-                          style={{
-                            maxWidth: "400px",
-                            width: "40%",
-                            paddingTop: "15rem",
-                          }}
-                        >
-                          <ModalHeader
-                            className="bg-danger"
-                            toggle={() => toggle()}
-                          >
-                            Bạn chắc không?
-                          </ModalHeader>
-                          <ModalBody>
-                            Bạn chắc chắn muốn xóa bình luận của mình?
-                          </ModalBody>
-                          <ModalFooter>
-                            {isLoading ? (
-                              <Button color="primary">
-                                <span
-                                  class="spinner-border spinner-border-sm"
-                                  role="status"
-                                  aria-hidden="true"
-                                ></span>{" "}
-                                Đang Xóa
-                              </Button>
-                            ) : (
-                              <Button
-                                color="primary"
-                                onClick={() => deleteComment(selectedId)}
-                              >
-                                Xóa
-                              </Button>
-                            )}
-                            <Button color="secondary" onClick={() => toggle()}>
-                              Hủy
-                            </Button>
-                          </ModalFooter>
-                        </Modal>
-                      </div>
+                        </>
+                      )
                     ) : (
                       <div className="settings"></div>
                     )

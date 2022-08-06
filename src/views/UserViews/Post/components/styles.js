@@ -235,7 +235,7 @@ export const CommentSection = styled.div`
   display: flex;
   margin-top: 16px;
   margin-bottom: 10px;
-  width: 150%;
+  width: 40rem;
   .user-name {
     font-weight: 600;
     margin-bottom: 4px;
@@ -247,6 +247,7 @@ export const CommentSection = styled.div`
   }
   .comment-actions {
     margin-top: 4px;
+    width: 37rem;
   }
   .comment {
   }

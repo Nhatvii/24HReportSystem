@@ -75,7 +75,7 @@ export function LikeShareSection(props) {
     try {
       const params = {
         postId: props.postId,
-        userId: JSON.parse(user_info).email,
+        userId: JSON.parse(user_info).accountId,
       };
       const response = await postApi.updateViewCount(params);
       console.log(response);
@@ -87,7 +87,7 @@ export function LikeShareSection(props) {
     try {
       const params = {
         postId: props.postId,
-        userId: JSON.parse(user_info).email,
+        userId: JSON.parse(user_info).accountId,
       };
       const response = await emotionApi.getEmotion(params);
       if (response.length === 0) {
@@ -117,7 +117,7 @@ export function LikeShareSection(props) {
     try {
       const params = {
         postId: props.postId,
-        userId: JSON.parse(user_info).email,
+        userId: JSON.parse(user_info).accountId,
       };
       const response = await emotionApi.sendEmotion(params);
       console.log(response);

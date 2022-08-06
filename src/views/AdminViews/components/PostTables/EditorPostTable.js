@@ -26,7 +26,7 @@ const EditorPostTable = () => {
     try {
       const user_info = localStorage.getItem("user_info");
       const param = {
-        EditorID: user_info !== null && JSON.parse(user_info).email,
+        EditorID: user_info !== null && JSON.parse(user_info).accountId,
         Status: 1,
       }; //Crafted only
       const response = await postApi.getByIdAndStatus(param);

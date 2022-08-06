@@ -192,7 +192,7 @@ const CreatePost = () => {
             try {
               const userID = localStorage.getItem("user_info");
               const params = {
-                userID: JSON.parse(userID).email,
+                userID: JSON.parse(userID).accountId,
                 title: title,
                 subTitle: subTitle,
                 categoryId: selectedCategory.value,

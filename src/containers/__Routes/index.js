@@ -23,6 +23,12 @@ const Routes = () => {
   return (
     <Switch>
       <PublicRoute exact path="/login" parentClass="theme-1" component={Auth} />
+      <PublicRoute
+        exact
+        path="/register"
+        parentClass="theme-1"
+        component={Auth}
+      />
       {/* admin routes */}
       <AdminRoute
         exact

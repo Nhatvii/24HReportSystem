@@ -31,6 +31,26 @@ class PostApi {
       "/Post?Status=" + params.Status + "&isRecentDate=" + params.isRecentDate;
     return axiosClient.get(url);
   };
+  searchByCategory = (params) => {
+    const url =
+      "/Post?Status=" +
+      params.status +
+      "&isViewCount=" +
+      params.isViewCount +
+      "&SubCategoryID=" +
+      params.SubCategoryID;
+    return axiosClient.get(url);
+  };
+  searchByContent = (params) => {
+    const url =
+      "/Post?Status=" +
+      params.status +
+      "&isViewCount=" +
+      params.isViewCount +
+      "&SearchContent=" +
+      params.SearchContent;
+    return axiosClient.get(url);
+  };
   updateViewCount = (params) => {
     const url = "/Post/UpdateViewCount";
     return axiosClient.put(url, params);

@@ -1,12 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import FooterCopyright from "../FooterCopyright";
-import FooterMoreNews from "../FooterMoreNews";
-import TwitterFeed from "../TwitterFeed";
 import FontAwesome from "../uiStyle/FontAwesome";
-
-import flogo from "../../doc/img/logo/footer_logo.png";
-import FooterNewsCategories from "../FooterNewsCategories";
 
 const FooterArea = ({ className }) => {
   const [email, setEmail] = useState("");
@@ -56,133 +51,18 @@ const FooterArea = ({ className }) => {
                     value={email}
                     className="signup"
                     type="email"
-                    placeholder="Your email address"
+                    placeholder="Email nhận tin"
                   />
                   <button type="submit" className="cbtn">
-                    sign up
+                    Theo dõi
                   </button>
                 </form>
-                <p>We hate spam as much as you do</p>
+                <p>Nhận tin mới nhất qua email</p>
               </div>
             </div>
           </div>
         </div>
         <div className="border_white" />
-        <div className="space-40" />
-        <div className="row justify-content-center">
-          <div className="col-lg-8">
-            <div className="row">
-              <div className="col-sm-6 col-lg">
-                <div className="single_footer_nav border_white_right">
-                  <FooterNewsCategories />
-                </div>
-              </div>
-              <div className="col-sm-6 col-lg">
-                <div className="single_footer_nav">
-                  <h3 className="widget-title2">Living</h3>
-                  <div className="row">
-                    <div className="col-lg-6">
-                      <ul>
-                        <li>
-                          <Link to="/">Crossword</Link>
-                        </li>
-                        <li>
-                          <Link to="/">Food</Link>
-                        </li>
-                        <li>
-                          <Link to="/">Automobiles</Link>
-                        </li>
-                        <li>
-                          <Link to="/">Education</Link>
-                        </li>
-                        <li>
-                          <Link to="/">Health</Link>
-                        </li>
-                        <li>
-                          <Link to="/">Magazine</Link>
-                        </li>
-                        <li>
-                          <Link to="/">Weddings</Link>
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="col-lg-6">
-                      <ul>
-                        <li>
-                          <Link to="/">Classifieds</Link>
-                        </li>
-                        <li>
-                          <Link to="/">Photographies</Link>
-                        </li>
-                        <li>
-                          <Link to="/">NYT Store</Link>
-                        </li>
-                        <li>
-                          <Link to="/">Journalisms</Link>
-                        </li>
-                        <li>
-                          <Link to="/">Public Editor</Link>
-                        </li>
-                        <li>
-                          <Link to="/">Tools & Services</Link>
-                        </li>
-                        <li>
-                          <Link to="/">My Account</Link>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="space-40" />
-            <div className="border_white" />
-            <div className="space-40" />
-            <div className="row">
-              <div className="col-sm-6 col-lg-5">
-                <div className="single_footer_nav border_white_right">
-                  <h3 className="widget-title2">Opinion</h3>
-                  <div className="row">
-                    <div className="col-lg-6">
-                      <ul>
-                        <li>
-                          <Link to="/">Today’s Opinion</Link>
-                        </li>
-                        <li>
-                          <Link to="/">Op-Ed Contributing</Link>
-                        </li>
-                        <li>
-                          <Link to="/">Contributing Writers</Link>
-                        </li>
-                        <li>
-                          <Link to="/">Business News</Link>
-                        </li>
-                        <li>
-                          <Link to="/">Collections</Link>
-                        </li>
-                        <li>
-                          <Link to="/">Today’s Paper</Link>
-                        </li>
-                        <li>
-                          <Link to="/">Saturday Review</Link>
-                        </li>
-                        <li>
-                          <Link to="/">Product Review</Link>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-sm-6 col-lg-7">
-                <TwitterFeed />
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-4">
-            <FooterMoreNews />
-          </div>
-        </div>
       </div>
       <FooterCopyright />
     </div>

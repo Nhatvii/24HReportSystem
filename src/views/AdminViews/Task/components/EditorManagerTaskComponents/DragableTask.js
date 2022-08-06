@@ -140,7 +140,7 @@ const StatusColumn = styled.div`
   box-shadow: 0px 0px 3px #ebe8e8;
 `;
 const DroppableStyles = styled.div`
-  max-height: 80vh;
+  max-height: 75vh;
   overflow: auto;
   border-radius: 5px;
   background: #ebe8e8;
@@ -163,7 +163,7 @@ const EmptyList = styled.div`
   background-color: transparent;
   min-height: 10rem;
 `;
-const statusName = (status) => {
+export const statusName = (status) => {
   switch (status) {
     case "New":
       return "Mới";
@@ -177,7 +177,7 @@ const statusName = (status) => {
       return "Chưa xong";
   }
 };
-const columns = [
+export const columns = [
   {
     key: "index",
     label: "STT",
@@ -276,7 +276,7 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
                 ? "Không có"
                 : editor.accountInfo.specializeNavigation,
             workLoad: editor.accountInfo.workLoad,
-            value: editor.email,
+            value: editor.accountId,
             label: (
               <div className="d-flex justify-content-between text-center">
                 <span>{editor.accountInfo.username}</span>

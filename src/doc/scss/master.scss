@@ -219,15 +219,32 @@ body {
     }
   }
 }
-
+.up_btn_trending:hover {
+  width: 150px;
+  ::after{
+    content: " Tin Nổi bật";
+  }
+}
+.up_btn_most_view:hover {
+  width: 150px;
+  ::after {
+      content: " Tin nóng hổi";
+    }
+}
+.up_btn_most_share:hover {
+  width: 150px;
+  ::after {
+      content: " Tin đề xuất";
+    }
+}
 .up_btn {
-  height: 70px;
+  height: 50px;
   width: 50px;
   text-align: center;
-  line-height: 70px;
-  background: #FF5555;
+  line-height: 50px;
+  background: #5560ff;
   color: #fff;
-  border-radius: 50px;
+  border-radius: 50%;
   position: fixed;
   z-index: 9999;
   bottom: 10%;
@@ -237,12 +254,107 @@ body {
   cursor: pointer;
   @include transition(all .3s);
 }
+.up_btn_trending {
+  height: 50px;
+  width: 50px;
+  text-align: center;
+  line-height: 50px;
+  background: #5560ff;
+  color: #fff;
+  border-radius: 50px;
+  position: fixed;
+  z-index: 9999;
+  bottom: 31%;
+  right: 2%;
+  opacity: 1;
+  cursor: pointer;
+  @include transition(all .3s);
+  -webkit-animation: glowing 1s ease-in-out infinite alternate;
+  -moz-animation: glowing 1s ease-in-out infinite alternate;
+  animation: glowing 1s ease-in-out infinite alternate;
+}
+ @-webkit-keyframes glowing {
+   from {
+     box-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px rgb(0, 110, 255), 0 0 20px #0ff;
+   }
+   to {
+     box-shadow: 0 0 10px #fff, 0 0 15px #4dffe7, 0 0 20px #4de4ff, 0 0 25px #4da9ff;
+   }
+ }
+ @keyframes glowing {
+  from {
+      box-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px rgb(0, 110, 255), 0 0 20px #0ff;
+    }
+  
+    to {
+      box-shadow: 0 0 10px #fff, 0 0 15px #4dffe7, 0 0 20px #4de4ff, 0 0 25px #4da9ff;
+    }
+ }
+.up_btn_most_view {
+  height: 50px;
+  width: 50px;
+  text-align: center;
+  line-height: 50px;
+  background: #5560ff;
+  color: #fff;
+  border-radius: 50px;
+  position: fixed;
+  z-index: 9999;
+  bottom: 23%;
+    right: 2%;
+  opacity: 1;
+  cursor: pointer;
+  @include transition(all .3s);
+  @include transition(all .3s);
+    -webkit-animation: glowing 1s ease-in-out infinite alternate;
+    -moz-animation: glowing 1s ease-in-out infinite alternate;
+    animation: glowing 1s ease-in-out infinite alternate;
+}
+.up_btn_most_share {
+  height: 50px;
+  width: 50px;
+  text-align: center;
+  line-height: 50px;
+  background: #5560ff;
+  color: #fff;
+  border-radius: 50px;
+  position: fixed;
+  z-index: 9999;
+  bottom: 15%;
+    right: 2%;
+  opacity: 1;
+  cursor: pointer;
+  @include transition(all .3s);
+  @include transition(all .3s);
+    -webkit-animation: glowing 1s ease-in-out infinite alternate;
+    -moz-animation: glowing 1s ease-in-out infinite alternate;
+    animation: glowing 1s ease-in-out infinite alternate;
+}
+
 
 .sticky {
   .up_btn {
     visibility: visible;
     opacity: 1;
     bottom: 7%;
+    @include transition(all .3s);
+  }
+  .up_btn_trending {
+    visibility: visible;
+    opacity: 1;
+    top: 20%;
+    @include transition(all .3s);
+  }
+  .up_btn_most_share {
+    visibility: visible;
+    opacity: 1;
+    top: 20%;
+    @include transition(all .3s);
+  }
+  .up_btn_most_view {
+    visibility: visible;
+    opacity: 1;
+    top: 20%;
     @include transition(all .3s);
   }
 }
@@ -686,7 +798,85 @@ a.social_medium {
     }
   }
 }
+.shinning {
+  box-sizing: border-box;
+  width: 400px;
+  height: 300px;
+  background-color: #0af;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 2px 2px 5px 0 #A3A3A3;
+}
 
+.shinning::before {
+  content: '';
+  width: 500px;
+  height: 300px;
+  opacity: 1;
+  background-image: linear-gradient(to bottom,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.3) 40%,
+      rgba(255, 255, 255, 0.3) 60%,
+      rgba(255, 255, 255, 0) 100%);
+  transform-origin: center center;
+  position: absolute;
+  z-index: 10;
+  animation-delay: 1s;
+  animation-name: mask-ani;
+  animation-duration: 5s;
+  animation-iteration-count: infinite;
+}
+
+.shinning::after {
+  content: '';
+  width: 500px;
+  height: 50px;
+  opacity: 0;
+  background-color: #fff;
+  transform-origin: center center;
+  position: absolute;
+  z-index: 1;
+  animation-delay: 1s;
+  animation-name: mask-border-ani;
+  animation-duration: 5s;
+  animation-iteration-count: infinite;
+}
+
+.shinning .number {
+  width: 98%;
+  vertical-align: top;
+  z-index: 5;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+@keyframes mask-ani {
+  0% {
+    transform: rotate(-36deg) translate(-40px, -430px);
+  }
+
+  70%,
+  100% {
+    transform: rotate(-36deg) translate(-40px, 378px);
+  }
+}
+
+@keyframes mask-border-ani {
+  0% {
+    opacity: 0.8;
+    transform: rotate(-36deg) translate(-126px, -190px);
+  }
+
+  70%,
+  100% {
+    opacity: 0.8;
+    transform: rotate(-36deg) translate(-126px, 355px);
+  }
+}
 .post_img {
   position: relative;
   z-index: 2;
@@ -848,6 +1038,7 @@ span.tranding.tranding_border {
   border-radius: 10px;
   padding-left: 2%;
   padding-right: 2%;
+  height: 29rem;
   ul {
     margin: 0;
     padding: 0;
@@ -919,7 +1110,8 @@ span.tranding {
   font-size: 10px;
   line-height: 24px;
   border-radius: 50%;
-  background: #1091FF;
+  background: #a7a7a7;
+  opacity: 0.9;
   color: $white;
   position: absolute;
   left: 5px;
@@ -937,7 +1129,7 @@ span.tranding {
       width: 40px;
       font-size: 12px;
       line-height: 40px;
-      left: 10px;
+      left: 85%;
       top: 10px;
     }
   }
@@ -969,8 +1161,75 @@ span.tranding {
 
 
 /*POST TYPE-4*/
+.post_img.number3 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: linear-gradient(-45deg, rgb(223, 182, 103) 0%, rgba(249, 243, 232, 1) 56%, rgba(231, 192, 116, 1) 96%);
+  color: rgba(223, 182, 103, 1);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  top: 50%;
+  margin-top: -30px;
+  left: 0;
 
+  h2 {
+    padding-top: 20%;
+    color: $share_number_color;
+    font-size: $widget_font_size2;
+    font-weight: $wightMedium;
+  }
+}
+.post_img.number2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: linear-gradient(to bottom right,
+      #262626,
+        #eaeaea,
+        #262626);
+  color: rgba(160, 160, 160, 1);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  top: 50%;
+  margin-top: -30px;
+  left: 0;
 
+  h2 {
+    padding-top: 20%;
+    color: $share_number_color;
+    font-size: $widget_font_size2;
+    font-weight: $wightMedium;
+  }
+}
+.post_img.number1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: linear-gradient(to bottom right,
+        #f3d139 0,
+        #cb9b51 22%,
+        #f6e27a 45%,
+        #f6f2c0 50%,
+        #f6e27a 55%,
+        #cb9b51 78%,
+        #cbd35f 100%);
+  color: rgba(242, 215, 50, 1);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  top: 50%;
+  margin-top: -30px;
+  left: 0;
+  h2 {
+    padding-top: 20%;
+    color: $share_number_color;
+    font-size: $widget_font_size2;
+    font-weight: $wightMedium;
+  }
+}
 .post_img.number {
   display: flex;
   align-items: center;
@@ -982,13 +1241,12 @@ span.tranding {
   top: 50%;
   margin-top: -30px;
   left: 0;
-
   h2 {
+    padding-top: 20%;
     color: $share_number_color;
     font-size: $widget_font_size2;
     font-weight: $wightMedium;
   }
-
 }
 
 .widgets_type4 {
@@ -1274,12 +1532,12 @@ span.tranding {
 /*POST TYPE-7*/
 
 .type8 {
-  padding-right: 20px;
+  padding-right: 40px;
   min-height: 64px;
   padding-left: 90px;
-  margin-bottom: 10px;
+  margin-bottom: 40px;
   .post_img {
-    height: 64px;
+    height: 70px;
     width: 80px;
   }
 }
@@ -1296,9 +1554,11 @@ span.tranding {
 }
 
 .type8_count h5 {
-  line-height: 50px;
+  line-height: 120px;
+  z-index: 999;
   color: $type8_counter_color;
-  font-size: 20;
+  font-size: 12;
+  width: max-content;
   font-weight: $wightRegular;
 }
 
@@ -1416,12 +1676,12 @@ span.tranding {
   display: inline-block;
 
   .post_img {
-    width: 48%;
+    width: 30%;
     float: left;
   }
 
   .single_post_text {
-    width: 49%;
+    width: 68%;
     float: left;
     padding: 0;
     padding-left: 30px;
@@ -1513,7 +1773,6 @@ span.tranding {
 .single_post_text {
   .meta2 {
     margin-bottom: 0;
-
     a {
       font-size: 12px;
       text-transform: capitalize;
@@ -1522,7 +1781,6 @@ span.tranding {
       line-height: 17px;
       margin-bottom: 5px;
       font-weight: 400;
-
       &:first-child {
         color: $secondary_color;
       }

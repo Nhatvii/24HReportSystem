@@ -780,16 +780,6 @@ const ListItem = ({ item, index, loadTask }) => {
                 </div>
               </CardBody>
               <CardFooter>
-                <Author>
-                  <LetteredAvatar
-                    name={item.editorId}
-                    size={25}
-                    radius={100}
-                    color="#fff"
-                    backgroundColor="#1b7ced"
-                  />
-                  <span> {item.editorId}</span>
-                </Author>
                 {item.posts.length !== 0 &&
                   (item.posts[0].status === "Public" ? (
                     <span>

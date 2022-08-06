@@ -15,7 +15,7 @@ const SidebarMenu = ({ menus, sideShow, setSideShow, className }) => {
       }`}
     >
       <span className="clox" onClick={() => setSideShow(false)}>
-        Close
+        <i className="fa fa-arror-left"></i>
       </span>
       <ul className="navBar">
         {menus.length > 0
