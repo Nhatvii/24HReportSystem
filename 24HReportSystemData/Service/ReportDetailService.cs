@@ -15,7 +15,7 @@ namespace ReportSystemData.Service
 {
     public partial interface IReportDetailService : IBaseService<ReportDetail>
     {
-        Task<SuccessResponse> CreateReportDetail(string reportID, List<string> image, List<string> video);
+        Task<SuccessResponse> CreateReportDetail(string reportID, List<string> image, List<string> video, List<string> record);
         List<ReportDetail> GetAllReportDetail(ReportDetailParameters reportDetailParameters);
     }
     public partial class ReportDetailService : BaseService<ReportDetail>, IReportDetailService
@@ -25,7 +25,7 @@ namespace ReportSystemData.Service
             _dbContext = context;
         }
 
-        public async Task<SuccessResponse> CreateReportDetail(string reportID, List<string> image, List<string> video)
+        public async Task<SuccessResponse> CreateReportDetail(string reportID, List<string> image, List<string> video, List<string> record)
         {
             if(image != null)
             {
@@ -48,6 +48,19 @@ namespace ReportSystemData.Service
                     {
                         Media = itemVideo.ToString(),
                         Type = "Video",
+                        ReportId = reportID
+                    };
+                    await CreateAsyn(reportDetail);
+                }
+            }
+            if (record != null)
+            {
+                foreach (var itemRecord in record)
+                {
+                    var reportDetail = new ReportDetail()
+                    {
+                        Media = itemRecord.ToString(),
+                        Type = "Record",
                         ReportId = reportID
                     };
                     await CreateAsyn(reportDetail);

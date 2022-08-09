@@ -73,10 +73,10 @@ namespace ReportSystemData.Service
             {
                 throw new ErrorResponse("Bình luận phải lớn hơn 16 từ!!!", (int)HttpStatusCode.Conflict);
             }
-            if (CheckBadWords(comment.CommentTitle.ToLower()))
-            {
-                throw new ErrorResponse("Vui lòng không bình luận từ ngữ phản cảm!!!", (int)HttpStatusCode.Conflict);
-            }
+            //if (CheckBadWords(comment.CommentTitle.ToLower()))
+            //{
+            //    throw new ErrorResponse("Vui lòng không bình luận từ ngữ phản cảm!!!", (int)HttpStatusCode.Conflict);
+            //}
             //Load sample data
             var sampleData = new _24HReportSystemData.BadwordFilterMLModel.ModelInput()
             {
@@ -110,8 +110,20 @@ namespace ReportSystemData.Service
             var cmt = Get().Where(c => c.CommentId.Equals(comment.CommentId)).FirstOrDefault();
             if (cmt != null)
             {
-                var cmtTmp = CheckBadWord(comment.CommentTitle);
-                cmt.CommentTitle = cmtTmp;
+                var sampleData = new _24HReportSystemData.BadwordFilterMLModel.ModelInput()
+                {
+                    Text = $@"{comment.CommentTitle}",
+                };
+
+                //Load model and predict output
+                var result = _24HReportSystemData.BadwordFilterMLModel.Predict(sampleData);
+                double totalScore01 = result.Score[0] + result.Score[1];
+
+                if ((totalScore01 < result.Score[2]) || result.Score[1] > 0.4 || result.Score[2] > 0.3)
+                {
+                    throw new ErrorResponse("Bình luận của bạn chứa từ ngữ phản cảm hoặc mang ý nghĩa thù địch!!!", (int)HttpStatusCode.Conflict);
+                }
+                cmt.CommentTitle = comment.CommentTitle;
                 if (comment.Status == 1) { cmt.Status = CommentConstants.STATUS_COMMENT_NEW; }
                 if (comment.Status == 2) { cmt.Status = CommentConstants.STATUS_COMMENT_PENDING; }
                 if (comment.Status == 3) { cmt.Status = CommentConstants.STATUS_COMMENT_APPROVE; }
@@ -132,113 +144,68 @@ namespace ReportSystemData.Service
             }
             throw new ErrorResponse("Bình luận không tồn tại!!!", (int)HttpStatusCode.NotFound);
         }
-        public string CheckBadWord(string input)
-        {
-            Dictionary<string, string> words = new Dictionary<string, string>();
-            ReadCSV readCsv = new ReadCSV();
-            readCsv.Url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQse0qvsvPJaksx8w6h9GOBxEr8eMxluSLZafiLvHdeSGf5vNrjI1gZMjlvWDE0de0VFa8BsxZmov-l/pub?output=csv";
-            string content = readCsv.CsvContent().ToString();
-            string[] arrContent = content.Split(';');
-            for (int i = 0; i < arrContent.Length - 1; i++)
-            {
-                words.Add(arrContent[i], arrContent[i]);
-            }
 
-            Dictionary<int, int> startendIndex = new Dictionary<int, int>();
-            var test = input.ToLower();
-            for (int start = 0; start < test.Length; start++)
-            {
-                for (int offset = 1; offset < (test.Length + 1 - start); offset++)
-                {
-                    string wordToCheck = test.Substring(start, offset);
-                    if (words.ContainsValue(wordToCheck))
-                    {
-                        foreach (var item in startendIndex)
-                        {
-                            if ((item.Key == start) && (offset+start > item.Value))
-                            {
-                                startendIndex.Remove(item.Key);
-                            }
-                        }
-                        startendIndex.Add(start, offset + start);
-                    }
-                }
-            }
+        //public bool CheckBadWords(string input)
+        //{
+        //    ReadCSV readCsv = new ReadCSV();
+        //    readCsv.Url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQse0qvsvPJaksx8w6h9GOBxEr8eMxluSLZafiLvHdeSGf5vNrjI1gZMjlvWDE0de0VFa8BsxZmov-l/pub?output=csv";
+        //    List<string> words = new List<string>();
+        //    string content = readCsv.CsvContent().ToString();
+        //    string[] arrContent = content.Split(';');
+        //    for (int i = 0; i < arrContent.Length - 1; i++)
+        //    {
+        //        words.Add(arrContent[i]);
+        //    }
+        //    int q = 101;
+        //    foreach (var item in words)
+        //    {
+        //        int M = item.Length;
+        //        int N = input.Length;
+        //        int i, j;
+        //        int p = 0; 
+        //        int t = 0; 
+        //        int h = 1;
 
-            string replaced = input;
-            foreach (var item in startendIndex)
-            {
-                string stars = "";
-                for (int i = item.Key; i < item.Value; i++)
-                {
-                    stars += "*";
-                }
-                replaced = replaced.Substring(0, item.Key) + stars + replaced.Substring(item.Value);
-            }
-            return replaced;
-        }
+        //        for (i = 0; i < M - 1; i++)
+        //            h = (h * d) % q;
 
-        public bool CheckBadWords(string input)
-        {
-            ReadCSV readCsv = new ReadCSV();
-            readCsv.Url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQse0qvsvPJaksx8w6h9GOBxEr8eMxluSLZafiLvHdeSGf5vNrjI1gZMjlvWDE0de0VFa8BsxZmov-l/pub?output=csv";
-            List<string> words = new List<string>();
-            string content = readCsv.CsvContent().ToString();
-            string[] arrContent = content.Split(';');
-            for (int i = 0; i < arrContent.Length - 1; i++)
-            {
-                words.Add(arrContent[i]);
-            }
-            int q = 101;
-            foreach (var item in words)
-            {
-                int M = item.Length;
-                int N = input.Length;
-                int i, j;
-                int p = 0; 
-                int t = 0; 
-                int h = 1;
+        //        for (i = 0; i < M; i++)
+        //        {
+        //            p = (d * p + item[i]) % q;
+        //            t = (d * t + input[i]) % q;
+        //        }
 
-                for (i = 0; i < M - 1; i++)
-                    h = (h * d) % q;
+        //        for (i = 0; i <= N - M; i++)
+        //        {
 
-                for (i = 0; i < M; i++)
-                {
-                    p = (d * p + item[i]) % q;
-                    t = (d * t + input[i]) % q;
-                }
+        //            if (p == t)
+        //            {
+        //                for (j = 0; j < M; j++)
+        //                {
+        //                    if (input[i + j] != item[j])
+        //                        break;
+        //                }
 
-                for (i = 0; i <= N - M; i++)
-                {
+        //                // if p == t and pat[0...M-1] = txt[i, i+1, ...i+M-1] 
 
-                    if (p == t)
-                    {
-                        for (j = 0; j < M; j++)
-                        {
-                            if (input[i + j] != item[j])
-                                break;
-                        }
+        //                if (j == M)
+        //                {
+        //                    var test = i + M;
+        //                    Console.WriteLine("index " + i + " and " + test);
+        //                    return true;
+        //                }
+        //            }
 
-                        // if p == t and pat[0...M-1] = txt[i, i+1, ...i+M-1] 
+        //            if (i < N - M)
+        //            {
+        //                t = (d * (t - input[i] * h) + input[i + M]) % q;
 
-                        if (j == M)
-                        {
-                            var test = i + M;
-                            Console.WriteLine("index " + i + " and " + test);
-                            return true;
-                        }
-                    }
-
-                    if (i < N - M)
-                    {
-                        t = (d * (t - input[i] * h) + input[i + M]) % q;
-
-                        if (t < 0)
-                            t = (t + q);
-                    }
-                }
-            }
-            return false;
-        }
+        //                if (t < 0)
+        //                    t = (t + q);
+        //            }
+        //        }
+        //    }
+        //    return false;
+        //}
     }
 }

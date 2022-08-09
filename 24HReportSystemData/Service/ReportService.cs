@@ -230,7 +230,7 @@ namespace ReportSystemData.Service
                 reportTmp.UserId = report.UserID;
                 reportTmp.CategoryId = 1;
                 await CreateAsyn(reportTmp);
-                await _reportDetailService.CreateReportDetail(reportTmp.ReportId, report.Image, report.Video);
+                await _reportDetailService.CreateReportDetail(reportTmp.ReportId, report.Image, report.Video, report.Record);
                 return new SuccessResponse((int)HttpStatusCode.OK, "Tạo thành công");
             }
             else
@@ -358,7 +358,7 @@ namespace ReportSystemData.Service
                         {
                             EditorId = acc.AccountId,
                             DeadlineTime = newTime,
-                            Description = "Đây là Task của " + acc.Email == null ? acc.PhoneNumber : acc.Email,
+                            Description = report.CreateTime.ToString() + " | " + acc.Email ,
                             BoardId = board.BoardId,
                             ReportId = new List<string>() { model.ReportId }.ToArray()
                         };

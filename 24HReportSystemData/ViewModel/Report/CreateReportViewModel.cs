@@ -17,6 +17,7 @@ namespace ReportSystemData.Parameter.Report
         public string Description { get; set; }
         public List<string> Video { get; set; }
         public List<string> Image { get; set; }
+        public List<string> Record { get; set; }
         [Required]
         public bool? IsAnonymous { get; set; }
         public int? CategoryId { get; set; }

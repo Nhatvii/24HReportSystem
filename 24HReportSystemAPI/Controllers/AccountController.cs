@@ -1,5 +1,7 @@
 ﻿using _24HReportSystemData.Models;
 using _24HReportSystemData.Parameters;
+using _24HReportSystemData.Service;
+using _24HReportSystemData.ViewModel;
 using _24HReportSystemData.ViewModel.Account;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,10 +20,12 @@ namespace _24HReportSystemAPI.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountService _repository;
+        private readonly IEmailSender _emailSender;
 
-        public AccountController(IAccountService service)
+        public AccountController(IAccountService service, IEmailSender emailSender)
         {
             _repository = service;
+            _emailSender = emailSender;
         }
 
         [HttpGet]
@@ -30,7 +34,15 @@ namespace _24HReportSystemAPI.Controllers
         {
             return Ok(_repository.GetAllAccount());
         }
-
+        [HttpGet]
+        [Route("GetEmailTest")]
+        [Produces("application/json")]
+        public ActionResult<Account> GetEmailTest()
+        {
+            var message = new Message(new string[] { "tranvanquanghuy117@gmail.com" }, "Account verify 24HReportSystem", "This is the content from our email.");
+            _emailSender.SendEmail(message);
+            return Ok(message);
+        }
         [HttpGet]
         [Route("GetAccount")]
         [Produces("application/json")]

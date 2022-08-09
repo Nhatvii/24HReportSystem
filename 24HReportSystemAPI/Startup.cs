@@ -2,6 +2,8 @@ using _24HReportSystemAPI.Handler;
 using _24HReportSystemData.AutoMapper;
 using _24HReportSystemData.DependencyInjection;
 using _24HReportSystemData.Models;
+using _24HReportSystemData.Service;
+using _24HReportSystemData.ViewModel;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -85,8 +87,15 @@ namespace _24HReportSystemAPI
             //{
             //    Credential = GoogleCredential.FromFile("E:\CapstoneProject\24HReportSystem\24HReportSystemAPI\reportsystem.json")
             //});
+
+            var emailConfig = Configuration
+            .GetSection("EmailConfiguration")
+            .Get<EmailConfiguration>();
+            services.AddSingleton(emailConfig);
+            services.AddControllers();
             services.AddAutoMapper(typeof(MappingProfile).Assembly);
             services.IntializerDI();
+            services.AddScoped<IEmailSender, EmailSender>();
             services.AddControllers(options =>
             {
                 options.Filters.Add<ErrorResponseHandler>();
