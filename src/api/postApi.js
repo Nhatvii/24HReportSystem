@@ -41,6 +41,16 @@ class PostApi {
       params.SubCategoryID;
     return axiosClient.get(url);
   };
+  searchByRootCategory = (params) => {
+    const url =
+      "/Post?Status=" +
+      params.status +
+      "&isViewCount=" +
+      params.isViewCount +
+      "&RootCategoryID=" +
+      params.RootCategoryID;
+    return axiosClient.get(url);
+  };
   searchByContent = (params) => {
     const url =
       "/Post?Status=" +

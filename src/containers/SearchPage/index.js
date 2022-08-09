@@ -14,7 +14,6 @@ const SearchPage = (props) => {
   const [posts, setPosts] = useState([]);
   const [title, setTitle] = useState("");
   const fetchPostList = async () => {
-    console.log(props.history.location.state.categoryID);
     setTitle(localStorage.getItem("title"));
     try {
       const params1 = {
@@ -33,11 +32,22 @@ const SearchPage = (props) => {
             : "",
         status: 3,
       };
-      if (localStorage.getItem("SearchContent") === "null") {
+      const params3 = {
+        isViewCount: true,
+        RootCategoryID:
+          localStorage.getItem("rootCategoryID") !== "null"
+            ? localStorage.getItem("rootCategoryID")
+            : "",
+        status: 3,
+      };
+      if (localStorage.getItem("SearchContent") !== "null") {
+        const response = await postApi.searchByContent(params2);
+        setPosts(response);
+      } else if (localStorage.getItem("categoryID") !== "null") {
         const response = await postApi.searchByCategory(params1);
         setPosts(response);
-      } else if (localStorage.getItem("categoryID") === "null") {
-        const response = await postApi.searchByContent(params2);
+      } else if (localStorage.getItem("rootCategoryID") !== "null") {
+        const response = await postApi.searchByRootCategory(params3);
         setPosts(response);
       }
     } catch (err) {
@@ -45,24 +55,33 @@ const SearchPage = (props) => {
     }
   };
   useEffect(() => {
-    localStorage.setItem(
-      "categoryID",
-      props.history.location.state.CategoryID !== undefined
-        ? props.history.location.state.CategoryID
-        : null
-    );
-    localStorage.setItem(
-      "SearchContent",
-      props.history.location.state.SearchContent !== undefined
-        ? props.history.location.state.SearchContent
-        : null
-    );
-    localStorage.setItem(
-      "title",
-      props.history.location.state.title !== undefined
-        ? props.history.location.state.title
-        : null
-    );
+    if (props.history.location.state !== undefined) {
+      localStorage.setItem(
+        "categoryID",
+        props.history.location.state.CategoryID !== undefined
+          ? props.history.location.state.CategoryID
+          : null
+      );
+      localStorage.setItem(
+        "rootCategoryID",
+        props.history.location.state.RootCategoryID !== undefined
+          ? props.history.location.state.RootCategoryID
+          : null
+      );
+      localStorage.setItem(
+        "SearchContent",
+        props.history.location.state.SearchContent !== undefined
+          ? props.history.location.state.SearchContent
+          : null
+      );
+      localStorage.setItem(
+        "title",
+        props.history.location.state.title !== undefined
+          ? props.history.location.state.title
+          : null
+      );
+    }
+
     fetchPostList();
   }, [props]);
   return (
@@ -80,7 +99,7 @@ const SearchPage = (props) => {
                     </div>
                   </div>
                 </div>
-                {posts &&
+                {posts.length > 0 ? (
                   posts.map((item, i) => (
                     <div key={i} className="col-lg-12">
                       <div className="single_post post_type12 mb30">
@@ -128,7 +147,22 @@ const SearchPage = (props) => {
                         </div>
                       </div>
                     </div>
-                  ))}
+                  ))
+                ) : (
+                  <div className="ml-100 justify-content-center mt-5">
+                    <div className="d-flex justify-content-center">
+                      <img
+                        src="https://i.pinimg.com/originals/5d/35/e3/5d35e39988e3a183bdc3a9d2570d20a9.gif"
+                        width={400}
+                        height={400}
+                        className="rounded-circle"
+                      />
+                    </div>
+                    <b className="h3 text-primary d-flex justify-content-center pb-5 pt-2">
+                      Không tìm thấy bài viết liên quan
+                    </b>
+                  </div>
+                )}
               </div>
             </div>
             <div className="col-md-6 col-lg-4">
