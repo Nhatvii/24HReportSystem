@@ -1034,11 +1034,12 @@ span.tranding.tranding_border {
 }
 
 .widget_tab {
-  box-shadow: 5px 0px 4px 4px #f7f6f6;
-  border-radius: 10px;
+  background-color: #FFFF;
+  box-shadow: 5px 0px 20px -2px #f7f6f6;
+  border-radius: 5px;
   padding-left: 2%;
   padding-right: 2%;
-  height: 29rem;
+  height: 29.2rem;
   ul {
     margin: 0;
     padding: 0;
@@ -2216,8 +2217,10 @@ span.tranding {
       @extend %primary_btn;
       position: absolute;
       right: 0;
-      top: -2px;
+      top: -1px;
       padding: 16px 15px;
+      background: linear-gradient(to right, rgb(86, 204, 242), rgb(47, 128, 237));
+      font-weight: bold;
     }
   }
 }

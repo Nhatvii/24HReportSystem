@@ -317,7 +317,7 @@ const SendReport = () => {
   return (
     <div className="fifth_bg">
       <Card className=" ml-5 mr-5 mb-4 pb-2">
-        <CardHeader className="bg-primary">
+        <CardHeader className="bg-primary" style={{ background: "linear-gradient(to right, rgb(86, 204, 242), rgb(47, 128, 237))"}}>
           <h5 style={{ color: "#fff" }}>Gửi báo cáo </h5>
         </CardHeader>
         <CardBody>
