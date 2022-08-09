@@ -316,10 +316,7 @@ const SendReport = () => {
     // return () => URL.revokeObjectURL(objectUrl);
   }, [selectedFile]);
   return (
-    <Card
-      className="mt-2 ml-2 mr-2 pt-2 pr-2 pl-2 pb-2"
-      style={{ height: "auto" }}
-    >
+    <Card className="mt-4 ml-4 mr-4 mb-4 pb-2" style={{ height: "auto" }}>
       <CardHeader>
         <b>Chi tiết báo cáo </b>
       </CardHeader>
@@ -445,6 +442,8 @@ const SendReport = () => {
           {preview.length !== 0 &&
             img.length !== 0 &&
             preview
+
+              .slice(0, 5)
               .filter((img) => img.type === "image")
               .map((img) => (
                 <FormGroup row>
@@ -455,23 +454,51 @@ const SendReport = () => {
                   </FormGroup>
                 </FormGroup>
               ))}
+          {img.length > 5 && (
+            <FormGroup row>
+              <FormGroup>
+                <UploadContainer>
+                  <ImgUpload preview={"5moreImg"} />
+                  <div class="centered">5 +</div>
+                </UploadContainer>
+              </FormGroup>
+            </FormGroup>
+          )}
+        </Row>
+        <Row>
           {preview.length !== 0 &&
             video.length !== 0 &&
             preview
+              .slice(0, 5)
               .filter((video) => video.type === "video")
               .map((video) => (
                 <label for="videos">
                   <video
-                    width="400"
+                    width="350"
                     height="150"
-                    style={{ height: "200px", objectFit: "contain" }}
+                    style={{
+                      height: "200px",
+                      objectFit: "contain",
+                      paddingLeft: "1.5rem",
+                    }}
                     autoPlay
+                    controls
                     loop
                   >
                     <source src={video.location} />
                   </video>
                 </label>
               ))}
+          {video.length > 5 && (
+            <FormGroup row>
+              <FormGroup>
+                <UploadContainer>
+                  <ImgUpload preview={"5moreVideo"} />
+                  <div class="top">5 +</div>
+                </UploadContainer>
+              </FormGroup>
+            </FormGroup>
+          )}
         </Row>
         {/* Detail */}
         <FormGroup>

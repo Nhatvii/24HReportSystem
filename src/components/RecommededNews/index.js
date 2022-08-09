@@ -53,6 +53,19 @@ const RecommendedNews = ({ data }) => {
             </div>
           </div>
         ))}
+      <Link
+        id="search"
+        style={{ float: "right" }}
+        to={{
+          pathname: "/search",
+          state: {
+            title: "Tin đề xuất",
+            SearchContent: " ",
+          },
+        }}
+      >
+        Xem thêm...
+      </Link>
     </Fragment>
   );
 };

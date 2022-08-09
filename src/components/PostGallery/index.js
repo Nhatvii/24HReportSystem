@@ -15,7 +15,7 @@ const PostGallery = (props) => {
   const [vModal, setVModal] = useState(false);
   const [videoId, setVideoId] = useState("0r6C3z3TEKw");
 
-  const { className,data } = props;
+  const { className, data } = props;
   return (
     <div className={`post_gallary_area mb20 ${className}`}>
       <div className="container">

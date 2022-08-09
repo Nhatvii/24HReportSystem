@@ -69,10 +69,7 @@ const HomePage = () => {
     try {
       const params = { Status: 3 };
       const response = await postApi.getByStatus(params);
-      localStorage.setItem(
-        "carousel-post",
-        JSON.stringify(response.slice(0, 4))
-      );
+      localStorage.setItem("carousel-post", JSON.stringify(response));
       setPostList(JSON.parse(localStorage.getItem("carousel-post")));
     } catch (err) {
       console.log(err.message);
@@ -115,7 +112,7 @@ const HomePage = () => {
   }
   return (
     <Fragment>
-      <div
+      {/* <div
         className="up_btn_trending up_btn_trending"
         onClick={() => scrollTrending()}
       >
@@ -132,7 +129,7 @@ const HomePage = () => {
         onClick={() => scrollMostShare()}
       >
         <FontAwesome name="star" />
-      </div>
+      </div> */}
       <PostGallery className="fifth_bg" data={postList} />
       <div className="container">
         <div className="row">
@@ -164,7 +161,7 @@ const HomePage = () => {
               <div className="entertrainment_carousel mb30">
                 <div className="entertrainment_item">
                   <div className="row justify-content-center">
-                    <RecommendedNews data={postList} />
+                    <RecommendedNews data={postList.slice(0, 4)} />
                   </div>
                 </div>
               </div>

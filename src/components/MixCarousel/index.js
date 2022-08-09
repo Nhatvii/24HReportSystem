@@ -151,6 +151,7 @@ const MixCarousel = ({ className, dark, data }) => {
                     </div>
                   ))}
                 </Swiper>
+
                 <div className="owl-nav">
                   <div onClick={goPrev} className="owl-prev">
                     <FontAwesome name="angle-left" />

@@ -74,12 +74,8 @@ const PendingReportTable = () => {
         categoryId: selected ? selected.value : 1,
         staffId: JSON.parse(user_info).accountId,
       };
-      console.log(params);
-      console.log(params2);
       const response = await updateReportApi.updateCategory(params2);
       const response2 = await updateReportApi.update(params);
-      console.log(response2);
-      console.log(response);
       // window.location.reload();
       loadReports();
       setVisibleModal(false);

@@ -34,7 +34,6 @@ const MostView = ({ no_margin, title, data }) => {
           {data
             .sort((a, b) => a.viewCount - b.viewCount)
             .reverse()
-            .slice(0, 6)
             .map((item, i) => (
               <div key={i} className="single_post2_carousel">
                 <div className="single_post widgets_small type8">
@@ -91,6 +90,19 @@ const MostView = ({ no_margin, title, data }) => {
               </div>
             ))}
         </Swiper>
+        <Link
+          id="search"
+          style={{ float: "right" }}
+          to={{
+            pathname: "/search",
+            state: {
+              title: "Xem nhiều",
+              SearchContent: " ",
+            },
+          }}
+        >
+          Xem thêm...
+        </Link>
         <div className="navBtns">
           <div onClick={goPrev} className="navBtn prevtBtn">
             <FontAwesome name="angle-left" />

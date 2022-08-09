@@ -20,7 +20,7 @@ export default function PostCarousel() {
     try {
       const params = { isViewCount: true, Status: 3 };
       const response = await postApi.getAll(params);
-      localStorage.setItem("carousel-post", JSON.stringify(response));
+      localStorage.setItem("carousel-post", JSON.stringify(response.slice(0, 4)));
       setPosts(JSON.parse(localStorage.getItem("carousel-post")));
     } catch (err) {
       console.log(err);

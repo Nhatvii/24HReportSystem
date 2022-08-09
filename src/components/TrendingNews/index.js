@@ -105,6 +105,19 @@ const TrendingNews = (props) => {
               <div className="space-15" />
             </Fragment>
           ))}
+          <Link
+            id="search"
+            style={{ float: "right" }}
+            to={{
+              pathname: "/search",
+              state: {
+                title: "Tin nổi bật",
+                SearchContent: " ",
+              },
+            }}
+          >
+            Xem thêm...
+          </Link>
         </div>
       </div>
     </Fragment>

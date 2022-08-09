@@ -31,6 +31,7 @@ const MostShareWidget = ({ title, dark, data }) => {
             data
               .sort((a, b) => a.shareCount - b.shareCount)
               .reverse()
+              .slice(0, 3)
               .map((item, i) => (
                 <div key={i} className="carousel_items">
                   <div className="single_post widgets_small widgets_type4">
@@ -84,6 +85,19 @@ const MostShareWidget = ({ title, dark, data }) => {
                 </div>
               ))}
         </Swiper>
+        <Link
+          id="search"
+          style={{ float: "right" }}
+          to={{
+            pathname: "/search",
+            state: {
+              title: "Chia sẻ nhiều",
+              SearchContent: " ",
+            },
+          }}
+        >
+          Xem thêm...
+        </Link>
         <div className="navBtns">
           <div onClick={goPrev} className="navBtn prevtBtn">
             <FontAwesome name="angle-left" />

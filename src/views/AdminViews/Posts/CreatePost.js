@@ -27,6 +27,7 @@ import { Link } from "react-router-dom";
 import moment from "moment";
 import { Comments } from "../../UserViews/Post/components/Comments";
 import { Markup } from "interweave";
+import { v4 as uuid } from "uuid";
 export const ImgUpload = styled.div`
   flex-direction: row;
   text-align: center;
@@ -178,7 +179,7 @@ const CreatePost = () => {
       valid = false;
     }
     if (valid === true) {
-      const storageRef = ref(storage, `/img/${img.name}`);
+      const storageRef = ref(storage, `/img/${uuid()}`);
       const uploadTask = uploadBytesResumable(storageRef, img);
       uploadTask.on(
         "state_changed",

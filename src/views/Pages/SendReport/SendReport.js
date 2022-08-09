@@ -15,7 +15,6 @@ import {
 import "@coreui/coreui-pro/dist/css/coreui.min.css";
 import "quill/dist/quill.snow.css";
 //react-select
-import makeAnimated from "react-select/animated";
 import useLocationForm from "./useLocationForm";
 import Select from "react-select";
 import reportApi from "../../../api/reportApi";
@@ -27,6 +26,7 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import storage from "../../../firebase/firebaseConfig";
 import { toast } from "react-toastify";
 //testing
+import { v4 as uuid } from "uuid";
 
 const SendReport = () => {
   const user_info = JSON.parse(localStorage.getItem("user_info"));
@@ -50,7 +50,7 @@ const SendReport = () => {
   const [categoryList, setCategoryList] = useState([]);
   const [selected, setSelected] = useState();
   const { state, onCitySelect, onDistrictSelect, onWardSelect } =
-    useLocationForm(true);
+    useLocationForm(false);
 
   const {
     cityOptions,
@@ -108,17 +108,17 @@ const SendReport = () => {
         userID:
           user_info !== null
             ? user_info.role.roleId !== 1
-              ? user_info.email
+              ? user_info.accountId
               : isAnonymous
               ? null
               : user_info !== null
-              ? user_info.email
+              ? user_info.accountId
               : null
             : null,
         staffID:
           user_info !== null
             ? user_info.role.roleId !== 1
-              ? user_info.email
+              ? user_info.accountId
               : null
             : null,
         categoryId:
@@ -129,12 +129,14 @@ const SendReport = () => {
             : null,
         location:
           address +
-          ", " +
-          state.selectedCity.label +
-          ", " +
-          state.selectedDistrict.label +
-          ", " +
-          state.selectedWard.label,
+          (state.selectedCity !== null
+            ? ", " +
+              state.selectedCity.label +
+              ", " +
+              state.selectedDistrict.label +
+              ", " +
+              state.selectedWard.label
+            : ""),
         timeFraud: time.format("YYYY-MM-DD HH:mm:ss"),
         description: text,
         video:
@@ -231,31 +233,18 @@ const SendReport = () => {
         file[file.length - 1].name.lastIndexOf(".") + 1
       ) === "webp"
     ) {
-      // const base64 = await convertBase64(file);
-      // setImg(base64);
       setImg([...img, file[file.length - 1]]);
     } else {
-      // const base64 = await convertBase64(file);
-      // setVideo(base64);
       setVideo([...video, file[file.length - 1]]);
     }
   };
-  // const convertBase64 = (file) => {
-  //   return new Promise((resolve, reject) => {
-  //     const fileReader = new FileReader();
-  //     fileReader.readAsDataURL(file);
-  //     fileReader.onload = () => {
-  //       resolve(fileReader.result);
-  //     };
-  //     fileReader.onerror = (error) => {
-  //       reject(error);
-  //     };
-  //   });
-  // };
+  useEffect(() => {
+    console.log(state);
+  });
   useEffect(() => {
     if (img.length > imgNumber) {
       Array.from(img).map((img) => {
-        const storageRef = ref(storage, `/img/${img.name}`);
+        const storageRef = ref(storage, `/img/${uuid()}`);
         const uploadTask = uploadBytesResumable(storageRef, img);
         uploadTask.on(
           "state_changed",
@@ -276,7 +265,7 @@ const SendReport = () => {
     }
     if (video.length > videoNumber) {
       Array.from(video).map((video) => {
-        const storageRef = ref(storage, `/video/${video.name}`);
+        const storageRef = ref(storage, `/video/${uuid()}`);
         const uploadTask = uploadBytesResumable(storageRef, video);
         uploadTask.on(
           "state_changed",
@@ -311,13 +300,17 @@ const SendReport = () => {
         location: objectUrl,
       });
     });
-    // free memory when ever this component is unmounted
-    // return () => URL.revokeObjectURL(objectUrl);
   }, [selectedFile]);
   return (
     <div className="fifth_bg">
       <Card className=" ml-5 mr-5 mb-4 pb-2">
-        <CardHeader className="bg-primary" style={{ background: "linear-gradient(to right, rgb(86, 204, 242), rgb(47, 128, 237))"}}>
+        <CardHeader
+          className="bg-primary"
+          style={{
+            background:
+              "linear-gradient(to right, rgb(86, 204, 242), rgb(47, 128, 237))",
+          }}
+        >
           <h5 style={{ color: "#fff" }}>Gửi báo cáo </h5>
         </CardHeader>
         <CardBody>

@@ -117,7 +117,6 @@ function useLocationForm(shouldFetchInitialLocation) {
   function onWardSelect(option) {
     setState({ ...state, selectedWard: option });
   }
-
   return { state, onCitySelect, onDistrictSelect, onWardSelect };
 }
 

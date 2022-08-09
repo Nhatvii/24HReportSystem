@@ -89,8 +89,8 @@ const SendReport = () => {
         response
           .filter((report) =>
             user_info && user_info.role.roleId === 1
-              ? report.userId === (user_info && user_info.email)
-              : report.staffId === (user_info && user_info.email)
+              ? report.userId === (user_info && user_info.accountId)
+              : report.staffId === (user_info && user_info.accountId)
           )
           .sort((a, b) => new moment(a.createTime) - new moment(b.createTime))
           .reverse()
