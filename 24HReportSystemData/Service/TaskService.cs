@@ -4,6 +4,7 @@ using _24HReportSystemData.Parameters;
 using _24HReportSystemData.Response;
 using _24HReportSystemData.ViewModel.ReportTask;
 using _24HReportSystemData.ViewModel.Task;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using ReportSystemData.Repositories;
 using ReportSystemData.Service.Base;
@@ -25,18 +26,21 @@ namespace ReportSystemData.Service
         SuccessResponse DeleteTask(string id);
         SuccessResponse ChangeTaskStatus(UpdateTaskStatusViewModel model);
         SuccessResponse TaskReviewFilter(double percent);
+        List<Task> GetListTaskHistory(string taskID);
     }
     public partial class TaskService : BaseService<Task>, ITaskService
     {
+        private readonly IMapper _mapper;
         private readonly IAccountService _accountService;
         private readonly IPostService _postService;
         private readonly IReportTaskService _reportTaskService;
         private readonly IAccountInfoService _accountInfoService;
-        public TaskService(DbContext context, ITaskRepository repository,
+        public TaskService(DbContext context, IMapper mapper, ITaskRepository repository,
             IAccountService accountService, IReportTaskService reportTaskService, IAccountInfoService accountInfoService,
             IPostService postService) : base(context, repository)
         {
             _dbContext = context;
+            _mapper = mapper;
             _accountService = accountService;
             _postService = postService;
             _reportTaskService = reportTaskService;
@@ -74,7 +78,7 @@ namespace ReportSystemData.Service
                     tasks = tasks.Where(t => t.Status.Equals(TaskConstants.STATUS_TASK_UNFINISHED)).ToList();
                 }
             }
-            if(taskParameters.BoardId != null)
+            if (taskParameters.BoardId != null)
             {
                 tasks = tasks.Where(t => t.BoardId.Equals(taskParameters.BoardId)).ToList();
             }
@@ -100,32 +104,81 @@ namespace ReportSystemData.Service
             {
                 throw new ErrorResponse("Role không phù hợp để tạo task!", (int)HttpStatusCode.NotFound);
             }
-            var tasks = new Task()
+            var taskTmp = _mapper.Map<Task>(task);
+            taskTmp.TaskId = Guid.NewGuid().ToString();
+            taskTmp.EditorId = task.EditorId;
+            taskTmp.CreateTime = DateTime.Now;
+            taskTmp.DeadLineTime = task.DeadlineTime;
+            taskTmp.Status = TaskConstants.STATUS_TASK_NEW;
+            taskTmp.Description = task.Description;
+            taskTmp.IsDelete = false;
+            taskTmp.BoardId = task.BoardId;
+            if (task.SubTaskId != null)
             {
-                TaskId = Guid.NewGuid().ToString(),
-                EditorId = task.EditorId,
-                CreateTime = DateTime.Now,
-                DeadLineTime = task.DeadlineTime,
-                Status = TaskConstants.STATUS_TASK_NEW,
-                Description = task.Description,
-                IsDelete = false, 
-                BoardId = task.BoardId
-            };
-            Create(tasks);
+                var check = GetTaskByID(task.SubTaskId);
+                if (check == null)
+                {
+                    throw new ErrorResponse("SubTaskID không tồn tại!!!", (int)HttpStatusCode.NotFound);
+                }
+                else
+                {
+                    taskTmp.SubTaskId = task.SubTaskId;
+                }
+            }
+            //var tasks = new Task()
+            //{
+            //    TaskId = Guid.NewGuid().ToString(),
+            //    EditorId = task.EditorId,
+            //    CreateTime = DateTime.Now,
+            //    DeadLineTime = task.DeadlineTime,
+            //    Status = TaskConstants.STATUS_TASK_NEW,
+            //    Description = task.Description,
+            //    IsDelete = false, 
+            //    BoardId = task.BoardId,
+            //};
+            Create(taskTmp);
             foreach (var item in task.ReportId)
             {
                 var reportTaskViewModel = new CreateReportTaskViewModel()
                 {
-                    TaskId = tasks.TaskId,
+                    TaskId = taskTmp.TaskId,
                     ReportId = item,
-                    CreateTime = tasks.CreateTime
+                    CreateTime = taskTmp.CreateTime
                 };
                 _reportTaskService.CreateReportTask(reportTaskViewModel);
             }
             UpdateAccountWordLoad();
-            return tasks;
+            return taskTmp;
         }
-
+        public List<Task> GetListTaskHistory(string taskID)
+        {
+            var listTask = new List<Task>();
+            var task = GetTaskByID(taskID);
+            if(task.SubTaskId == null)
+            {
+                throw new ErrorResponse("Task không tồn tại SubTask", (int)HttpStatusCode.NoContent);
+            }
+            else
+            {
+                bool flag = false;
+                listTask.Add(task);
+                var taskTmp = task;
+                do
+                {
+                    var newtask = GetTaskByID(taskTmp.SubTaskId);
+                    if(newtask.SubTaskId != null)
+                    {
+                        listTask.Add(newtask);
+                        taskTmp = newtask;
+                    }
+                    else
+                    {
+                        flag = true;
+                    }
+                } while (flag);
+                return listTask;
+            }
+        }
         public SuccessResponse DeleteTask(string id)
         {
             var task = GetTaskByID(id);
@@ -218,7 +271,7 @@ namespace ReportSystemData.Service
             foreach (var item in listTask)
             {
                 var acc = _accountInfoService.GetAccountInfoByID(item.EditorId);
-                if(acc.Specialize != null)
+                if (acc.Specialize != null)
                 {
                     listTaskReview.Add(item);
                 }

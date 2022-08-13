@@ -87,7 +87,7 @@ namespace ReportSystemData.Service
             var result = _24HReportSystemData.BadwordFilterMLModel.Predict(sampleData);
             double totalScore01 = result.Score[0] + result.Score[1];
 
-            if ( (totalScore01 < result.Score[2]) || result.Score[1] > 0.4 || result.Score[2] > 0.3)
+            if ( (totalScore01 < result.Score[2]) || result.Score[1] > 0.3 || result.Score[2] > 0.29)
             {
                 throw new ErrorResponse("Bình luận của bạn chứa từ ngữ phản cảm hoặc mang ý nghĩa thù địch!!!", (int)HttpStatusCode.Conflict);
             }
@@ -110,6 +110,14 @@ namespace ReportSystemData.Service
             var cmt = Get().Where(c => c.CommentId.Equals(comment.CommentId)).FirstOrDefault();
             if (cmt != null)
             {
+                if (comment.CommentTitle.Length > 100)
+                {
+                    throw new ErrorResponse("Bình luận phải bé hơn 100 từ!!!", (int)HttpStatusCode.Conflict);
+                }
+                if (comment.CommentTitle.Length < 16)
+                {
+                    throw new ErrorResponse("Bình luận phải lớn hơn 16 từ!!!", (int)HttpStatusCode.Conflict);
+                }
                 var sampleData = new _24HReportSystemData.BadwordFilterMLModel.ModelInput()
                 {
                     Text = $@"{comment.CommentTitle}",
@@ -119,7 +127,7 @@ namespace ReportSystemData.Service
                 var result = _24HReportSystemData.BadwordFilterMLModel.Predict(sampleData);
                 double totalScore01 = result.Score[0] + result.Score[1];
 
-                if ((totalScore01 < result.Score[2]) || result.Score[1] > 0.4 || result.Score[2] > 0.3)
+                if ((totalScore01 < result.Score[2]) || result.Score[1] > 0.3 || result.Score[2] > 0.29)
                 {
                     throw new ErrorResponse("Bình luận của bạn chứa từ ngữ phản cảm hoặc mang ý nghĩa thù địch!!!", (int)HttpStatusCode.Conflict);
                 }

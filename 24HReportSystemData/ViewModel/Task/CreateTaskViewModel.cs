@@ -11,5 +11,6 @@ namespace ReportSystemData.ViewModel.Task
         public string Description { get; set; }
         public string[] ReportId { get; set; }
         public string BoardId { get; set; }
+        public string SubTaskId { get; set; }
     }
 }

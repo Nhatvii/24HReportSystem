@@ -347,6 +347,10 @@ namespace _24HReportSystemData.Models
                     .IsRequired()
                     .HasMaxLength(200);
 
+                entity.Property(e => e.ReportTitle)
+                    .HasMaxLength(200)
+                    .HasColumnName("Report_Title");
+
                 entity.Property(e => e.StaffId)
                     .HasMaxLength(50)
                     .HasColumnName("Staff_ID");

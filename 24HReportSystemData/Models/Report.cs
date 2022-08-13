@@ -16,6 +16,7 @@ namespace _24HReportSystemData.Models
         }
 
         public string ReportId { get; set; }
+        public string ReportTitle { get; set; }
         public string Location { get; set; }
         public DateTime TimeFraud { get; set; }
         public string Description { get; set; }

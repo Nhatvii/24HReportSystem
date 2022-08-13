@@ -9,5 +9,6 @@ namespace _24HReportSystemData.Parameters
     public class ReportDetailParameters
     {
         public string ReportID { get; set; }
+        public string Type { get; set; }
     }
 }

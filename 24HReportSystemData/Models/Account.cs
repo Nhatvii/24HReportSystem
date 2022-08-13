@@ -32,7 +32,6 @@ namespace _24HReportSystemData.Models
         public virtual AccountInfo AccountInfo { get; set; }
         [JsonIgnore]
         public virtual ICollection<Board> Boards { get; set; }
-        [JsonIgnore]
         public virtual ICollection<Comment> Comments { get; set; }
         [JsonIgnore]
         public virtual ICollection<Emotion> Emotions { get; set; }

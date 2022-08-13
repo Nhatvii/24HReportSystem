@@ -7,6 +7,7 @@ using ReportSystemData.Service;
 using ReportSystemData.ViewModel.Task;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace ReportSystemAPI.Controllers
@@ -57,6 +58,13 @@ namespace ReportSystemAPI.Controllers
         public ActionResult TaskReviewFilter(double percent)
         {
             return Ok(_repository.TaskReviewFilter(percent));
+        }
+        [HttpGet]
+        [Produces("application/json")]
+        [Route("ListTaskHistory")]
+        public ActionResult<List<Task>> GetTaskHistory([Required]string TaskId)
+        {
+            return Ok(_repository.GetListTaskHistory(TaskId));
         }
     }
 }

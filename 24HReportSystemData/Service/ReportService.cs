@@ -241,12 +241,13 @@ namespace ReportSystemData.Service
                 reportTmp.Status = ReportConstants.STATUS_REPORT_NEW;
                 reportTmp.IsAnonymous = report.IsAnonymous;
                 reportTmp.StaffId = report.StaffID;
+                reportTmp.ReportTitle = report.ReportTitle;
                 if (report.CategoryId.HasValue && report.CategoryId > 0)
                 {
                     reportTmp.CategoryId = (int)report.CategoryId;
                 }
                 await CreateAsyn(reportTmp);
-                await _reportDetailService.CreateReportDetail(reportTmp.ReportId, report.Image, report.Video);
+                await _reportDetailService.CreateReportDetail(reportTmp.ReportId, report.Image, report.Video, report.Record);
                 var changeStatusModel = new ChangeReportStatusViewModel()
                 {
                     ReportId = reportTmp.ReportId,

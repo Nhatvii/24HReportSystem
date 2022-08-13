@@ -9,6 +9,7 @@ namespace ReportSystemData.Parameter.Report
     {
         public string UserID { get; set; }
         public string StaffID { get; set; }
+        public string ReportTitle { get; set; }
         [Required]
         public string Location { get; set; }
         [Required]

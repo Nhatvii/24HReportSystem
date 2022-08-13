@@ -156,6 +156,10 @@ namespace ReportSystemData.Service
                     postTmp.ViewCount = 0;
                     postTmp.EditorId = post.UserID;
                     postTmp.Status = PostConstrants.STATUS_POST_DRAFT;
+                    if(post.TaskId != null)
+                    {
+                        postTmp.TaskId = post.TaskId;
+                    }
                     await CreateAsyn(postTmp);
                     return new SuccessResponse((int)HttpStatusCode.OK, "Tạo thành công");
                 }

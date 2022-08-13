@@ -6,11 +6,11 @@ using ReportSystemData.ViewModel.Category;
 using ReportSystemData.ViewModel.Comment;
 using ReportSystemData.ViewModel.Emotion;
 using ReportSystemData.ViewModel.Post;
+using ReportSystemData.ViewModel.Task;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace _24HReportSystemData.AutoMapper
 {
@@ -23,6 +23,7 @@ namespace _24HReportSystemData.AutoMapper
             CreateMap<CreateReportViewModel, Report>();
 
             CreateMap<CreatePostViewModel, Post>();
+            CreateMap<CreateTaskViewModel, Task>();
 
             CreateMap<CreateCommentViewModel, Comment>();
 

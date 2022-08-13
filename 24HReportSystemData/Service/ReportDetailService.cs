@@ -76,6 +76,21 @@ namespace ReportSystemData.Service
             {
                 reportDetail = reportDetail.Where(rp => rp.ReportId.Equals(reportDetailParameters.ReportID)).ToList();
             }
+            if(reportDetailParameters.Type != null)
+            {
+                if(reportDetailParameters.Type.Equals("Image"))
+                {
+                    reportDetail = reportDetail.Where(rp => rp.Type.Equals("Image")).ToList();
+                }
+                if (reportDetailParameters.Type.Equals("Video"))
+                {
+                    reportDetail = reportDetail.Where(rp => rp.Type.Equals("Video")).ToList();
+                }
+                if (reportDetailParameters.Type.Equals("Record"))
+                {
+                    reportDetail = reportDetail.Where(rp => rp.Type.Equals("Record")).ToList();
+                }
+            }
             return reportDetail;
         }
     }
