@@ -21,7 +21,7 @@ namespace ReportSystemData.Service
     {
         List<Post> GetAllPost(PostParameters postParameters);
         Post GetPostById(string id);
-        Task<SuccessResponse> CreatePostAsync(CreatePostViewModel post);
+        Task<string> CreatePostAsync(CreatePostViewModel post);
         SuccessResponse UpdatePost(UpdatePostViewModel post);
         SuccessResponse UpdatePublicPost(UpdatePublicPostViewModel post);
         SuccessResponse DeletePost(string id);
@@ -143,7 +143,7 @@ namespace ReportSystemData.Service
             return post;
         }
 
-        public async Task<SuccessResponse> CreatePostAsync(CreatePostViewModel post)
+        public async Task<string> CreatePostAsync(CreatePostViewModel post)
         {
             var account = _accountService.GetAccountByID(post.UserID);
             if (account != null)
@@ -156,12 +156,9 @@ namespace ReportSystemData.Service
                     postTmp.ViewCount = 0;
                     postTmp.EditorId = post.UserID;
                     postTmp.Status = PostConstrants.STATUS_POST_DRAFT;
-                    if(post.TaskId != null)
-                    {
-                        postTmp.TaskId = post.TaskId;
-                    }
                     await CreateAsyn(postTmp);
-                    return new SuccessResponse((int)HttpStatusCode.OK, "Tạo thành công");
+                    return postTmp.PostId;
+                    //return new SuccessResponse((int)HttpStatusCode.OK, "Tạo thành công");
                 }
                 throw new ErrorResponse("User không thể tạo bài viết!!!", (int)HttpStatusCode.NoContent);
             }

@@ -64,6 +64,12 @@ namespace _24HReportSystemAPI.Controllers
         {
             return Ok(_repository.Login(login));
         }
+        [HttpPost]
+        [Route("LoginWithGoogle")]
+        public async Task<IActionResult> LoginWithGoogle(string email)
+        {
+            return Ok(await _repository.LoginWithGoogleAsync(email));
+        }
 
         [HttpPost]
         [Route("Register")]

@@ -4,6 +4,9 @@ using _24HReportSystemData.Response;
 using _24HReportSystemData.ViewModel.Account;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using FirebaseAdmin;
+using FirebaseAdmin.Auth;
+using Google.Apis.Auth.OAuth2;
 using Microsoft.EntityFrameworkCore;
 using ReportSystemData.Repositories;
 using ReportSystemData.Service.Base;
@@ -29,6 +32,7 @@ namespace ReportSystemData.Service
         SuccessResponse CheckAccountRegister(string email, string phoneNumber);
         List<Account> GetAllEditorAccount();
         Account GetMinWorkLoad(int rootCate);
+        Task<SuccessResponse> LoginWithGoogleAsync(string email);
     }
     public partial class AccountService : BaseService<Account>, IAccountService
     {
@@ -83,6 +87,30 @@ namespace ReportSystemData.Service
                     return account;
                 }
                 throw new ErrorResponse("Email hoặc mật khấu không hợp lệ!!!", (int)HttpStatusCode.NotFound);
+            }
+            return null;
+        }
+        public async Task<SuccessResponse> LoginWithGoogleAsync(string email)
+        {
+            if(FirebaseApp.DefaultInstance == null)
+            {
+                FirebaseApp.Create(new AppOptions()
+                {
+                    Credential = GoogleCredential.FromFile("../backend/firebaseAuth.json"),
+                });
+            }
+            try
+            {
+                var account = await FirebaseAuth.DefaultInstance.GetUserByEmailAsync(email);
+                if(account.EmailVerified)
+                {
+                    return new SuccessResponse((int)HttpStatusCode.OK, "Email và số điện thoại hợp lệ");
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
             }
             return null;
         }

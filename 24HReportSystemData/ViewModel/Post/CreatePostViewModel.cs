@@ -25,6 +25,5 @@ namespace ReportSystemData.ViewModel.Post
         public string Video { get; set; }
         [Required]
         public string Image { get; set; }
-        public string TaskId { get; set; }
     }
 }

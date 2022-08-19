@@ -147,7 +147,7 @@ namespace ReportSystemData.Service
                 };
                 _reportTaskService.CreateReportTask(reportTaskViewModel);
             }
-            UpdateAccountWordLoad();
+            UpdateAccountWordLoad(task.EditorId);
             return taskTmp;
         }
         public List<Task> GetListTaskHistory(string taskID)
@@ -293,14 +293,10 @@ namespace ReportSystemData.Service
             }
             return new SuccessResponse((int)HttpStatusCode.OK, "Cập nhật thành công");
         }
-        public void UpdateAccountWordLoad()
+        public void UpdateAccountWordLoad(string email)
         {
-            var listAccount = _accountService.GetAllEditorAccount();
-            foreach (var item in listAccount)
-            {
-                var workNum = GetNumUserWorkLoad(item.Email);
-                _accountInfoService.UpdateAccountWorkLoad(item.Email, workNum);
-            }
+            var workNum = GetNumUserWorkLoad(email);
+            _accountInfoService.UpdateAccountWorkLoad(email, workNum);
         }
         public int GetNumUserWorkLoad(string email)
         {

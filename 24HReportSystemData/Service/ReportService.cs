@@ -235,6 +235,11 @@ namespace ReportSystemData.Service
             }
             else
             {
+                var checkRole = _accountService.GetAccountByID(report.StaffID);
+                if(checkRole.RoleId != 2)
+                {
+                    throw new ErrorResponse("Vai trò tạo báo cáo không phù hợp", (int)HttpStatusCode.Conflict);
+                }
                 var reportTmp = _mapper.Map<Report>(report);
                 reportTmp.ReportId = Guid.NewGuid().ToString();
                 reportTmp.CreateTime = DateTime.Now;
@@ -355,14 +360,23 @@ namespace ReportSystemData.Service
                         TimeSpan aInterval = new System.TimeSpan(7, 0, 0, 0);
                         DateTime newTime = aDateTime.Add(aInterval);
                         var board = _boardService.GetLastedBoard();
-                        var createTask = new CreateTaskViewModel()
-                        {
-                            EditorId = acc.AccountId,
-                            DeadlineTime = newTime,
-                            Description = report.CreateTime.ToString() + " | " + acc.Email ,
-                            BoardId = board.BoardId,
-                            ReportId = new List<string>() { model.ReportId }.ToArray()
-                        };
+                        var createTask = report.ReportTitle != null
+                            ? new CreateTaskViewModel()
+                            {
+                                EditorId = acc.AccountId,
+                                DeadlineTime = newTime,
+                                Description = report.ReportTitle,
+                                BoardId = board.BoardId,
+                                ReportId = new List<string>() { model.ReportId }.ToArray()
+                            }
+                            : new CreateTaskViewModel()
+                            {
+                                EditorId = acc.AccountId,
+                                DeadlineTime = newTime,
+                                Description = report.CreateTime.ToString() + " | " + acc.Email ,
+                                BoardId = board.BoardId,
+                                ReportId = new List<string>() { model.ReportId }.ToArray()
+                            };
                         var task = _taskService.CreateTask(createTask);
                         UpdateReportEditor(model.ReportId, acc.AccountId);
                     }
