@@ -88,7 +88,7 @@ const MostShareWidget = ({ title, dark, data }) => {
         </Swiper>
         <Link
           id="search"
-          style={{ float: "right"}}
+          style={{ float: "right" }}
           to={{
             pathname: "/search",
             state: {
@@ -97,8 +97,14 @@ const MostShareWidget = ({ title, dark, data }) => {
             },
           }}
         >
-          <Button style={{color: "#1ab7ea !important", fontSize: "1rem", fontWeight: "bold" }}>
-          Xem thêm
+          <Button
+            style={{
+              color: "#1ab7ea !important",
+              fontSize: "1rem",
+              fontWeight: "bold",
+            }}
+          >
+            Xem thêm
           </Button>
         </Link>
         <div className="navBtns">

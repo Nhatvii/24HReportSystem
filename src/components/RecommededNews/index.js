@@ -55,8 +55,8 @@ const RecommendedNews = ({ data }) => {
           </div>
         ))}
       <Link
-        id="search"        
-        style={{ alignSelf: "flex-end", marginLeft: "auto"}}
+        id="search"
+        style={{ alignSelf: "flex-end", marginLeft: "auto" }}
         to={{
           pathname: "/search",
           state: {
@@ -65,8 +65,14 @@ const RecommendedNews = ({ data }) => {
           },
         }}
       >
-        <Button style={{ color: "#1ab7ea !important", fontSize: "1rem", fontWeight: "bold" }}>
-        Xem thêm
+        <Button
+          style={{
+            color: "#1ab7ea !important",
+            fontSize: "1rem",
+            fontWeight: "bold",
+          }}
+        >
+          Xem thêm
         </Button>
       </Link>
     </Fragment>

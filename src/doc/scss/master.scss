@@ -467,7 +467,8 @@ body {
   top: 0;
   height: 100%;
   width: 100%;
-  background: $primary_bg;
+  background-color: hsla(0, 0%, 37%, 0.911);
+  transition: opacity 250ms ease;
   z-index: 999;
   display: flex;
   align-items: center;

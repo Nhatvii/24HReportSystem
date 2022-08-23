@@ -137,7 +137,6 @@ const MainMenu = ({ className, dark }) => {
                 root.rootCategoryId
             )
             .map((sub, subId) => ({
-              
               id: (40 + rootId) * 10 + subId,
               link: "/search",
               searchByCategory: true,
@@ -315,6 +314,7 @@ const MainMenu = ({ className, dark }) => {
                       >
                         <FontAwesome name="search" />
                       </li>
+
                       {user_info && (
                         <li>
                           {/*  Avatar*/}

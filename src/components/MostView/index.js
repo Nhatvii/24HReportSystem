@@ -93,7 +93,7 @@ const MostView = ({ no_margin, title, data }) => {
         </Swiper>
         <Link
           id="search"
-          style={{ float: "right"}}
+          style={{ float: "right" }}
           to={{
             pathname: "/search",
             state: {
@@ -102,8 +102,14 @@ const MostView = ({ no_margin, title, data }) => {
             },
           }}
         >
-                    <Button style={{color: "#1ab7ea !important", fontSize: "1rem", fontWeight: "bold" }}>
-          Xem thêm
+          <Button
+            style={{
+              color: "#1ab7ea !important",
+              fontSize: "1rem",
+              fontWeight: "bold",
+            }}
+          >
+            Xem thêm
           </Button>
         </Link>
         <div className="navBtns">

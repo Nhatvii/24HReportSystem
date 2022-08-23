@@ -3,16 +3,21 @@ import BreadCrumb from "../../components/BreadCrumb";
 import WidgetTab from "../../components/WidgetTab";
 import NewsLetter from "../../components/NewsLetter";
 import FollowUs from "../../components/FollowUs";
-
 // images
 import postApi from "../../api/postApi";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import moment from "moment";
+import Pagination from "./pagination";
+import "./style.css";
 
 const SearchPage = (props) => {
   const [posts, setPosts] = useState([]);
   const [title, setTitle] = useState("");
+  const [pageOfItems, setPageOfItems] = useState([]);
+  const onChangePage = (pageOfItems) => {
+    setPageOfItems(pageOfItems);
+  };
   const fetchPostList = async () => {
     setTitle(localStorage.getItem("title"));
     try {
@@ -107,8 +112,8 @@ const SearchPage = (props) => {
                     </div>
                   </div>
                 </div>
-                {posts.length > 0 ? (
-                  posts.map((item, i) => (
+                {pageOfItems.length > 0 ? (
+                  pageOfItems.map((item, i) => (
                     <div key={i} className="col-lg-12">
                       <div className="single_post post_type12 mb30">
                         <div className="post_img">
@@ -170,6 +175,9 @@ const SearchPage = (props) => {
                       Không tìm thấy bài viết liên quan
                     </b>
                   </div>
+                )}
+                {posts.length > 0 && (
+                  <Pagination items={posts} onChangePage={onChangePage} />
                 )}
               </div>
             </div>

@@ -108,7 +108,7 @@ const TrendingNews = (props) => {
           ))}
           <Link
             id="search"
-            style={{ float: "right"}}
+            style={{ float: "right" }}
             to={{
               pathname: "/search",
               state: {
@@ -117,9 +117,17 @@ const TrendingNews = (props) => {
               },
             }}
           >
-          <Button style={{color: "#1ab7ea !important", fontSize: "1rem", fontWeight: "bold", marginTop: "1rem", marginBottom: "0.5rem" }}>
-            Xem thêm
-          </Button>
+            <Button
+              style={{
+                color: "#1ab7ea !important",
+                fontSize: "1rem",
+                fontWeight: "bold",
+                marginTop: "1rem",
+                marginBottom: "0.5rem",
+              }}
+            >
+              Xem thêm
+            </Button>
           </Link>
         </div>
       </div>

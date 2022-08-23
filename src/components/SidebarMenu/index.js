@@ -15,7 +15,7 @@ const SidebarMenu = ({ menus, sideShow, setSideShow, className }) => {
       }`}
     >
       <span className="clox" onClick={() => setSideShow(false)}>
-        <i className="fa fa-arror-left"></i>
+        <i className="fa fa-solid fa-angle-right" />
       </span>
       <ul className="navBar">
         {menus.length > 0
@@ -78,7 +78,16 @@ const SidebarMenu = ({ menus, sideShow, setSideShow, className }) => {
                               <ul className="thirdMenu">
                                 {sub_item.third_menu.map((third_item, i) => (
                                   <li key={i}>
-                                    <NavLink to={third_item.link}>
+                                    <NavLink
+                                      to={{
+                                        pathname: third_item.link,
+                                        state: {
+                                          title:
+                                            "Danh mục: " + third_item.linkText,
+                                          CategoryID: third_item.categoryId,
+                                        },
+                                      }}
+                                    >
                                       {third_item.linkText}
                                     </NavLink>
                                   </li>

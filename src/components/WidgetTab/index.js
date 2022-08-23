@@ -55,7 +55,7 @@ const WidgetTabPane = ({ arr, a_id, id }) => {
               {arr.length - 1 === i && (
                 <Link
                   id="search"
-                  style={{ float: "right"}}
+                  style={{ float: "right" }}
                   to={{
                     pathname: "/search",
                     state: {
@@ -64,7 +64,13 @@ const WidgetTabPane = ({ arr, a_id, id }) => {
                     },
                   }}
                 >
-                  <Button style={{color: "#1ab7ea !important", fontSize: "1rem", fontWeight: "bold" }}>
+                  <Button
+                    style={{
+                      color: "#1ab7ea !important",
+                      fontSize: "1rem",
+                      fontWeight: "bold",
+                    }}
+                  >
                     Xem thêm
                   </Button>
                 </Link>
