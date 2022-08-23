@@ -115,7 +115,7 @@ const HomePage = () => {
   }
   return (
     <Fragment>
-      <div
+      {/* <div
         className="up_btn_trending up_btn_trending"
         onClick={() => scrollTrending()}
       >
@@ -132,7 +132,7 @@ const HomePage = () => {
         onClick={() => scrollMostShare()}
       >
         <FontAwesome name="star" />
-      </div>
+      </div> */}
       <PostGallery className="fifth_bg" data={postList} />
       <div className="container">
         <div className="row">
