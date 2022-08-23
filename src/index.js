@@ -16,11 +16,13 @@ import "simple-line-icons/css/simple-line-icons.css";
 import "rc-datetime-picker/dist/picker.min.css";
 import "rc-datetime-picker/dist/picker.css";
 import App from "./App";
+import ScrollToTop from "./scrollToTop";
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
+        <ScrollToTop />
         <App />
       </BrowserRouter>
     </Provider>

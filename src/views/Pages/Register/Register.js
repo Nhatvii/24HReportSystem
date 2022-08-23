@@ -17,7 +17,7 @@ import { Toast, ToastContainer } from "react-bootstrap";
 import { firebase, auth } from "../../../firebase/firebase";
 import OtpInput from "react-otp-input";
 import { setTimeout } from "core-js";
-import "../Login/styles.css";
+import "../Login/styles.scss";
 //
 const Register = (props) => {
   const { history } = props;
@@ -73,7 +73,6 @@ const Register = (props) => {
         setPhone(values.account);
       }
     }
-    console.log(errors);
     return errors;
   };
 
@@ -97,7 +96,6 @@ const Register = (props) => {
       });
       if (phone !== "") {
         const response = await registerApi.createUser(json2);
-        console.log(response);
         if (!JSON.stringify(response).includes("error")) {
           console.log(response);
           const params = { accountID: response.accountId, isAuthen: true };
@@ -108,7 +106,6 @@ const Register = (props) => {
               password: password,
             };
             const loginResponse = await loginApi.getAll(params);
-            console.log(loginResponse);
             if (!JSON.stringify(loginResponse).includes("error")) {
               //lấy dữ liệu đăng Nhập
               localStorage.setItem("user_info", JSON.stringify(loginResponse));
@@ -431,7 +428,9 @@ const Register = (props) => {
             )}
             <Col md="6" className="text-right">
               <Button color="link" className="px-0">
-                <a href="/login">Đã có tải khoản?</a>
+                <a href="/login">
+                  <b>Đã có tải khoản?</b>
+                </a>
               </Button>
             </Col>
           </Row>
@@ -439,8 +438,10 @@ const Register = (props) => {
         <br />
         <p>
           <a href="/">
-            <icon className="fa fa-angle-left" />
-            &nbsp;Trang chủ{" "}
+            <b>
+              <icon className="fa fa-angle-left" />
+              &nbsp;Trang chủ
+            </b>
           </a>
         </p>
       </div>

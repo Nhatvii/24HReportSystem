@@ -139,7 +139,7 @@ const NotFoundPage = () => {
         <div className="space-50" />
       </div>
 
-      <div className="archives padding-top-30">
+      {/* <div className="archives padding-top-30">
         <div className="container">
           <div className="row">
             <div className="col-md-6 col-lg-8">
@@ -222,7 +222,7 @@ const NotFoundPage = () => {
           </div>
         </div>
       </div>
-      <div className="space-70" />
+      <div className="space-70" /> */}
     </Fragment>
   );
 };

@@ -3,15 +3,11 @@ import { Link } from "react-router-dom";
 
 const quick_links = [
   {
-    name: "About",
-    link: "/",
+    name: "Về chúng tôi",
+    link: "/about-us",
   },
   {
-    name: "Advertise",
-    link: "/",
-  },
-  {
-    name: "Privacy & Policy",
+    name: "Chính sách",
     link: "/",
   },
   {
@@ -26,7 +22,7 @@ const FooterCopyright = () => {
       <div className="container">
         <div className="row">
           <div className="col-lg-6 align-self-center">
-            <p>&copy; Copyright 2020, All Rights Reserved</p>
+            <p>&copy; Bản quyền 2022</p>
           </div>
           <div className="col-lg-6 align-self-center">
             <div className="copyright_menus text-right">

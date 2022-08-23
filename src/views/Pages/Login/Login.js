@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, Col, Row } from "reactstrap";
 import { useFormik } from "formik";
 import { toast } from "react-toastify";
 import loginApi from "../../../api/loginApi";
-import "./styles.css";
+import "./styles.scss";
+import { signInWithGoogle } from "../../../firebase";
 
 const Login = (props) => {
   // const { history } = props;
@@ -61,7 +62,8 @@ const Login = (props) => {
         if (response.role.roleId === 1) {
           window.location.href = "/";
         } else {
-          window.location.href = "/admin";
+          window.location.href =
+            "https://report-24h-admin.azurewebsites.net/auth/sign-in";
         }
       } else {
         setErrorMessage(
@@ -74,7 +76,6 @@ const Login = (props) => {
       toast.error(e.message);
     }
   }
-  useEffect(() => {}, []);
 
   return (
     <div className="form-center">
@@ -130,26 +131,47 @@ const Login = (props) => {
               </Button>
             </Col>
           ) : (
-            <Col md="6">
-              <Button type="submit" color="primary" className="float-left">
-                Đăng nhập
-              </Button>
-            </Col>
+            <>
+              <Col md={4}>
+                <Button type="submit" color="primary" className="float-left">
+                  Đăng nhập
+                </Button>
+              </Col>
+              <Col md={8}>
+                <div className="google-btn" onClick={signInWithGoogle}>
+                  <div className="google-icon-wrapper">
+                    <img
+                      className="google-icon"
+                      src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+                    />
+                  </div>
+                  <p className="btn-text ">
+                    <b>Đăng nhập bằng Google</b>
+                  </p>
+                </div>
+              </Col>
+            </>
           )}
-          <Col md="6" className="text-right">
-            <Button color="link" className="px-0">
-              Quên mật khẩu?
-            </Button>
-          </Col>
         </Row>
       </form>
       <br />
-      <p>
-        <a href="/">
-          <icon className="fa fa-angle-left" />
-          &nbsp;Trang chủ{" "}
-        </a>
-      </p>
+      <Row>
+        <Col md={6}>
+          <p>
+            <a href="/">
+              <b>
+                <icon className="fa fa-angle-left" />
+                &nbsp;Trang chủ
+              </b>
+            </a>
+          </p>
+        </Col>
+        <Col md={6}>
+          <a href="/reset-password" className="px-0 float-right">
+            <b>Quên mật khẩu?</b>
+          </a>
+        </Col>
+      </Row>
     </div>
   );
 };

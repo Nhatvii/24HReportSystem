@@ -29,6 +29,12 @@ const Routes = () => {
         parentClass="theme-1"
         component={Auth}
       />
+      <PublicRoute
+        exact
+        path="/reset-password"
+        parentClass="theme-1"
+        component={Auth}
+      />
       {/* admin routes */}
       <AdminRoute
         exact
