@@ -13,6 +13,7 @@ import postApi from "../../api/postApi";
 
 const HomePage = () => {
   const [postList, setPostList] = useState([]);
+  const [temp, setTemp] = useState(0);
   const loadPostList = async () => {
     try {
       const params = { Status: 3 };
@@ -23,10 +24,14 @@ const HomePage = () => {
       console.log(err.message);
     }
   };
-
+  useEffect(() => {
+    setInterval(() => {
+      setTemp((prevTemp) => prevTemp + 1);
+    }, 5000);
+  }, []);
   useEffect(() => {
     loadPostList();
-  });
+  }, [temp]);
   function scrollTrending() {
     const id = "trending";
     const yOffset = -150;

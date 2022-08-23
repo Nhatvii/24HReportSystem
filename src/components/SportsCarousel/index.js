@@ -104,6 +104,7 @@ const SportsCarousel = ({ dark }) => {
         <Swiper getSwiper={setSwiper} {...params}>
           {mostView.map((item, i) => (
             <div key={i} className="single_post2_carousel">
+              <div className="etst">
               <div className="single_post widgets_small">
                 <div className="post_img">
                   <div className="img_wrap">
@@ -124,6 +125,7 @@ const SportsCarousel = ({ dark }) => {
                     <Link to="/post1">{item.title}</Link>
                   </h4>
                 </div>
+              </div>
               </div>
               <div className="space-15" />
               {dark ? (

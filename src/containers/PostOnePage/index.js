@@ -3,11 +3,16 @@ import BreadCrumb from "../../components/BreadCrumb";
 import FontAwesome from "../../components/uiStyle/FontAwesome";
 import { Link } from "react-router-dom";
 import WidgetTab from "../../components/WidgetTab";
+import WidgetTrendingNews from "../../components/WidgetTrendingNews";
 import NewsLetter from "../../components/NewsLetter";
 import MostShareWidget from "../../components/MostShareWidget";
 import FollowUs from "../../components/FollowUs";
+import PostOnePagination from "../../components/PostOnePagination";
 import { Markup } from "interweave";
+
 // images
+import author2 from "../../doc/img/author/author2.png";
+
 import OurBlogSection from "../../components/OurBlogSection";
 import postDetailApi from "../../api/postDetailApi";
 import moment from "moment";
@@ -15,6 +20,7 @@ import { Comments } from "../../views/UserViews/Post/components/Comments";
 
 const PostOnePage = (props) => {
   const [postDetail, setPostDetail] = useState([]);
+  const [description, setDescription] = useState([]);
   const fetchPostDetail = async () => {
     try {
       await postDetailApi.getAll(props.match.params.id).then((data) => {
@@ -90,12 +96,7 @@ const PostOnePage = (props) => {
                     <div className="author">
                       <div className="author_img">
                         <div className="author_img_wrap">
-                          <img
-                            src="https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg"
-                            alt="author2"
-                            width={50}
-                            height={50}
-                          />
+                          <img src={author2} alt="author2" />
                         </div>
                       </div>
                       <Link to="/">

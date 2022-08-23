@@ -1,5 +1,6 @@
 import moment from "moment";
 import React, { Fragment } from "react";
+import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 const RecommendedNews = ({ data }) => {
@@ -54,8 +55,8 @@ const RecommendedNews = ({ data }) => {
           </div>
         ))}
       <Link
-        id="search"
-        style={{ float: "right" }}
+        id="search"        
+        style={{ alignSelf: "flex-end", marginLeft: "auto"}}
         to={{
           pathname: "/search",
           state: {
@@ -64,7 +65,9 @@ const RecommendedNews = ({ data }) => {
           },
         }}
       >
-        Xem thêm...
+        <Button style={{ color: "#1ab7ea !important", fontSize: "1rem", fontWeight: "bold" }}>
+        Xem thêm
+        </Button>
       </Link>
     </Fragment>
   );

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import FontAwesome from "../uiStyle/FontAwesome";
 import Swiper from "react-id-swiper";
 import moment from "moment";
+import { Button } from "react-bootstrap";
 
 const MostView = ({ no_margin, title, data }) => {
   // const { data } = props;
@@ -92,7 +93,7 @@ const MostView = ({ no_margin, title, data }) => {
         </Swiper>
         <Link
           id="search"
-          style={{ float: "right" }}
+          style={{ float: "right"}}
           to={{
             pathname: "/search",
             state: {
@@ -101,7 +102,9 @@ const MostView = ({ no_margin, title, data }) => {
             },
           }}
         >
-          Xem thêm...
+                    <Button style={{color: "#1ab7ea !important", fontSize: "1rem", fontWeight: "bold" }}>
+          Xem thêm
+          </Button>
         </Link>
         <div className="navBtns">
           <div onClick={goPrev} className="navBtn prevtBtn">

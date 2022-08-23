@@ -250,7 +250,7 @@ body {
   width: 50px;
   text-align: center;
   line-height: 50px;
-  background: #5560ff;
+  background: #1ab7ea;
   color: #fff;
   border-radius: 50%;
   position: fixed;
@@ -780,7 +780,7 @@ a.social_medium {
       top: 50%;
       height: 20px;
       width: 3px;
-      background: #1091FF;
+      background: #1ab7ea !important;
       transform: translateY(-50%);
     }
 
@@ -997,6 +997,7 @@ span.tranding.tranding_border {
 .widgets_small {
   padding-left: 117px;
   min-height: 70px;
+  margin-bottom: 1rem;
 
   .post_img {
     position: absolute;
@@ -1572,7 +1573,7 @@ span.tranding {
   padding-right: 40px;
   min-height: 64px;
   padding-left: 90px;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 
   .post_img {
     height: 70px;

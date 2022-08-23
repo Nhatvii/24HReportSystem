@@ -4,6 +4,7 @@ import TrendingNewsSlider from "../TrendingNewsSlider";
 import { Link } from "react-router-dom";
 import FontAwesome from "../uiStyle/FontAwesome";
 import moment from "moment";
+import { Button } from "react-bootstrap";
 
 const TrendingNews = (props) => {
   const { data } = props;
@@ -107,7 +108,7 @@ const TrendingNews = (props) => {
           ))}
           <Link
             id="search"
-            style={{ float: "right" }}
+            style={{ float: "right"}}
             to={{
               pathname: "/search",
               state: {
@@ -116,7 +117,9 @@ const TrendingNews = (props) => {
               },
             }}
           >
-            Xem thêm...
+          <Button style={{color: "#1ab7ea !important", fontSize: "1rem", fontWeight: "bold", marginTop: "1rem", marginBottom: "0.5rem" }}>
+            Xem thêm
+          </Button>
           </Link>
         </div>
       </div>
