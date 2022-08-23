@@ -25,34 +25,87 @@ class AccountApi {
       var jsonData = jsonDecode(response.body);
       if (jsonData['error'] == null && jsonData['role']['roleId'] == 1) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString('email', jsonData['email']);
-        if (jsonData['accountInfo']['username'] != null) {
-          prefs.setString('username', jsonData['accountInfo']['username']);
+        prefs.setString('accountId', jsonData['accountId']);
+        if (jsonData['email'] != null) {
+          prefs.setString('email', jsonData['email']);
+        } else {
+          prefs.setString('phone', jsonData['phoneNumber']);
         }
+        prefs.setString('username', jsonData['accountInfo']['username']);
       }
       return jsonData;
     }
   }
 
+  // Login with Google
+  Future signInGoogle(String email) async {
+    var url = Uri.parse(
+        "${constants.localhost}/Account/LoginWithGoogle?email=$email");
+    var response = await http.post(url);
+
+    if (response.statusCode == 200) {
+      var jsonData = jsonDecode(response.body);
+      if (jsonData['error'] == null && jsonData['role']['roleId'] == 1) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('accountId', jsonData['accountId']);
+        if (jsonData['email'] != null) {
+          prefs.setString('email', jsonData['email']);
+        } else {
+          prefs.setString('phone', jsonData['phoneNumber']);
+        }
+        prefs.setString('username', jsonData['accountInfo']['username']);
+      }
+      return jsonData;
+    } else {
+      throw Exception('Unable to Login with Google');
+    }
+  }
+
   // Sign Up API
-  Future signUp(String email, String pass, String phone) async {
+  Future signUp(String pass, String phone, String name) async {
     var url = Uri.parse('${constants.localhost}/Account/Register');
+    // Map<String, dynamic> tmp;
+    // if (email.isEmpty) {
+    //   tmp = {
+    //     "password": pass,
+    //     "roleId": 1,
+    //     "phoneNumber": phone,
+    //     "username": name,
+    //   };
+    // } else {
+    //   tmp = {
+    //     "email": email,
+    //     "password": pass,
+    //     "roleId": 1,
+    //     "username": name,
+    //   };
+    // }
     var response = await http.post(
       url,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode({
-        "email": email,
-        "password": pass,
-        "roleId": 1,
-        "phoneNumber": phone,
-      }),
+      body: jsonEncode(
+          // tmp
+          {
+            "password": pass,
+            "roleId": 1,
+            "phoneNumber": phone,
+            "username": name,
+          }),
     );
     if (response.statusCode == 200) {
       var jsonData = jsonDecode(response.body);
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('email', jsonData['email']);
+      if (jsonData['error'] == null) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('accountId', jsonData['accountId']);
+        if (jsonData['email'] != null) {
+          prefs.setString('email', jsonData['email']);
+        } else {
+          prefs.setString('phone', jsonData['phoneNumber']);
+        }
+        prefs.setString('username', jsonData['accountInfo']['username']);
+      }
       return jsonData;
     }
   }
@@ -71,9 +124,9 @@ class AccountApi {
   // Get Account Info API
   Future<Account> getAccountInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var emailCheck = prefs.getString('email');
+    var accountId = prefs.getString('accountId');
     var url = Uri.parse(
-        "${constants.localhost}/Account/GetAccount/?email=$emailCheck");
+        "${constants.localhost}/Account/GetAccount/?UserId=$accountId");
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -90,6 +143,7 @@ class AccountApi {
   Future updateUserInfo(String email, String name, String address, String phone,
       String identityCard) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    var accountId = prefs.getString('accountId');
     var url = Uri.parse('${constants.localhost}/Account');
     var response = await http.put(
       url,
@@ -97,6 +151,7 @@ class AccountApi {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode({
+        "accountID": accountId,
         "email": email,
         "phoneNumber": phone,
         "username": name,
@@ -106,7 +161,7 @@ class AccountApi {
     );
     if (response.statusCode == 200) {
       var jsonData = jsonDecode(response.body);
-      print(jsonData);
+      prefs.setString('email', email);
       prefs.setString('username', name);
       return jsonData;
     } else {
@@ -114,7 +169,7 @@ class AccountApi {
     }
   }
 
-  Future checkUserAuthen(String email) async {
+  Future checkUserAuthen(String accountId) async {
     var url = Uri.parse('${constants.localhost}/Account');
     var response = await http.put(
       url,
@@ -122,7 +177,7 @@ class AccountApi {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode({
-        "email": email,
+        "accountID": accountId,
         "isAuthen": true,
       }),
     );

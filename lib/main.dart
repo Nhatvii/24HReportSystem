@@ -1,3 +1,4 @@
+import 'package:capstone_project/pages/login_page/login_page.dart';
 import 'package:capstone_project/pages/main_page/main_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 // import 'package:firebase_app_check/firebase_app_check.dart';
@@ -14,6 +15,7 @@ void main() async {
       .then((value) => runApp(const MyApp()));
 
   // FirebaseMessaging.instance.getToken();
+  // FirebaseMessaging.instance.subscribeToTopic('abc');
   // FirebaseMessaging messaging = FirebaseMessaging.instance;
 
   // NotificationSettings settings = await messaging.requestPermission(
@@ -31,6 +33,8 @@ void main() async {
   // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
   //   print('Got a message whilst in the foreground!');
   //   print('Message data: ${message.data}');
+  //   print('Notification title: ${message.notification!.title}');
+  //   print('Notification body: ${message.notification!.body}');
 
   //   if (message.notification != null) {
   //     print('Message also contained a notification: ${message.notification}');
@@ -50,7 +54,7 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
       builder: (context, child) => MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: '24HReport System',
+        title: '24H Report System',
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.white,
           primarySwatch: Colors.blue,
@@ -60,6 +64,7 @@ class MyApp extends StatelessWidget {
       child: const MainPage(
         page: 0,
       ),
+      // LoginPage(),
     );
   }
 }

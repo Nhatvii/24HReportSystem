@@ -1,6 +1,6 @@
-
 import 'package:capstone_project/api/Account/account_api.dart';
 import 'package:capstone_project/constants/constants.dart';
+import 'package:capstone_project/services/google_sign_in_service.dart';
 import 'package:flutter/material.dart';
 
 class LoginPageModel {
@@ -9,6 +9,7 @@ class LoginPageModel {
   late String showErr;
   late bool isShowPass;
   late bool isLoading;
+  GoogleServices googleServices = GoogleServices();
   Constants constants = Constants();
   AccountApi accountApi = AccountApi();
 

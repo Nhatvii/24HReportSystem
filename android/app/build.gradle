@@ -70,5 +70,8 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:30.2.0')
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.google.firebase:firebase-analytics'
+    implementation ('com.mapbox.maps:android:10.6.2'){
+    exclude group: 'com.mapbox.mapboxsdk', module: 'mapbox-android-telemetry'
+    }
     // implementation 'com.google.firebase:firebase-appcheck-safetynet'
 }

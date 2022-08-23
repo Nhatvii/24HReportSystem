@@ -1,9 +1,11 @@
+import 'dart:convert';
 
 import 'package:capstone_project/api/Category/category_api.dart';
 import 'package:capstone_project/api/Post/post_api.dart';
 import 'package:capstone_project/constants/constants.dart';
 import 'package:capstone_project/entities/category.dart';
 import 'package:capstone_project/entities/post.dart';
+import 'package:capstone_project/services/google_sign_in_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,9 +18,11 @@ class HomePageModel {
   List<Category> listCate = [];
   late int checkIndex;
   int categoryIDDefault = 0;
+  String? accountId;
   String? email;
   String? name;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
+  GoogleServices googleServices = GoogleServices();
   Constants constants = Constants();
   PostApi postApi = PostApi();
   CategoryApi categoryApi = CategoryApi();
@@ -35,15 +39,17 @@ class HomePageModel {
 
   Future<void> init() async {
     final listCategory = await categoryApi.getListCategory();
+    Category category = Category(rootCategoryId: 0, type: 'Tất cả');
+    listCategory.insert(0, category);
     listCate = listCategory;
     fetchListCategory = Future.value(listCategory);
-    fetchNewPost = postApi.getListNewPost(listCategory[0].rootCategoryId);
-    fetchPopularPost =
-        postApi.getListPopularPost(listCategory[0].rootCategoryId);
+    fetchNewPost = postApi.getListNewPost(0);
+    fetchPopularPost = postApi.getListPopularPost(0);
   }
 
   Future<SharedPreferences> getInstance() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    accountId = prefs.getString('accountId');
     email = prefs.getString('email');
     name = prefs.getString('username');
     return prefs;

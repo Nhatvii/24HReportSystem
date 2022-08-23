@@ -12,7 +12,7 @@ class ReportCardPart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 0.2.sh,
+      height: 0.22.sh,
       width: 1.sw,
       margin: EdgeInsets.only(bottom: 0.01.sh),
       child: GestureDetector(
@@ -88,7 +88,7 @@ class ReportCardPart extends StatelessWidget {
                   ],
                 ),
                 SizedBox(
-                  height: 0.005.sh,
+                  height: 0.008.sh,
                 ),
                 Row(
                   children: [
@@ -104,7 +104,7 @@ class ReportCardPart extends StatelessWidget {
                   ],
                 ),
                 SizedBox(
-                   height: 0.005.sh,
+                   height: 0.008.sh,
                 ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,

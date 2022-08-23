@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> implements HomePageView {
                   top: 0.155.sh,
                   left: 0.02.sh,
                   right: 0.02.sh,
-                  bottom: 0.01.sh,
+                  bottom: 0.002.sh,
                 ),
                 child: SingleChildScrollView(
                   child: Column(

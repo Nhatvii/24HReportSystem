@@ -23,17 +23,19 @@ class PostDetailPagePresenter {
   }
 
   void loadCommentByPostId(String postId) {
-    _postDetailPageModel.fetchListCommentByPostID =
-        _postDetailPageModel.commentApi.getListComment(postId);
+    _postDetailPageModel.fetchListCommentByPostID = _postDetailPageModel
+        .commentApi
+        .getListComment(postId)
+        .then((value) => _postDetailPageModel.listComment = value);
     _postDetailPageView.refreshData(_postDetailPageModel);
   }
 
   void postComment(String postId, StateSetter sheetState) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? email = prefs.getString('email');
-    if (email != null) {
+    String? accountId = prefs.getString('accountId');
+    if (accountId != null) {
       _postDetailPageModel.commentApi
-          .postComment(_postDetailPageModel.comment.text, postId, email)
+          .postComment(_postDetailPageModel.comment.text, postId)
           .then((value) => {
                 if (value['statusCode'] == 200)
                   {
@@ -41,8 +43,12 @@ class PostDetailPagePresenter {
                         .getCommentById(value['message'])
                         .then((value) => {
                               sheetState(() {
-                                _postDetailPageModel.listComment
-                                    .insert(0, value);
+                                if (_postDetailPageModel.listComment.isEmpty) {
+                                  loadCommentByPostId(postId);
+                                } else {
+                                  _postDetailPageModel.listComment
+                                      .insert(0, value);
+                                }
                               }),
                               _postDetailPageModel.commentCount++,
                               _postDetailPageModel.comment.clear(),
@@ -55,13 +61,69 @@ class PostDetailPagePresenter {
                   {
                     _postDetailPageView
                         .showCommentBadWordDialog(value['error']['message']),
-                    _postDetailPageModel.comment.clear(),
+                    // _postDetailPageModel.comment.clear(),
                     _postDetailPageView.refreshData(_postDetailPageModel),
                   }
               });
     } else {
-      _postDetailPageView.showAlertDialog();
+      _postDetailPageView.showLoginDialog();
     }
+  }
+
+  void onCancelEdit(int index, StateSetter sheetState) {
+    sheetState(() {
+      if (_postDetailPageModel.listEditComment[index] == true) {
+        _postDetailPageModel.listEditComment[index] =
+            !_postDetailPageModel.listEditComment[index];
+        _postDetailPageModel.editComment.text = '';
+        _postDetailPageView.refreshData(_postDetailPageModel);
+      }
+    });
+  }
+
+  void onEditComment(int index, String comment, StateSetter sheetState) {
+    sheetState(() {
+      _postDetailPageModel.listEditComment[_postDetailPageModel.cancelIndex] =
+          false;
+      _postDetailPageModel.cancelIndex = index;
+      _postDetailPageModel.listEditComment[index] =
+          !_postDetailPageModel.listEditComment[index];
+      _postDetailPageModel.editComment.text = comment;
+      _postDetailPageView.refreshData(_postDetailPageModel);
+    });
+  }
+
+  void updateComment(
+      int index, String commentId, StateSetter sheetState) async {
+    _postDetailPageModel.commentApi
+        .updateComment(commentId, _postDetailPageModel.editComment.text)
+        .then((value) => {
+              if (value['error'] == null)
+                {
+                  _postDetailPageModel.commentApi
+                      .getCommentById(commentId)
+                      .then((value) => {
+                            sheetState(() {
+                              _postDetailPageModel.listComment[
+                                      _postDetailPageModel
+                                          .listComment
+                                          .indexWhere((element) =>
+                                              element.commentId == commentId)] =
+                                  value;
+                              _postDetailPageModel.listEditComment[index] =
+                                  !_postDetailPageModel.listEditComment[index];
+                              _postDetailPageView
+                                  .refreshData(_postDetailPageModel);
+                            }),
+                          }),
+                }
+              else
+                {
+                  _postDetailPageView
+                      .showCommentBadWordDialog(value['error']['message']),
+                  _postDetailPageView.refreshData(_postDetailPageModel),
+                }
+            });
   }
 
   void deleteComment(String commentId, int index, StateSetter sheetState) {
@@ -77,8 +139,8 @@ class PostDetailPagePresenter {
 
   void likePost(String postId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? email = prefs.getString('email');
-    if (email != null) {
+    String? accountId = prefs.getString('accountId');
+    if (accountId != null) {
       _postDetailPageModel.emotionApi.updateEmotion(postId).then((value) => {
             _postDetailPageModel.isLike = !_postDetailPageModel.isLike,
             if (_postDetailPageModel.isLike == true)
@@ -88,7 +150,7 @@ class PostDetailPagePresenter {
             _postDetailPageView.refreshData(_postDetailPageModel),
           });
     } else {
-      _postDetailPageView.showAlertDialog();
+      _postDetailPageView.showLoginDialog();
     }
   }
 
@@ -102,14 +164,14 @@ class PostDetailPagePresenter {
 
   void savePost(String postId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? email = prefs.getString('email');
-    if (email != null) {
+    String? accountId = prefs.getString('accountId');
+    if (accountId != null) {
       _postDetailPageModel.postApi.updatePostSaved(postId).then((value) => {
             _postDetailPageModel.isSave = !_postDetailPageModel.isSave,
             _postDetailPageView.refreshData(_postDetailPageModel),
           });
     } else {
-      _postDetailPageView.showAlertDialog();
+      _postDetailPageView.showLoginDialog();
     }
   }
 

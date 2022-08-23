@@ -15,15 +15,19 @@ class PostDetailPageModel {
   late Future<List<Post>> fetchListRelatedPost;
   late Future<List<Comment>> fetchListCommentByPostID;
   late TextEditingController comment;
+  late TextEditingController editComment;
+  late List<bool> listEditComment;
+  late List<Comment> listComment;
   bool isLike = false;
   bool isSave = false;
   bool isSend = false;
   int likeCount = 0;
   int commentCount = 0;
   int shareCount = 0;
-  late List<Comment> listComment;
+  int cancelIndex = 0;
   Constants constants = Constants();
   String? response;
+  String? accountId;
   String? email;
   String? name;
   final FlutterShareMe flutterShareMe = FlutterShareMe();
@@ -34,24 +38,17 @@ class PostDetailPageModel {
   PostDetailPageModel(String postID, int categoryID) {
     emotionApi.updateViewCount(postID);
     fetchPostDetail = postApi.getPostDetail(postID);
-    // .then((value) => checkEmotionStatus(postID));
     fetchListRelatedPost = Future.delayed(const Duration(hours: 24), () => []);
     fetchListCommentByPostID =
         Future.delayed(const Duration(hours: 24), () => []);
     comment = TextEditingController();
+    editComment = TextEditingController();
+    listEditComment = [];
     listComment = [];
     getInstance();
   }
 
   Future<void> init(String postID, int categoryID) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    email = prefs.getString('email');
-    // fetchPostDetail = postApi.getPostDetail(postID).then((value) {
-    //   likeCount = value.likeCount;
-    //   commentCount = value.commentCount;
-    //   shareCount = value.shareCount;
-    //   return value;
-    // });
     await postApi.getPostDetail(postID).then((value) {
       likeCount = value.likeCount;
       commentCount = value.commentCount;
@@ -66,6 +63,7 @@ class PostDetailPageModel {
 
   Future<SharedPreferences> getInstance() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    accountId = prefs.getString('accountId');
     email = prefs.getString('email');
     name = prefs.getString('username');
     return prefs;
@@ -73,8 +71,8 @@ class PostDetailPageModel {
 
   checkEmotionStatus(String postId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    email = prefs.getString('email');
-    if (email != null) {
+    accountId = prefs.getString('accountId');
+    if (accountId != null) {
       final checkEmotion = await emotionApi.checkEmotion(postId);
       Future.value(checkEmotion).then((dynamic value) => {
             for (var i in value)

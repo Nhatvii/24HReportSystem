@@ -33,20 +33,12 @@ class SignUpForm extends StatelessWidget {
         UnderlineText(
           height: 0.08.sh,
           width: 1.sw,
-          controller: signUpPageModel.email,
-          text: "Email*",
-          enabled: true,
-          inputType: TextInputType.emailAddress,
-        ),
-        SizedBox(
-          height: 0.025.sh,
-        ),
-        UnderlineText(
-          height: 0.08.sh,
-          width: 1.sw,
           controller: signUpPageModel.phone,
           text: "Số Điện Thoại*",
           enabled: true,
+          isDense: false,
+          contentPadding: EdgeInsets.symmetric(vertical: 0.02.sh),
+          focus: false,
           inputType: TextInputType.phone,
         ),
         SizedBox(
@@ -76,6 +68,20 @@ class SignUpForm extends StatelessWidget {
           icon: signUpPageModel.isShowConPass
               ? const Icon(Icons.visibility)
               : const Icon(Icons.visibility_off),
+        ),
+        SizedBox(
+          height: 0.025.sh,
+        ),
+        UnderlineText(
+          height: 0.08.sh,
+          width: 1.sw,
+          controller: signUpPageModel.name,
+          text: "Họ Tên*",
+          enabled: true,
+          isDense: false,
+          contentPadding: EdgeInsets.symmetric(vertical: 0.02.sh),
+          focus: false,
+          inputType: TextInputType.text,
         ),
         SizedBox(
           height: 0.04.sh,

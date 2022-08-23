@@ -69,9 +69,9 @@ class PostApi {
   // Get List Saved Post API
   Future<List<Post>> getListPostSaved() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var email = prefs.getString('email');
+    var accountId = prefs.getString('accountId');
     var url =
-        Uri.parse('${constants.localhost}/Post/GetListPostSave?userID=$email');
+        Uri.parse('${constants.localhost}/Post/GetListPostSave?userID=$accountId');
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -99,7 +99,7 @@ class PostApi {
   // Post Saved API
   Future updatePostSaved(String postId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var email = prefs.getString('email');
+    var accountId = prefs.getString('accountId');
     var url = Uri.parse('${constants.localhost}/Post/UpdatePostSave');
     var response = await http.put(
       url,
@@ -108,7 +108,7 @@ class PostApi {
       },
       body: jsonEncode({
         "postId": postId,
-        "userId": email,
+        "userId": accountId,
       }),
     );
     if (response.statusCode == 200) {

@@ -6,5 +6,11 @@ abstract class UserProfilePageView {
 
   void onEditUserInfo();
 
+  void onClickEditInfo();
+
+  void onCancelEdit();
+
   void showSnackBar(String msg, BuildContext context);
+
+  void showToast(String msg);
 }

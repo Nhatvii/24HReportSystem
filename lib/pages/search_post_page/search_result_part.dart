@@ -37,7 +37,7 @@ class SearchResultPart extends StatelessWidget {
                   height: 0.5.sh,
                   child: Center(
                     child: Text(
-                      'Không tìm thấy bài viết!',
+                      'Không tìm thấy bài viết liên quan !!!',
                       style: TextStyle(
                           fontSize: 14.sp, fontWeight: FontWeight.w600),
                     ),

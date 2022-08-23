@@ -63,7 +63,7 @@ class _SearchPostPageState extends State<SearchPostPage>
   }
 
   _appBar() => PreferredSize(
-        preferredSize: Size(MediaQuery.of(context).size.width, 0.14.sh),
+        preferredSize: Size(MediaQuery.of(context).size.width, 0.15.sh),
         child: Stack(
           children: [
             Container(),

@@ -23,14 +23,17 @@ class NavigationDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // print(homePageModel.accountId);
+    // print(homePageModel.name);
+
     return Drawer(
       child: SingleChildScrollView(
         child: Column(
           children: [
-            homePageModel.email != null
+            homePageModel.accountId != null
                 ? loginHeader(context)
                 : notLoginHeader(context),
-            homePageModel.email != null
+            homePageModel.accountId != null
                 ? loginDrawer(context)
                 : notLoginDrawer(context),
           ],
@@ -77,20 +80,18 @@ class NavigationDrawer extends StatelessWidget {
         height: 0.008.sh,
         width: 0.016.sw,
         radius: 35.r,
-        text: homePageModel.name == null
-            ? homePageModel.email!
-            : homePageModel.name!,
+        text: homePageModel.name ?? '',
         fontSize: 22.sp,
       ),
       accountName: Text(
-        homePageModel.name ?? '',
+        homePageModel.name!,
         style: TextStyle(
           fontSize: 16.sp,
           color: Colors.white,
         ),
       ),
       accountEmail: Text(
-        homePageModel.email!,
+        homePageModel.email ?? '',
         style: TextStyle(
           fontSize: 14.sp,
           color: Colors.white,
@@ -132,7 +133,7 @@ class NavigationDrawer extends StatelessWidget {
                 size: 20.sp,
               ),
               text: Text(
-                'Báo cáo đã gửi',
+                'Tình huống đã gửi',
                 style: TextStyle(fontSize: 14.sp),
               ),
               function: () => navigateToReportSendHistoryPage()),

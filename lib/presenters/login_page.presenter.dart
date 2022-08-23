@@ -45,4 +45,57 @@ class LoginPagePresenter {
               });
     }
   }
+
+  void onSignInGoogle() {
+    _loginPageModel.googleServices.signInWithGoogle().then((googleUser) => {
+          print(googleUser),
+          if (googleUser.user!.email!.isNotEmpty)
+            {
+              _loginPageModel.accountApi
+                  .signInGoogle(googleUser.user!.email!)
+                  .then((value) => {
+                        if (value['error'] == null)
+                          {_loginPageView.onSignInSuccess()}
+                        else
+                          {
+                            _loginPageView
+                                .onSignInFail(value['error']['message'])
+                          }
+                      })
+              // _loginPageModel.accountApi
+              //     .checkAccount(googleUser.user!.email!, 'null')
+              //     .then((value) => {
+              //           if (value['error'] == null)
+              //             {
+              //               _loginPageModel.accountApi
+              //                   .signUp(googleUser.user!.email!, '', '',
+              //                       googleUser.user!.displayName!)
+              //                   .then((value) => {
+              //                         if (value['error'] == null)
+              //                           {
+              //                             _loginPageModel.accountApi
+              //                                 .checkUserAuthen(
+              //                                     googleUser.user!.email!)
+              //                                 .then((value) => _loginPageView
+              //                                     .onSignInSuccess())
+              //                           }
+              //                         else
+              //                           {
+              //                             _loginPageModel.showErr =
+              //                                 value['error']['message'],
+              //                             _loginPageView
+              //                                 .refreshData(_loginPageModel),
+              //                           }
+              //                       }),
+              //               _loginPageView.refreshData(_loginPageModel),
+              //             }
+              //           else
+              //             {
+              //             }
+              // })
+            }
+          else
+            {_loginPageView.onSignInFail('Xảy ra lỗi')}
+        });
+  }
 }

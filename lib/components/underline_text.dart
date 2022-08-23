@@ -7,6 +7,9 @@ class UnderlineText extends StatelessWidget {
   final double height;
   final double width;
   final bool enabled;
+  final bool isDense;
+  final EdgeInsets contentPadding;
+  final bool focus;
   final TextInputType inputType;
   const UnderlineText(
       {Key? key,
@@ -15,6 +18,9 @@ class UnderlineText extends StatelessWidget {
       required this.height,
       required this.width,
       required this.enabled,
+      required this.isDense,
+      required this.contentPadding,
+      required this.focus,
       required this.inputType})
       : super(key: key);
 
@@ -24,11 +30,14 @@ class UnderlineText extends StatelessWidget {
       height: height,
       width: width,
       child: TextFormField(
+          autofocus: focus,
           keyboardType: inputType,
           style: TextStyle(fontSize: 16.sp),
           controller: controller,
           enabled: enabled,
           decoration: InputDecoration(
+            isDense: isDense,
+            contentPadding: contentPadding,
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.grey, width: 0.5.w),
             ),
@@ -40,7 +49,7 @@ class UnderlineText extends StatelessWidget {
             ),
             labelText: text,
             labelStyle: TextStyle(
-              fontSize: 18.sp,
+              fontSize: 16.sp,
               color: Colors.grey,
             ),
           )),

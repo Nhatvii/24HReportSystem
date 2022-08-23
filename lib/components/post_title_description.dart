@@ -47,7 +47,7 @@ class PostTitleDescription extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
-                        height: 0.05.sh,
+                        height: 0.055.sh,
                         width: 0.55.sw,
                         child: Text(
                           post.title,

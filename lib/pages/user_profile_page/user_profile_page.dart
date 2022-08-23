@@ -1,11 +1,13 @@
 import 'package:capstone_project/components/avatar_name.dart';
-import 'package:capstone_project/components/underline_text.dart';
 import 'package:capstone_project/entities/account.dart';
 import 'package:capstone_project/models/user_profile_page_model.dart';
+import 'package:capstone_project/pages/user_profile_page/edit_form_part.dart';
+import 'package:capstone_project/pages/user_profile_page/view_form_part.dart';
 import 'package:capstone_project/presenters/user_profile_page_presenter.dart';
 import 'package:capstone_project/views/user_profile_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({Key? key}) : super(key: key);
@@ -72,38 +74,31 @@ class _UserProfilePageState extends State<UserProfilePage>
                           SizedBox(
                             height: 0.05.sh,
                           ),
-                          Row(
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('Xin chào,',
-                                      style: TextStyle(
-                                          fontSize: 25.sp,
-                                          fontWeight: FontWeight.w600)),
-                                  SizedBox(
-                                    width: 0.7.sw,
-                                    child: Text(
-                                      snapshot.data!.accountInfo.username == ''
-                                          ? snapshot.data!.email
-                                          : snapshot.data!.accountInfo.username,
-                                      style: TextStyle(
-                                          fontSize: 18.sp,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  ),
-                                ],
+                          AvatarName(
+                              height: 0.08.sh,
+                              width: 0.16.sw,
+                              radius: 35.r,
+                              text: snapshot.data!.accountInfo.username,
+                              fontSize: 25.sp),
+                          SizedBox(
+                            height: 0.01.sh,
+                          ),
+                          Text('Xin chào,',
+                              style: TextStyle(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w600)),
+                          SizedBox(
+                            width: 0.7.sw,
+                            child: Center(
+                              child: Text(
+                                snapshot.data!.accountInfo.username == ''
+                                    ? snapshot.data!.email
+                                    : snapshot.data!.accountInfo.username,
+                                style: TextStyle(
+                                    fontSize: 22.sp,
+                                    fontWeight: FontWeight.w500),
                               ),
-                              AvatarName(
-                                  height: 0.08.sh,
-                                  width: 0.16.sw,
-                                  radius: 35.r,
-                                  text:
-                                      snapshot.data!.accountInfo.username == ''
-                                          ? snapshot.data!.email
-                                          : snapshot.data!.accountInfo.username,
-                                  fontSize: 25.sp)
-                            ],
+                            ),
                           ),
                           SizedBox(
                             height: 0.02.sh,
@@ -115,89 +110,18 @@ class _UserProfilePageState extends State<UserProfilePage>
                             endIndent: 0.05.sw,
                           ),
                           SizedBox(
-                            height: 0.06.sh,
+                            height: 0.04.sh,
                           ),
-                          UnderlineText(
-                            controller: _userProfilePageModel.email,
-                            text: 'Email',
-                            height: 0.08.sh,
-                            width: 1.sw,
-                            enabled: false,
-                            inputType: TextInputType.emailAddress,
-                          ),
-                          SizedBox(
-                            height: 0.005.sh,
-                          ),
-                          UnderlineText(
-                            controller: _userProfilePageModel.name,
-                            text: 'Họ và Tên',
-                            height: 0.08.sh,
-                            width: 1.sw,
-                            enabled: _userProfilePageModel.isEdit,
-                            inputType: TextInputType.name,
-                          ),
-                          SizedBox(
-                            height: 0.005.sh,
-                          ),
-                          UnderlineText(
-                            controller: _userProfilePageModel.address,
-                            text: 'Địa Chỉ',
-                            height: 0.08.sh,
-                            width: 1.sw,
-                            enabled: _userProfilePageModel.isEdit,
-                            inputType: TextInputType.streetAddress,
-                          ),
-                          SizedBox(
-                            height: 0.005.sh,
-                          ),
-                          UnderlineText(
-                            controller: _userProfilePageModel.phone,
-                            text: 'Số Điện Thoại',
-                            height: 0.08.sh,
-                            width: 1.sw,
-                            enabled: false,
-                            inputType: TextInputType.phone,
-                          ),
-                          SizedBox(
-                            height: 0.005.sh,
-                          ),
-                          UnderlineText(
-                            controller: _userProfilePageModel.identityCard,
-                            text: 'CCCD/CMND',
-                            height: 0.08.sh,
-                            width: 1.sw,
-                            enabled: _userProfilePageModel.isEdit,
-                            inputType: TextInputType.number,
-                          ),
-                          SizedBox(
-                            height: 0.1.sh,
-                          ),
-                          Center(
-                            child: GestureDetector(
-                              onTap: () {
-                                onEditUserInfo();
-                              },
-                              child: Container(
-                                height: 0.055.sh,
-                                width: 0.55.sw,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.r),
-                                  gradient:
-                                      const LinearGradient(colors: <Color>[
-                                    Color(0xFF56CCF2),
-                                    Color(0xFF2F80ED),
-                                  ]),
+                          _userProfilePageModel.isEdit
+                              ? EditFormPart(
+                                  userProfilePageModel: _userProfilePageModel,
+                                  editFunction: onEditUserInfo,
+                                  cancelEditFunction: onCancelEdit,
+                                )
+                              : ViewFormPart(
+                                  userProfilePageModel: _userProfilePageModel,
+                                  isEditFunction: onClickEditInfo,
                                 ),
-                                child: Text(
-                                    _userProfilePageModel.isEdit
-                                        ? 'Xác Nhận'
-                                        : 'Chỉnh Sửa',
-                                    style: TextStyle(
-                                        fontSize: 16.sp, color: Colors.white)),
-                              ),
-                            ),
-                          ),
                         ],
                       );
                     }
@@ -236,5 +160,23 @@ class _UserProfilePageState extends State<UserProfilePage>
     );
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  @override
+  void onCancelEdit() {
+    _userProfilePagePresenter.onCancelEdit();
+  }
+
+  @override
+  void onClickEditInfo() {
+    _userProfilePagePresenter.onClickEditInfo();
+  }
+
+  @override
+  void showToast(String msg) {
+    Fluttertoast.showToast(
+      msg: msg,
+      gravity: ToastGravity.BOTTOM,
+    );
   }
 }

@@ -10,9 +10,9 @@ class EmotionApi {
   // Check Emotion API
   Future checkEmotion(String postId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var email = prefs.getString('email');
+    var accountId = prefs.getString('accountId');
     var url = Uri.parse(
-        '${constants.localhost}/Emotion?PostId=$postId&UserId=$email');
+        '${constants.localhost}/Emotion?PostId=$postId&UserId=$accountId');
     var response = await http.get(url);
     if (response.statusCode == 200) {
       var jsonData = jsonDecode(response.body);
@@ -25,7 +25,7 @@ class EmotionApi {
   // Update Emotion API
   Future updateEmotion(String postId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var email = prefs.getString('email');
+    var accountId = prefs.getString('accountId');
     var url = Uri.parse('${constants.localhost}/Emotion/EditEmotion');
     var response = await http.put(
       url,
@@ -34,7 +34,7 @@ class EmotionApi {
       },
       body: jsonEncode({
         "postId": postId,
-        "userId": email,
+        "userId": accountId,
       }),
     );
     if (response.statusCode == 200) {
@@ -65,7 +65,7 @@ class EmotionApi {
   // Update View Count API
   Future updateViewCount(String postId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var email = prefs.getString('email');
+    var accountId = prefs.getString('accountId');
     var url = Uri.parse('${constants.localhost}/Post/UpdateViewCount');
     var response = await http.put(
       url,
@@ -74,7 +74,7 @@ class EmotionApi {
       },
       body: jsonEncode({
         "postId": postId,
-        "userId": email,
+        "userId": accountId,
       }),
     );
     if (response.statusCode == 200) {

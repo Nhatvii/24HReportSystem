@@ -14,7 +14,9 @@ class TagCate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 0.035.sw,),
+      padding: EdgeInsets.symmetric(
+        horizontal: 0.035.sw,
+      ),
       margin: EdgeInsets.only(right: 0.03.sw),
       alignment: Alignment.center,
       decoration: isBeingSelected
@@ -35,11 +37,11 @@ class TagCate extends StatelessWidget {
       ),
       child: isBeingSelected
           ? Text(
-              'Lừa Đảo Qua $text',
+              text == 'Tất cả' ? text : 'Lừa Đảo Qua $text',
               style: TextStyle(color: Colors.white, fontSize: 13.sp),
             )
           : Text(
-              'Lừa Đảo Qua $text',
+              text == 'Tất cả' ? text : 'Lừa Đảo Qua $text',
               style: TextStyle(color: Colors.black, fontSize: 13.sp),
             ),
     );

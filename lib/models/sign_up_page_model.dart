@@ -6,16 +6,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SignUpPageModel {
-  late TextEditingController email;
+  late TextEditingController phone;
   late TextEditingController password;
   late TextEditingController conPass;
-  late TextEditingController phone;
+  late TextEditingController name;
   late TextEditingController otp;
   late String showErr;
   late bool isShowPass;
   late bool isShowConPass;
   late bool isLoading;
   late bool otpPhone;
+  bool emailCheck = false;
   Constants constants = Constants();
   AccountApi accountApi = AccountApi();
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -23,15 +24,15 @@ class SignUpPageModel {
   Duration myDuration = const Duration(seconds: 60);
   String verificationReceived = "";
   final numeric = RegExp(r'(^(?:[+0]9)?[0-9]{10}$)');
-  // final character = RegExp(r'^\D+$');
-  final emailCheck = RegExp(
+  final character = RegExp(r'^\D+$');
+  final email = RegExp(
       r"[\w!#$%&'*+\=?^_`{|}~-]+(?:\.[\w!#$%&'*+\=?^_`{|}~-]+)*@(?:\w(?:[\w-]*\w)?\.)+\w(?:[\w-]*\w)?");
 
   SignUpPageModel() {
-    email = TextEditingController();
+    phone = TextEditingController();
     password = TextEditingController();
     conPass = TextEditingController();
-    phone = TextEditingController();
+    name = TextEditingController();
     otp = TextEditingController();
     showErr = "";
     isShowPass = true;

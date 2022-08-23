@@ -41,7 +41,7 @@ class UnderlineTextIcon extends StatelessWidget {
               ),
               labelText: text,
               labelStyle: TextStyle(
-                fontSize: 18.sp,
+                fontSize: 16.sp,
                 color: Colors.grey,
               ),
               suffixIcon: GestureDetector(onTap: function, child: icon))),

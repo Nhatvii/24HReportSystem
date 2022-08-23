@@ -1,13 +1,20 @@
 import 'package:capstone_project/entities/report.dart';
 import 'package:capstone_project/models/report_send_detail_page_model.dart';
+import 'package:capstone_project/pages/report_send_detail_page/image_part.dart';
+import 'package:capstone_project/pages/report_send_detail_page/record_audio_part.dart';
+import 'package:capstone_project/pages/report_send_detail_page/video_part.dart';
+import 'package:capstone_project/presenters/report_send_detail_page_presenter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ReportSendInfoDetailPart extends StatelessWidget {
   final ReportSendDetailPageModel reportSendDetailPageModel;
+  final ReportSendDetailPagePresenter reportSendDetailPagePresenter;
   const ReportSendInfoDetailPart(
-      {Key? key, required this.reportSendDetailPageModel})
+      {Key? key,
+      required this.reportSendDetailPageModel,
+      required this.reportSendDetailPagePresenter})
       : super(key: key);
 
   @override
@@ -82,10 +89,13 @@ class ReportSendInfoDetailPart extends StatelessWidget {
                   SizedBox(
                     height: 0.005.sh,
                   ),
-                  Text(
-                    snapshot.data!.location,
-                    style: TextStyle(
-                      fontSize: 12.sp,
+                  Padding(
+                    padding: EdgeInsets.only(left: 0.01.sh),
+                    child: Text(
+                      snapshot.data!.location,
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -99,10 +109,13 @@ class ReportSendInfoDetailPart extends StatelessWidget {
                   SizedBox(
                     height: 0.005.sh,
                   ),
-                  Text(
-                    DateFormat('dd-MM-yyyy').format(snapshot.data!.timeFraud),
-                    style: TextStyle(
-                      fontSize: 12.sp,
+                  Padding(
+                    padding: EdgeInsets.only(left: 0.01.sh),
+                    child: Text(
+                      'Ngày ${DateFormat('dd-MM-yyyy').format(snapshot.data!.timeFraud)}  lúc ${DateFormat('hh:mm').format(snapshot.data!.timeFraud)}',
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -116,12 +129,30 @@ class ReportSendInfoDetailPart extends StatelessWidget {
                   SizedBox(
                     height: 0.005.sh,
                   ),
-                  Text(
-                    snapshot.data!.description,
-                    style: TextStyle(
-                      fontSize: 12.sp,
+                  Padding(
+                    padding: EdgeInsets.only(left: 0.01.sh),
+                    child: Text(
+                      snapshot.data!.description,
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                      ),
                     ),
                   ),
+                  SizedBox(
+                    height: 0.005.sh,
+                  ),
+                  Text(
+                    'Ghi âm',
+                    style:
+                        TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500),
+                  ),
+                  SizedBox(
+                    height: 0.005.sh,
+                  ),
+                  RecordAudioPart(
+                      reportSendDetailPageModel: reportSendDetailPageModel,
+                      reportSendDetailPagePresenter:
+                          reportSendDetailPagePresenter),
                   SizedBox(
                     height: 0.01.sh,
                   ),
@@ -131,30 +162,19 @@ class ReportSendInfoDetailPart extends StatelessWidget {
                         TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500),
                   ),
                   SizedBox(
+                    height: 0.02.sh,
+                  ),
+                  ImagePart(
+                      reportSendDetailPageModel: reportSendDetailPageModel,
+                      reportSendDetailPagePresenter:
+                          reportSendDetailPagePresenter),
+                  SizedBox(
                     height: 0.01.sh,
                   ),
-                  Container(
-                    padding: EdgeInsets.all(0.002.sh),
-                    height: 0.35.sh,
-                    width: 1.sw,
-                    child: GridView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: 10,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 4,
-                            crossAxisSpacing: 0.003.sh,
-                            mainAxisSpacing: 0.004.sw),
-                        itemBuilder: (context, index) {
-                          return SizedBox(
-                            height: 0.011.sh,
-                            width: 0.022.sw,
-                            child: Image.asset(
-                              'assets/images/nhay.jpg',
-                              fit: BoxFit.cover,
-                            ),
-                          );
-                        }),
-                  )
+                  VideoPart(
+                      reportSendDetailPageModel: reportSendDetailPageModel,
+                      reportSendDetailPagePresenter:
+                          reportSendDetailPagePresenter),
                 ]);
           }
           return Container();

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
@@ -42,7 +44,7 @@ class SendReportPagePresenter {
     });
 
     _sendReportPageModel.getInstance().then((value) {
-      _sendReportPageModel.email = value;
+      _sendReportPageModel.accountId = value;
       _sendReportPageView.refreshData(_sendReportPageModel);
     });
   }
@@ -57,24 +59,34 @@ class SendReportPagePresenter {
     // }
   }
 
-  void selectedDate(
-      BuildContext context, DateTime date, TextEditingController text) {
-    _sendReportPageModel.selectedDate(context, date, text).then(
-        (value) => {_sendReportPageView.refreshData(_sendReportPageModel)});
+  void selectDateTime(BuildContext context) async {
+    DateTime? date = await _sendReportPageModel.selectedDate(
+        context, _sendReportPageModel.today);
+    if (date == null) return;
+
+    TimeOfDay? time = await _sendReportPageModel.selectedTime(
+        context, _sendReportPageModel.todayTime);
+    if (time == null) return;
+
+    _sendReportPageModel.date.text = '${date.day}-${date.month}-${date.year}';
+    _sendReportPageModel.time.text =
+        '${_sendReportPageModel.twoDigits(time.hour)}:${_sendReportPageModel.twoDigits(time.minute)}';
+    canSendReport();
+    _sendReportPageView.refreshData(_sendReportPageModel);
   }
 
-  void selectedTime(
-      BuildContext context, TimeOfDay time, TextEditingController text) {
-    _sendReportPageModel.selectedTime(context, time, text).then(
-        (value) => {_sendReportPageView.refreshData(_sendReportPageModel)});
+  void selectFile() async {
+    await _sendReportPageModel
+        .selectFile()
+        .onError((error, stackTrace) => {
+              _sendReportPageView.showToast(error.toString()),
+            })
+        .whenComplete(
+            () => _sendReportPageView.refreshData(_sendReportPageModel));
+    _sendReportPageView.refreshData(_sendReportPageModel);
   }
 
-  void selectFile() {
-    _sendReportPageModel.selectFile().whenComplete(
-        () => _sendReportPageView.refreshData(_sendReportPageModel));
-  }
-
-  void removeImage(int index, File file) {
+  void removeMedia(int index, File file) {
     _sendReportPageModel.removeSelectFileFromFirebase(file, index).whenComplete(
         () => _sendReportPageView.refreshData(_sendReportPageModel));
   }
@@ -89,10 +101,33 @@ class SendReportPagePresenter {
     _sendReportPageView.refreshData(_sendReportPageModel);
   }
 
-  void openCamera() {
-    _sendReportPageModel.pickImage().then(
-          (value) => _sendReportPageView.refreshData(_sendReportPageModel),
+  void openCamera() async {
+    await _sendReportPageModel.pickImage().whenComplete(
+          () => _sendReportPageView.refreshData(_sendReportPageModel),
         );
+    _sendReportPageView.refreshData(_sendReportPageModel);
+  }
+
+  void openVideo() async {
+    await _sendReportPageModel
+        .pickVideo()
+        .onError((error, stackTrace) => {
+              _sendReportPageView.showToast(error.toString()),
+            })
+        .whenComplete(
+          () => _sendReportPageView.refreshData(_sendReportPageModel),
+        );
+    _sendReportPageView.refreshData(_sendReportPageModel);
+  }
+
+  void canSendReport() {
+    if (_sendReportPageModel.location.text.trim().isNotEmpty &&
+        _sendReportPageModel.date.text.trim().isNotEmpty) {
+      _sendReportPageModel.isSend = true;
+    } else {
+      _sendReportPageModel.isSend = false;
+    }
+    _sendReportPageView.refreshData(_sendReportPageModel);
   }
 
   Future isRecord() async {
@@ -112,8 +147,11 @@ class SendReportPagePresenter {
   }
 
   deleteRecord() {
-    _sendReportPageModel.delete();
-    _sendReportPageView.refreshData(_sendReportPageModel);
+    _sendReportPageModel
+        .delete(
+            _sendReportPageModel.recordPath, _sendReportPageModel.recordFile)
+        .whenComplete(
+            () => _sendReportPageView.refreshData(_sendReportPageModel));
   }
 
   playAudio() async {
@@ -121,9 +159,11 @@ class SendReportPagePresenter {
       await _sendReportPageModel.audioPlayer.pause();
     } else {
       try {
-        await _sendReportPageModel.audioPlayer.play(
-            DeviceFileSource(_sendReportPageModel.recordFile!.path),
-            volume: 1);
+        // await _sendReportPageModel.audioPlayer.play(
+        //     DeviceFileSource(_sendReportPageModel.recordFile.path),
+        //     volume: 1);
+        await _sendReportPageModel.audioPlayer
+            .play(UrlSource(_sendReportPageModel.recordUrl!), volume: 0.25);
       } catch (e) {
         _sendReportPageView.showToast('Không có file để chạy');
       }
@@ -138,32 +178,58 @@ class SendReportPagePresenter {
   }
 
   void sendReport() {
-    _sendReportPageModel
-        .sendFormReport(
-            _sendReportPageModel.location.text,
-            _sendReportPageModel.date.text,
-            _sendReportPageModel.time.text,
-            _sendReportPageModel.description.text,
-            _sendReportPageModel.listImageString,
-            _sendReportPageModel.isAnonymous)
-        .then((value) => {
-              if (value['error'] == null)
-                {
-                  _sendReportPageView.showToast('Gửi thành công'),
-                  if (_sendReportPageModel.email != null)
-                    {
-                      _sendReportPageView.navigateToShowReportPage(),
-                    }
-                  else
-                    {
-                      _sendReportPageView.navigateToHomePage(),
-                    }
-                }
-              else
-                {
-                  _sendReportPageView.showToast(value['message']),
-                }
-            });
+    if (_sendReportPageModel.location.text.trim().isEmpty &&
+        _sendReportPageModel.date.text.trim().isEmpty &&
+        _sendReportPageModel.description.text.trim().isEmpty) {
+      _sendReportPageView.showToast('Nhập đầy đủ thông tin yêu cầu');
+      _sendReportPageView.refreshData(_sendReportPageModel);
+    } else {
+      _sendReportPageModel.reportApi
+          .sendFormReport(
+              _sendReportPageModel.location.text,
+              _sendReportPageModel.date.text,
+              _sendReportPageModel.time.text,
+              _sendReportPageModel.description.text,
+              _sendReportPageModel.listImageString,
+              _sendReportPageModel.listVideoString,
+              _sendReportPageModel.recordAudioString,
+              _sendReportPageModel.isAnonymous)
+          .then((value) => {
+                if (value['error'] == null)
+                  {
+                    _sendReportPageView.showToast('Gửi thành công'),
+                    if (_sendReportPageModel.accountId != null)
+                      {
+                        _sendReportPageView.navigateToShowReportPage(),
+                        // _sendReportPageModel = SendReportPageModel(),
+                      }
+                    else
+                      {
+                        _sendReportPageView.navigateToHomePage(),
+                      }
+                  }
+                else
+                  {
+                    _sendReportPageView.showToast(value['message']),
+                  }
+              });
+      _sendReportPageView.refreshData(_sendReportPageModel);
+    }
+  }
+
+  void chooseLocation(Map location) {
+    _sendReportPageModel.location.text = location['description'];
     _sendReportPageView.refreshData(_sendReportPageModel);
   }
+
+  // openMapPage(BuildContext context) async {
+  //   Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) => const MapLocationPage(),
+  //       )).then((value) {
+  //     _sendReportPageModel.location.text = value;
+  //     _sendReportPageView.refreshData(_sendReportPageModel);
+  //   });
+  // }
 }

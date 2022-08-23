@@ -36,19 +36,15 @@ class SignUpPagePresenter {
   }
 
   void onSignUpClicked() {
-    if (_signUpPageModel.email.text.trim().isEmpty ||
+    if (_signUpPageModel.phone.text.trim().isEmpty ||
         _signUpPageModel.password.text.trim().isEmpty ||
         _signUpPageModel.conPass.text.trim().isEmpty ||
-        _signUpPageModel.phone.text.trim().isEmpty) {
+        _signUpPageModel.name.text.trim().isEmpty) {
       _signUpPageModel.showErr = "Vui lòng điền đầy đủ thông tin";
-      _signUpPageView.refreshData(_signUpPageModel);
-    } else if (!_signUpPageModel.emailCheck
-        .hasMatch(_signUpPageModel.email.text.trim())) {
-      _signUpPageModel.showErr = "Sai định dạng email";
       _signUpPageView.refreshData(_signUpPageModel);
     } else if (!_signUpPageModel.numeric
         .hasMatch(_signUpPageModel.phone.text.trim())) {
-      _signUpPageModel.showErr = "Số điện thoại chỉ có 10 số";
+      _signUpPageModel.showErr = "Sai định dạng số điện thoại";
       _signUpPageView.refreshData(_signUpPageModel);
     } else if (_signUpPageModel.password.text.trim().length < 6) {
       _signUpPageModel.showErr = "Mật khẩu phải có ít nhất 6 kí tự";
@@ -57,13 +53,56 @@ class SignUpPagePresenter {
         _signUpPageModel.password.text.trim()) {
       _signUpPageModel.showErr = "Mật khẩu không trùng nhau";
       _signUpPageView.refreshData(_signUpPageModel);
+    } else if (!_signUpPageModel.character
+        .hasMatch(_signUpPageModel.name.text.trim())) {
+      _signUpPageModel.showErr = "Họ và Tên không có số và kí tự đặc biệt";
+      _signUpPageView.refreshData(_signUpPageModel);
     } else {
       _signUpPageModel.showErr = "";
       _signUpPageModel.isLoading = true;
       _signUpPageView.refreshData(_signUpPageModel);
+      // if (_signUpPageModel.emailPhone.text.contains('@gmail')) {
+      //   _signUpPageModel.accountApi
+      //       .checkAccount(_signUpPageModel.emailPhone.text, 'null')
+      //       .then((value) => {
+      //             if (value['error'] == null)
+      //               {
+      //                 _signUpPageModel.accountApi
+      //                     .signUp(
+      //                         _signUpPageModel.emailPhone.text,
+      //                         _signUpPageModel.password.text,
+      //                         '',
+      //                         _signUpPageModel.name.text)
+      //                     .then((value) => {
+      //                           if (value['error'] == null)
+      //                             {
+      //                               _signUpPageModel.accountApi
+      //                                   .checkUserAuthen(
+      //                                       _signUpPageModel.emailPhone.text)
+      //                                   .then((value) =>
+      //                                       _signUpPageView.onSignUpSuccess())
+      //                             }
+      //                           else
+      //                             {
+      //                               // _signUpPageModel.showErr = 'Xảy ra lỗi',
+      //                               _signUpPageModel.showErr =
+      //                                   value['error']['message'],
+      //                               _signUpPageView
+      //                                   .refreshData(_signUpPageModel),
+      //                             }
+      //                         }),
+      //                 _signUpPageView.refreshData(_signUpPageModel),
+      //               }
+      //             else
+      //               {
+      //                 _signUpPageModel.isLoading = false,
+      //                 _signUpPageModel.showErr = value['error']['message'],
+      //                 _signUpPageView.refreshData(_signUpPageModel),
+      //               }
+      //           });
+      // } else {
       _signUpPageModel.accountApi
-          .checkAccount(
-              _signUpPageModel.email.text, _signUpPageModel.phone.text)
+          .checkAccount('null', _signUpPageModel.phone.text)
           .then((value) => {
                 if (value['error'] == null)
                   {
@@ -77,20 +116,7 @@ class SignUpPagePresenter {
                     _signUpPageView.refreshData(_signUpPageModel),
                   }
               });
-
-      // _signUpPageModel.accountApi
-      //     .signUp(_signUpPageModel.email.text, _signUpPageModel.password.text,
-      //         _signUpPageModel.phone.text)
-      //     .then((value) => {
-      //           if (value['error'] == null)
-      //             {_signUpPageView.onSignUpSuccess()}
-      //           else
-      //             {
-      //               _signUpPageModel.isLoading = false,
-      //               _signUpPageModel.showErr = value['message'],
-      //               _signUpPageView.refreshData(_signUpPageModel),
-      //             }
-      //         });
+      // }
     }
   }
 
@@ -102,12 +128,19 @@ class SignUpPagePresenter {
           print(exception.message);
         },
         codeSent: (String verificationId, int? resendingToken) async {
-          _signUpPageModel.verificationReceived = verificationId;
-          _signUpPageModel.otpPhone = true;
-          _signUpPageModel.countdownTimer!.cancel();
-          _signUpPageModel.myDuration = const Duration(seconds: 60);
-          _signUpPageView.refreshData(_signUpPageModel);
-          startTimer();
+          if (_signUpPageModel.countdownTimer != null) {
+            _signUpPageModel.verificationReceived = verificationId;
+            _signUpPageModel.otpPhone = true;
+            _signUpPageModel.countdownTimer!.cancel();
+            _signUpPageModel.myDuration = const Duration(seconds: 60);
+            _signUpPageView.refreshData(_signUpPageModel);
+            startTimer();
+          } else {
+            _signUpPageModel.verificationReceived = verificationId;
+            _signUpPageModel.otpPhone = true;
+            _signUpPageView.refreshData(_signUpPageModel);
+            startTimer();
+          }
         },
         timeout: const Duration(seconds: 60),
         codeAutoRetrievalTimeout: (String verificationId) async {});
@@ -123,15 +156,19 @@ class SignUpPagePresenter {
           .signInWithCredential(credential)
           .then((value) {
             _signUpPageModel.accountApi
-                .signUp(_signUpPageModel.email.text,
-                    _signUpPageModel.password.text, _signUpPageModel.phone.text)
+                .signUp(_signUpPageModel.password.text,
+                    _signUpPageModel.phone.text, _signUpPageModel.name.text)
                 .then((value) => {
                       if (value['error'] == null)
                         {
                           _signUpPageModel.accountApi
-                              .checkUserAuthen(_signUpPageModel.email.text)
-                              .then(
-                                  (value) => _signUpPageView.onSignUpSuccess())
+                              .checkUserAuthen(
+                                  // _signUpPageModel.phone.text
+                                  value['accountId'])
+                              .then((value) => {
+                                    _signUpPageModel.countdownTimer!.cancel(),
+                                    _signUpPageView.onSignUpSuccess()
+                                  })
                         }
                       else
                         {

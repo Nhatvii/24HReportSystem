@@ -30,6 +30,7 @@ class _SavedPostPageState extends State<SavedPostPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(
           'Bài Viết Đã Lưu',
           style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700),

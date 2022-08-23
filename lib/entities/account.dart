@@ -9,6 +9,7 @@ String accountToJson(Account data) => json.encode(data.toJson());
 
 class Account {
     Account({
+        required this.accountId,
         required this.email,
         required this.password,
         required this.phoneNumber,
@@ -16,6 +17,7 @@ class Account {
         required this.accountInfo,
     });
 
+    String accountId;
     String email;
     String password;
     String phoneNumber;
@@ -23,14 +25,16 @@ class Account {
     AccountInfo accountInfo;
 
     factory Account.fromJson(Map<String, dynamic> json) => Account(
-        email: json["email"],
+        accountId: json['accountId'],
+        email: json["email"] ?? '',
         password: json["password"],
-        phoneNumber: json["phoneNumber"],
+        phoneNumber: json["phoneNumber"] ?? '',
         // role: Role.fromJson(json["role"]),
         accountInfo: AccountInfo.fromJson(json["accountInfo"]),
     );
 
     Map<String, dynamic> toJson() => {
+        "accountId": accountId,
         "email": email,
         "password": password,
         "phoneNumber": phoneNumber,

@@ -34,7 +34,7 @@ class PostSavedPart extends StatelessWidget {
               );
             } else {
               return SizedBox(
-                  height: 0.85.sh,
+                  height: 0.8.sh,
                   child: Center(
                     child: Text(
                       'Chưa lưu bài viết nào',

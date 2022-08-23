@@ -9,11 +9,13 @@ class CommentListSection extends StatelessWidget {
   final PostDetailPageModel postDetailPageModel;
   final PostDetailPagePresenter postDetailPagePresenter;
   final StateSetter sheetState;
+  final Function(String, int, StateSetter) function;
   const CommentListSection(
       {Key? key,
       required this.postDetailPageModel,
       required this.postDetailPagePresenter,
-      required this.sheetState})
+      required this.sheetState,
+      required this.function})
       : super(key: key);
 
   @override
@@ -31,7 +33,11 @@ class CommentListSection extends StatelessWidget {
           if (snapshot.hasData) {
             if (snapshot.data!.isNotEmpty) {
               return GestureDetector(
-                onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+                onTap: () {
+                  postDetailPagePresenter.onCancelEdit(
+                      postDetailPageModel.cancelIndex, sheetState);
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
                 child: Container(
                   height: 0.7.sh,
                   padding: EdgeInsets.only(
@@ -44,6 +50,7 @@ class CommentListSection extends StatelessWidget {
                   ),
                   child: ListView.builder(
                     itemBuilder: (context, index) {
+                      postDetailPageModel.listEditComment.add(false);
                       // return tagComment(snapshot.data![index]);
                       return tagComment(
                           postDetailPageModel.listComment[index], index);
@@ -98,100 +105,158 @@ class CommentListSection extends StatelessWidget {
               height: 0.05.sh,
               width: 0.1.sw,
               radius: 35.r,
-              text: comment.user.accountInfo.username.isEmpty
-                  ? comment.user.email
-                  : comment.user.accountInfo.username,
+              text: comment.user.accountInfo.username,
               fontSize: 16.sp),
           SizedBox(
             width: 0.02.sw,
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                margin: EdgeInsets.only(bottom: 0.005.sh),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.r),
-                  color: Colors.grey.shade300,
-                ),
-                constraints: BoxConstraints(
-                  maxWidth: 0.78.sw,
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(0.015.sh),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          comment.user.accountInfo.username.isEmpty
-                              ? comment.user.email
-                              : comment.user.accountInfo.username,
+          postDetailPageModel.listEditComment[index]
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(bottom: 0.005.sh),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15.r),
+                        color: Colors.grey.shade300,
+                      ),
+                      constraints: BoxConstraints(
+                        maxWidth: 0.78.sw,
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(0.015.sh),
+                        child: TextField(
+                          controller: postDetailPageModel.editComment,
+                          autofocus: true,
                           style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 13.sp,
-                              fontWeight: FontWeight.w500),
-                        ),
-                        SizedBox(
-                          height: 0.005.sh,
-                        ),
-                        Text(
-                          comment.commentTitle,
-                          style: TextStyle(
-                            color: Colors.black,
                             fontSize: 12.sp,
                           ),
-                        )
-                      ]),
-                ),
-              ),
-              Container(
-                  padding: EdgeInsets.symmetric(horizontal: 0.025.sw),
-                  child: Row(
-                    children: [
-                      comment.user.email == postDetailPageModel.email
-                          ? Row(
-                              children: [
-                                Text(
-                                  'Chỉnh Sửa',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 11.sp,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 0.02.sw,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    print('1');
-                                    postDetailPagePresenter.deleteComment(
-                                        comment.commentId, index, sheetState);
-                                  },
-                                  child: Text(
-                                    'Xóa',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 11.sp,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 0.02.sw,
-                                ),
-                              ],
-                            )
-                          : Container(),
-                      Text(
-                        postDetailPageModel.convertToAgo(comment.createTime),
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 11.sp,
+                          decoration: InputDecoration(
+                            border: UnderlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.grey, width: 0.5.w),
+                            ),
+                            isDense: true,
+                          ),
+                          onSubmitted: (value) {
+                            print('Update comment');
+                            postDetailPagePresenter.updateComment(
+                                index, comment.commentId, sheetState);
+                          },
                         ),
                       ),
-                    ],
-                  ))
-            ],
-          ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 0.025.sw),
+                      child: GestureDetector(
+                        onTap: () {
+                          print('Hủy');
+                          postDetailPagePresenter.onCancelEdit(
+                              index, sheetState);
+                        },
+                        child: Text(
+                          'Hủy',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 11.sp,
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(bottom: 0.005.sh),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15.r),
+                        color: Colors.grey.shade300,
+                      ),
+                      constraints: BoxConstraints(
+                        maxWidth: 0.78.sw,
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(0.015.sh),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                comment.user.accountInfo.username,
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 13.sp,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              SizedBox(
+                                height: 0.005.sh,
+                              ),
+                              Text(
+                                comment.commentTitle,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 12.sp,
+                                ),
+                              )
+                            ]),
+                      ),
+                    ),
+                    Container(
+                        padding: EdgeInsets.symmetric(horizontal: 0.025.sw),
+                        child: Row(
+                          children: [
+                            comment.user.accountId ==
+                                    postDetailPageModel.accountId
+                                ? Row(
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          print('Chỉnh sửa');
+                                          postDetailPagePresenter.onEditComment(
+                                              index,
+                                              comment.commentTitle,
+                                              sheetState);
+                                        },
+                                        child: Text(
+                                          'Chỉnh Sửa',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 11.sp,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 0.02.sw,
+                                      ),
+                                      GestureDetector(
+                                        onTap: () => function(comment.commentId, index, sheetState),
+                                        child: Text(
+                                          'Xóa',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 11.sp,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 0.02.sw,
+                                      ),
+                                    ],
+                                  )
+                                : Container(),
+                            Text(
+                              postDetailPageModel
+                                  .convertToAgo(comment.createTime),
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 11.sp,
+                              ),
+                            ),
+                          ],
+                        ))
+                  ],
+                ),
         ],
       ),
     );

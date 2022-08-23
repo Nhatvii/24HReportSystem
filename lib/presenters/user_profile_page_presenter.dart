@@ -32,15 +32,17 @@ class UserProfilePagePresenter {
                     _userProfilePageModel.isEdit =
                         !_userProfilePageModel.isEdit,
                     _userProfilePageModel.msg = 'Cập nhật thành công',
-                    _userProfilePageView.showSnackBar(
-                        _userProfilePageModel.msg!, context),
+                    // _userProfilePageView.showSnackBar(
+                    //     _userProfilePageModel.msg!, context),
+                    _userProfilePageView.showToast(_userProfilePageModel.msg!),
                     _userProfilePageView.refreshData(_userProfilePageModel),
                   }
                 else
                   {
                     _userProfilePageModel.msg = 'Cập nhật không thành công',
-                    _userProfilePageView.showSnackBar(
-                        _userProfilePageModel.msg!, context),
+                    // _userProfilePageView.showSnackBar(
+                    //     _userProfilePageModel.msg!, context),
+                    _userProfilePageView.showToast(_userProfilePageModel.msg!),
                     _userProfilePageView.refreshData(_userProfilePageModel),
                   }
               });
@@ -48,5 +50,15 @@ class UserProfilePagePresenter {
       _userProfilePageModel.isEdit = !_userProfilePageModel.isEdit;
       _userProfilePageView.refreshData(_userProfilePageModel);
     }
+  }
+
+  void onClickEditInfo() {
+    _userProfilePageModel.isEdit = true;
+    _userProfilePageView.refreshData(_userProfilePageModel);
+  }
+
+  void onCancelEdit() {
+    _userProfilePageModel.isEdit = false;
+    _userProfilePageView.refreshData(_userProfilePageModel);
   }
 }

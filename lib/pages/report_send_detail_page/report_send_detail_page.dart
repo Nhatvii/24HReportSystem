@@ -15,6 +15,7 @@ class ReportSendDetailPage extends StatefulWidget {
 }
 
 class _ReportSendDetailPageState extends State<ReportSendDetailPage>
+    with AutomaticKeepAliveClientMixin
     implements ReportSendDetailPageView {
   late ReportSendDetailPageModel _reportSendDetailPageModel;
   late ReportSendDetailPagePresenter _reportSendDetailPagePresenter;
@@ -25,6 +26,13 @@ class _ReportSendDetailPageState extends State<ReportSendDetailPage>
     _reportSendDetailPagePresenter =
         ReportSendDetailPagePresenter(widget.reportId);
     _reportSendDetailPagePresenter.view = this;
+    _reportSendDetailPagePresenter.init(widget.reportId);
+  }
+
+  @override
+  void dispose() {
+    _reportSendDetailPagePresenter.dispose();
+    super.dispose();
   }
 
   @override
@@ -42,7 +50,7 @@ class _ReportSendDetailPageState extends State<ReportSendDetailPage>
                 )),
           ),
           title: Text(
-            'Chi Tiết Báo Cáo',
+            'Chi Tiết Tình Huống',
             style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700),
           ),
           centerTitle: true,
@@ -65,7 +73,9 @@ class _ReportSendDetailPageState extends State<ReportSendDetailPage>
                   height: 5.h,
                 ),
                 ReportSendInfoDetailPart(
-                    reportSendDetailPageModel: _reportSendDetailPageModel),
+                    reportSendDetailPageModel: _reportSendDetailPageModel,
+                    reportSendDetailPagePresenter:
+                        _reportSendDetailPagePresenter),
               ],
             ),
           ),
@@ -76,8 +86,13 @@ class _ReportSendDetailPageState extends State<ReportSendDetailPage>
 
   @override
   void refreshData(ReportSendDetailPageModel model) {
-    setState(() {
-      _reportSendDetailPageModel = model;
-    });
+    if (mounted) {
+      setState(() {
+        _reportSendDetailPageModel = model;
+      });
+    }
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

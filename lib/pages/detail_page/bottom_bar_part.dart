@@ -12,11 +12,13 @@ class BottomBar extends StatefulWidget {
   final PostDetailPageModel postDetailPageModel;
   final PostDetailPagePresenter postDetailPagePresenter;
   final Function function;
+  final Function(String, int, StateSetter) deleteCommentFunction;
   const BottomBar({
     Key? key,
     required this.postDetailPageModel,
     required this.postDetailPagePresenter,
     required this.function,
+    required this.deleteCommentFunction,
   }) : super(key: key);
 
   @override
@@ -197,7 +199,10 @@ class _BottomBarState extends State<BottomBar> {
       PostDetailPagePresenter presenter, String postId) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: () => Navigator.of(context).pop(),
+      onTap: () {
+        presenter.onCancelEdit(model.cancelIndex, sheetState);
+        Navigator.of(context).pop();
+      },
       child: DraggableScrollableSheet(
         initialChildSize: 0.8,
         minChildSize: 0.6,
@@ -213,6 +218,7 @@ class _BottomBarState extends State<BottomBar> {
                     postDetailPageModel: model,
                     postDetailPagePresenter: presenter,
                     sheetState: sheetState,
+                    function: widget.deleteCommentFunction,
                   ),
                   Positioned(
                     bottom: 0,
@@ -227,7 +233,7 @@ class _BottomBarState extends State<BottomBar> {
                           border: Border(
                               top: BorderSide(
                                   color: Colors.grey, width: 0.002.sw))),
-                      child: model.email == null
+                      child: model.name == null
                           ? GestureDetector(
                               onTap: () => widget.function(),
                               child: SizedBox(
@@ -249,9 +255,7 @@ class _BottomBarState extends State<BottomBar> {
                                     height: 0.06.sh,
                                     width: 0.12.sw,
                                     radius: 35.r,
-                                    text: model.name == null
-                                        ? model.email!
-                                        : model.name!,
+                                    text: model.name ?? "",
                                     fontSize: 18.sp),
                                 SizedBox(
                                   width: 0.03.sw,

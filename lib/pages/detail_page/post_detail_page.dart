@@ -47,7 +47,8 @@ class _PostDetailPageState extends State<PostDetailPage>
             child: BottomBar(
               postDetailPageModel: _postDetailPageModel,
               postDetailPagePresenter: _postDetailPagePresenter,
-              function: showAlertDialog,
+              function: showLoginDialog,
+              deleteCommentFunction: showDeleteCommentDialog,
             )),
         resizeToAvoidBottomInset: false,
         extendBody: true,
@@ -100,7 +101,7 @@ class _PostDetailPageState extends State<PostDetailPage>
   }
 
   @override
-  void showAlertDialog() {
+  void showLoginDialog() {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -160,5 +161,33 @@ class _PostDetailPageState extends State<PostDetailPage>
       msg: msg,
       gravity: ToastGravity.BOTTOM,
     );
+  }
+
+  @override
+  void showDeleteCommentDialog(
+      String commentId, int index, StateSetter sheetState) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialogCustom(
+              title: Text(
+                'Thông Báo',
+                style: TextStyle(fontSize: 13.sp),
+              ),
+              content: Text('Bạn muốn xóa bình luận này ?',
+                  style: TextStyle(fontSize: 13.sp)),
+              confirmFunction: TextButton(
+                child: Text("Xóa", style: TextStyle(fontSize: 12.sp)),
+                onPressed: () {
+                  Navigator.pop(context);
+                  _postDetailPagePresenter.deleteComment(
+                      commentId, index, sheetState);
+                },
+              ),
+              cancelFunction: TextButton(
+                child: Text("Hủy", style: TextStyle(fontSize: 12.sp)),
+                onPressed: () => Navigator.pop(context),
+              ));
+        });
   }
 }

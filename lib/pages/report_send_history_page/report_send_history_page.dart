@@ -1,5 +1,6 @@
 import 'package:capstone_project/entities/report.dart';
 import 'package:capstone_project/models/report_send_history_page_model.dart';
+import 'package:capstone_project/pages/main_page/main_page.dart';
 import 'package:capstone_project/pages/report_send_detail_page/report_send_detail_page.dart';
 import 'package:capstone_project/pages/report_send_history_page/report_card_part.dart';
 import 'package:capstone_project/presenters/report_send_history_page_presenter.dart';
@@ -34,14 +35,19 @@ class _ReportSendHistoryPageState extends State<ReportSendHistoryPage>
           leading: Padding(
             padding: EdgeInsets.only(left: 0.02.sh),
             child: GestureDetector(
-                onTap: () => Navigator.pop(context),
+                // onTap: () => Navigator.pop(context),
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MainPage(page: 0),
+                    )),
                 child: Icon(
                   Icons.arrow_back_ios,
                   size: 22.sp,
                 )),
           ),
           title: Text(
-            'Báo Cáo Đã Gửi',
+            'Tình Huống Đã Gửi',
             style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700),
           ),
           centerTitle: true,
@@ -67,21 +73,33 @@ class _ReportSendHistoryPageState extends State<ReportSendHistoryPage>
               );
             }
             if (snapshot.hasData) {
-              return Container(
-                padding: EdgeInsets.only(
-                    top: 0.02.sh, left: 0.02.sh, right: 0.02.sh),
-                height: 0.9.sh,
-                width: 1.sw,
-                child: ListView.builder(
-                  itemBuilder: (context, index) {
-                    return ReportCardPart(
-                      report: snapshot.data![index],
-                      function: navigateToReportDetailPage,
-                    );
-                  },
-                  itemCount: snapshot.data!.length,
-                ),
-              );
+              if (snapshot.data!.isNotEmpty) {
+                return Container(
+                  padding: EdgeInsets.only(
+                      top: 0.02.sh, left: 0.02.sh, right: 0.02.sh),
+                  height: 0.9.sh,
+                  width: 1.sw,
+                  child: ListView.builder(
+                    itemBuilder: (context, index) {
+                      return ReportCardPart(
+                        report: snapshot.data![index],
+                        function: navigateToReportDetailPage,
+                      );
+                    },
+                    itemCount: snapshot.data!.length,
+                  ),
+                );
+              } else {
+                return SizedBox(
+                    height: 0.8.sh,
+                    child: Center(
+                      child: Text(
+                        'Chưa có báo cáo nào !!!',
+                        style: TextStyle(
+                            fontSize: 14.sp, fontWeight: FontWeight.w600),
+                      ),
+                    ));
+              }
             }
             if (snapshot.hasError) {
               print(snapshot.error);
