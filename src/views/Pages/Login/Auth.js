@@ -2,8 +2,9 @@ import React, { Component, Fragment } from "react";
 import { Route, NavLink, BrowserRouter } from "react-router-dom";
 import Register from "../Register/Register";
 import Login from "./Login";
-import "./styles.css";
+import "./styles.scss";
 import MobileStoreButton from "react-mobile-store-button";
+import ResetPassword from "./resetPassword";
 class Auth extends Component {
   constructor(props) {
     super(props);
@@ -52,6 +53,7 @@ class Auth extends Component {
               </div>
               <Route path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
+              <Route exact path="/reset-password" component={ResetPassword} />
             </div>
           </div>
         </BrowserRouter>

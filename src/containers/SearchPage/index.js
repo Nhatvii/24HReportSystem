@@ -95,7 +95,15 @@ const SearchPage = (props) => {
                 <div className="row">
                   <div className="col-12 align-self-center">
                     <div className="categories_title">
-                      <h5>{title}</h5>
+                      <h5>
+                        {title === "1"
+                          ? "Nổi bật"
+                          : title === "2"
+                          ? "Gần đây"
+                          : title === "3"
+                          ? "Đề xuất"
+                          : title}
+                      </h5>
                     </div>
                   </div>
                 </div>

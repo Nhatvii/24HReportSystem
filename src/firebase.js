@@ -1,5 +1,16 @@
 import { initializeApp } from "firebase/app";
 import { getToken, getMessaging, onMessage } from "firebase/messaging";
+import {
+  GoogleAuthProvider,
+  getAuth,
+  signInWithPopup,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+  signOut,
+} from "firebase/auth";
+import { toast } from "react-toastify";
+import loginApi from "./api/loginApi";
 // const user_info = JSON.parse(localStorage.getItem("user_info"));
 var firebaseConfig = {
   apiKey: "AIzaSyAgaeSeRcOqy7jZdEujk1LF-IXmRzkZV1Y",
@@ -11,8 +22,77 @@ var firebaseConfig = {
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
+//login
+const auth = getAuth(firebaseApp);
+const googleProvider = new GoogleAuthProvider();
+const signInWithGoogle = async () => {
+  try {
+    const res = await signInWithPopup(auth, googleProvider);
+    const user = res.user;
+    console.log(user);
+    if (user) {
+      const params = { email: user.email };
+      const response = await loginApi.loginWithGoogle(params);
+      if (!JSON.stringify(response).includes("error")) {
+        localStorage.setItem("user_info", JSON.stringify(response));
+        if (response.role.roleId === 1) {
+          window.location.href = "/";
+        }
+      }
+    }
+    // const q = query(collection(db, "users"), where("uid", "==", user.uid));
+    // const docs = await getDocs(q);
+    // if (docs.docs.length === 0) {
+    //   await addDoc(collection(db, "users"), {
+    //     uid: user.uid,
+    //     name: user.displayName,
+    //     authProvider: "google",
+    //     email: user.email,
+    //   });
+    // }
+  } catch (err) {
+    console.error(err);
+    toast.error(err.message);
+  }
+};
+const logInWithEmailAndPassword = async (email, password) => {
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (err) {
+    console.error(err);
+    toast.error(err.message);
+  }
+};
+const registerWithEmailAndPassword = async (name, email, password) => {
+  try {
+    const res = await createUserWithEmailAndPassword(auth, email, password);
+    const user = res.user;
+    // await addDoc(collection(db, "users"), {
+    //   uid: user.uid,
+    //   name,
+    //   authProvider: "local",
+    //   email,
+    // });
+  } catch (err) {
+    console.error(err);
+    alert(err.message);
+  }
+};
+const sendPasswordReset = async (email) => {
+  console.log(email);
+  try {
+    await sendPasswordResetEmail(auth, email);
+    toast.info("Password reset link sent!");
+  } catch (err) {
+    console.error(err);
+    toast.error(err.message);
+  }
+};
+const logout = () => {
+  signOut(auth);
+};
+//notifications
 const messaging = getMessaging(firebaseApp);
-
 export const fetchToken = async (setTokenFound, setFcmToken) => {
   return getToken(messaging, {
     vapidKey:
@@ -63,3 +143,11 @@ function subscribeTokenToTopic(token, topic) {
     });
   return true;
 }
+export {
+  auth,
+  signInWithGoogle,
+  logInWithEmailAndPassword,
+  registerWithEmailAndPassword,
+  sendPasswordReset,
+  logout,
+};

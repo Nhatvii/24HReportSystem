@@ -170,8 +170,16 @@ export const Profile = () => {
           </Col>
           <Col md="8" className="">
             <Card>
-              <CardHeader style={{ background: "linear-gradient(to right, rgb(86, 204, 242), rgb(47, 128, 237))" }}>
-                <div className="h4" style={{ color: "#fff" , fontWeight: "bold"}}>
+              <CardHeader
+                style={{
+                  background:
+                    "linear-gradient(to right, rgb(86, 204, 242), rgb(47, 128, 237))",
+                }}
+              >
+                <div
+                  className="h4"
+                  style={{ color: "#fff", fontWeight: "bold" }}
+                >
                   Sửa hồ sơ
                 </div>
               </CardHeader>
@@ -414,7 +422,12 @@ export const Profile = () => {
                     <Button
                       className="btn-fill pull-right mt-2"
                       type="submit"
-                      style={{ background: "linear-gradient(to right, rgb(86, 204, 242), rgb(47, 128, 237))", color: "#FFFF", fontWeight:"bold" }}
+                      style={{
+                        background:
+                          "linear-gradient(to right, rgb(86, 204, 242), rgb(47, 128, 237))",
+                        color: "#FFFF",
+                        fontWeight: "bold",
+                      }}
                     >
                       Cập nhật hồ sơ
                     </Button>

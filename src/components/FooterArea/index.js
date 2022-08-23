@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import FooterCopyright from "../FooterCopyright";
-import FontAwesome from "../uiStyle/FontAwesome";
+// import FontAwesome from "../uiStyle/FontAwesome";
 
 const FooterArea = ({ className }) => {
   const [email, setEmail] = useState("");
@@ -18,7 +18,12 @@ const FooterArea = ({ className }) => {
               <div>
                 <h1 style={{ color: "white" }}>Report 24h</h1>
               </div>
-              <div className="social2">
+              <div>
+                <h6 style={{ color: "white" }}>
+                  Trang web được góp từ chuyên môn của <b>Công an Quận 1</b>
+                </h6>
+              </div>
+              {/* <div className="social2">
                 <ul className="inline">
                   <li>
                     <Link to="#">
@@ -41,9 +46,9 @@ const FooterArea = ({ className }) => {
                     </Link>
                   </li>
                 </ul>
-              </div>
+              </div> */}
             </div>
-            <div className="col-md-6 col-lg-4 offset-lg-2 align-self-center">
+            {/* <div className="col-md-6 col-lg-4 offset-lg-2 align-self-center">
               <div className="signup_form">
                 <form onSubmit={submitHandler}>
                   <input
@@ -59,7 +64,7 @@ const FooterArea = ({ className }) => {
                 </form>
                 <p>Nhận tin mới nhất qua email</p>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="border_white" />

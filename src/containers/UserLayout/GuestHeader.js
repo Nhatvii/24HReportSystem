@@ -12,7 +12,7 @@ const defaultProps = {};
 class GuestHeader extends Component {
   render() {
     const { children, ...attributes } = this.props;
-    
+
     return (
       <React.Fragment>
         <AppSidebarToggler className="d-lg-none" display="md" mobile />
@@ -44,7 +44,7 @@ class GuestHeader extends Component {
         </Nav>
         {/* Search bar */}
         <Search />
-        <Nav className="d-md-down-none pr-4 pl-2" navbar>
+        <Nav className="pr-4 pl-2" navbar>
           {/* Login button */}
           <Button
             block

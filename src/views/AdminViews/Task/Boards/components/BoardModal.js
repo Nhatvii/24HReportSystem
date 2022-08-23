@@ -16,7 +16,7 @@ export const BoardModal = (props) => {
     }
     await action({
       boardName: boardTitle,
-      manager_Id: JSON.parse(user_info).email,
+      manager_Id: JSON.parse(user_info).accountId,
     });
     setBoardTitle("");
     setLoading(false);

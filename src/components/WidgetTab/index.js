@@ -50,7 +50,22 @@ const WidgetTabPane = ({ arr, a_id, id }) => {
                   </h4>
                 </div>
               </div>
-              <div className="space-15" /> <div className="space-15" />
+              <div className="space-15" />
+              {arr.length - 1 === i && (
+                <Link
+                  id="search"
+                  style={{ float: "right" }}
+                  to={{
+                    pathname: "/search",
+                    state: {
+                      title: id,
+                      SearchContent: " ",
+                    },
+                  }}
+                >
+                  Xem thêm...
+                </Link>
+              )}
             </Fragment>
           ))}
       </div>

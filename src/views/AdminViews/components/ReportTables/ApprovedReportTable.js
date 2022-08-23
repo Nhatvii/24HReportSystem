@@ -456,7 +456,7 @@ const ReportTableNew = () => {
                   className="py-2 font-weight-bold"
                   style={{ backgroundColor: "#e8e6e6" }}
                 >
-                  {item.userId === item.staffId ? (
+                  {item.staffId === item.userId ? (
                     <span className="text-info">Nhân viên</span>
                   ) : (
                     "Người dùng"
@@ -464,7 +464,7 @@ const ReportTableNew = () => {
                 </td>
               ) : (
                 <td className="py-2">
-                  {item.userId === item.staffId ? (
+                  {item.staffId === item.userId ? (
                     <span className="text-info">Nhân viên</span>
                   ) : (
                     "Người dùng"

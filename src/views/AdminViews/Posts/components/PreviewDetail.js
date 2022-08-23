@@ -7,7 +7,10 @@ export function PreviewDetail(props) {
     <div className="mb-1">
       <h3 className="h3">{props.title ? props.title : "Tiêu đề bài viết"}</h3>
       <h5 className="h5 text-muted">
-        viết bởi <b>{JSON.parse(localStorage.getItem("user_info")).email}</b>{" "}
+        viết bởi{" "}
+        <b>
+          {JSON.parse(localStorage.getItem("user_info")).accountInfo.username}
+        </b>{" "}
         lúc {moment().format("dddd, Do MMMM YYYY, h:mm:ss")}
       </h5>
       <div>

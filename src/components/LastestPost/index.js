@@ -8,7 +8,7 @@ import moment from "moment";
 const LastestPost = ({ className, dark, data }) => {
   const [vModal, setvModal] = useState(false);
   // MÃ Video Youtube
-  const [videoId] = useState("4Z-ayfkRiSI");
+  const [videoId] = useState("3cpeBj-biwg");
   return (
     <div className={`video_posts ${className ? className : ""}`}>
       <div className="container">
@@ -30,7 +30,7 @@ const LastestPost = ({ className, dark, data }) => {
                   <div className="img_wrap">
                     <Link to="/" className="play_btn">
                       <img
-                        src="https://res.klook.com/image/upload/q_85/c_fill,w_750/v1595998129/blog/nnkzuqga2usqfgdg9j9u.png"
+                        src="http://hanoimoi.com.vn/Uploads/images/phananh/2022/08/08/canhbao.jpg"
                         alt="video1"
                       />
                     </Link>
@@ -45,11 +45,14 @@ const LastestPost = ({ className, dark, data }) => {
                   }`}
                 >
                   <div className="meta3">
-                    <Link to="#">Giải trí</Link>
+                    <Link to="#">Lừa đảo</Link>
                     <Link to="#">{moment().format("DD.MM.YYYY")}</Link>
                   </div>
                   <h4>
-                    <Link to="#">Sài gòn có gì chơi?? (Test video)</Link>
+                    <Link to="#">
+                      Cảnh Giác Với Hình Thức Lừa Đảo Mạo Danh Sở Giao Dịch
+                      Chứng Khoán Hà Nội
+                    </Link>
                   </h4>
                 </div>
               </div>

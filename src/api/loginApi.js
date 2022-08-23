@@ -6,6 +6,10 @@ class LoginApi {
     console.log(params);
     return axiosClient.post(url, params);
   };
+  loginWithGoogle = (params) => {
+    const url = "/Account/LoginWithGoogle?email=" + params.email;
+    return axiosClient.post(url, params);
+  };
 }
 const loginApi = new LoginApi();
 export default loginApi;

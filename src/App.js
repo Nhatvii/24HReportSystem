@@ -25,7 +25,7 @@ const App = (props) => {
         if (
           response !== null &&
           user_info.role.roleId === 3 &&
-          user_info.email === response.editorId
+          user_info.accountId === response.editorId
         ) {
           setNotification({
             title: payload.notification.title,

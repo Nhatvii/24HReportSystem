@@ -18,44 +18,44 @@ const menus = [
     linkText: "Trang chủ",
     link: "/",
   },
-  {
-    id: 2,
-    linkText: "Hỗ trợ",
-    child: true,
-    icon: "angle-down",
-    submenu: [
-      {
-        id: 21,
-        link: "/about",
-        linkText: "Về chúng tôi",
-      },
-      {
-        id: 22,
-        link: "/archive",
-        linkText: "Thành tựu",
-      },
-      {
-        id: 23,
-        link: "/contact",
-        linkText: "Liên hệ với chúng tôi",
-      },
-    ],
-  },
+  // {
+  //   id: 2,
+  //   linkText: "Hỗ trợ",
+  //   child: true,
+  //   icon: "angle-down",
+  //   submenu: [
+  //     {
+  //       id: 21,
+  //       link: "/about",
+  //       linkText: "Về chúng tôi",
+  //     },
+  //     {
+  //       id: 22,
+  //       link: "/archive",
+  //       linkText: "Thành tựu",
+  //     },
+  //     {
+  //       id: 23,
+  //       link: "/contact",
+  //       linkText: "Liên hệ với chúng tôi",
+  //     },
+  //   ],
+  // },
   {
     id: 5,
     linkText: "Gửi báo cáo",
     link: "/send-report",
   },
-  {
-    id: 6,
-    linkText: "FAQ",
-    link: "/faq",
-  },
-  {
-    id: 7,
-    linkText: "Liên hệ",
-    link: "/contact",
-  },
+  // {
+  //   id: 6,
+  //   linkText: "FAQ",
+  //   link: "/faq",
+  // },
+  // {
+  //   id: 7,
+  //   linkText: "Liên hệ",
+  //   link: "/contact",
+  // },
 ];
 
 async function logout() {

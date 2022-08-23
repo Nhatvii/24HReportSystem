@@ -3,13 +3,6 @@ import { Link } from "react-router-dom";
 import FontAwesome from "../uiStyle/FontAwesome";
 import Swiper from "react-id-swiper";
 
-// images
-import popularsm1 from "../../doc/img/popular/popularsm1.jpg";
-import popularsm2 from "../../doc/img/popular/popularsm2.jpg";
-import popularsm3 from "../../doc/img/popular/popularsm3.jpg";
-import popularsm4 from "../../doc/img/popular/popularsm4.jpg";
-import popularsm5 from "../../doc/img/popular/popularsm5.jpg";
-
 import "./style.scss";
 
 const PopularPosts = ({ data }) => {
@@ -30,7 +23,7 @@ const PopularPosts = ({ data }) => {
   const params = {
     loops: true,
     slidesPerView: 1,
-    slidesPerColumn: 4,
+    slidesPerColumn: 5,
   };
   return (
     <div className="popular_carousel_area mb30 md-mt-30">
@@ -40,7 +33,6 @@ const PopularPosts = ({ data }) => {
         <Swiper getSwiper={setSwiper} {...params} observer observeParents>
           {data
             .sort((a, b) => a.publicTime - b.publicTime)
-            .slice(0, 6)
             .map((item, i) => (
               <div key={i} className="single_post type10 widgets_small mb15">
                 <div className="post_img">
@@ -79,6 +71,19 @@ const PopularPosts = ({ data }) => {
               </div>
             ))}
         </Swiper>
+        <Link
+          id="search"
+          style={{ float: "right" }}
+          to={{
+            pathname: "/search",
+            state: {
+              title: "Tin nóng",
+              SearchContent: " ",
+            },
+          }}
+        >
+          Xem thêm...
+        </Link>
         <div className="navBtns">
           <div onClick={goPrev} className="navBtn prevtBtn">
             <FontAwesome name="angle-left" />
