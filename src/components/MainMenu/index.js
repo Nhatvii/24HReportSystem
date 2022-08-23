@@ -314,6 +314,7 @@ const MainMenu = ({ className, dark }) => {
                       >
                         <FontAwesome name="search" />
                       </li>
+
                       {user_info && (
                         <li>
                           {/*  Avatar*/}
