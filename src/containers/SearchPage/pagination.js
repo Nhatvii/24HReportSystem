@@ -9,11 +9,16 @@ class Pagination extends React.Component {
     super(props);
     this.state = { pager: {} };
   }
+  componentWillReceiveProps = (nextProps) => {
+    if (nextProps.items !== this.props.items) {
+      this.setPage(this.props.initialPage, nextProps.items);
+    }
+  };
   componentWillMount() {
     this.setPage(this.props.initialPage);
   }
-  setPage(page) {
-    var items = this.props.items;
+  setPage(page, items) {
+    var items = items || this.props.items;
     var pager = this.state.pager;
     if (page < 1 || page > pager.totalPages) {
       return;

@@ -14,44 +14,39 @@ import "./style.css";
 const SearchPage = (props) => {
   const [posts, setPosts] = useState([]);
   const [title, setTitle] = useState("");
+  const [searchContent, setSearchContent] = useState(null);
+  const [categoryID, setCategoryID] = useState(null);
+  const [rootCategoryID, setRootCategoryID] = useState(null);
   const [pageOfItems, setPageOfItems] = useState([]);
   const onChangePage = (pageOfItems) => {
     setPageOfItems(pageOfItems);
   };
   const fetchPostList = async () => {
-    setTitle(localStorage.getItem("title"));
     try {
       const params1 = {
         isViewCount: true,
-        SubCategoryID:
-          localStorage.getItem("categoryID") !== "null"
-            ? localStorage.getItem("categoryID")
-            : "",
+        SubCategoryID: categoryID,
         status: 3,
       };
       const params2 = {
         isViewCount: true,
-        SearchContent:
-          localStorage.getItem("SearchContent") !== "null"
-            ? localStorage.getItem("SearchContent")
-            : "",
+        SearchContent: searchContent,
         status: 3,
       };
       const params3 = {
         isViewCount: true,
-        RootCategoryID:
-          localStorage.getItem("rootCategoryID") !== "null"
-            ? localStorage.getItem("rootCategoryID")
-            : "",
+        RootCategoryID: rootCategoryID,
         status: 3,
       };
-      if (localStorage.getItem("SearchContent") !== "null") {
+      if (searchContent !== undefined) {
         const response = await postApi.searchByContent(params2);
         setPosts(response);
-      } else if (localStorage.getItem("categoryID") !== "null") {
+      }
+      if (categoryID !== undefined) {
         const response = await postApi.searchByCategory(params1);
         setPosts(response);
-      } else if (localStorage.getItem("rootCategoryID") !== "null") {
+      }
+      if (rootCategoryID !== undefined) {
         const response = await postApi.searchByRootCategory(params3);
         setPosts(response);
       }
@@ -61,36 +56,24 @@ const SearchPage = (props) => {
   };
   useEffect(() => {
     if (props.history.location.state !== undefined) {
-      localStorage.setItem(
-        "categoryID",
-        props.history.location.state.CategoryID !== undefined
-          ? props.history.location.state.CategoryID
-          : null
-      );
-      localStorage.setItem(
-        "rootCategoryID",
-        props.history.location.state.RootCategoryID !== undefined
-          ? props.history.location.state.RootCategoryID
-          : null
-      );
-      localStorage.setItem(
-        "SearchContent",
-        props.history.location.state.SearchContent !== undefined
-          ? props.history.location.state.SearchContent
-          : null
-      );
-      localStorage.setItem(
-        "title",
-        props.history.location.state.title !== undefined
-          ? props.history.location.state.title
-          : null
-      );
+      if (props.history.location.state.SearchContent !== searchContent) {
+        setSearchContent(props.history.location.state.SearchContent);
+      }
+      if (props.history.location.state.CategoryID !== categoryID) {
+        setCategoryID(props.history.location.state.CategoryID);
+      }
+      if (props.history.location.state.RootCategoryID !== rootCategoryID) {
+        setRootCategoryID(props.history.location.state.RootCategoryID);
+      }
+      setTitle(props.history.location.state.title);
     }
-
-    fetchPostList();
   }, [props]);
+  useEffect(() => {
+    fetchPostList();
+  }, [searchContent, categoryID, rootCategoryID, title]);
   return (
     <Fragment>
+      {console.log(posts)}
       <BreadCrumb title={title} />
       <div className="archives padding-top-30">
         <div className="container">
@@ -112,7 +95,7 @@ const SearchPage = (props) => {
                     </div>
                   </div>
                 </div>
-                {pageOfItems.length > 0 ? (
+                {pageOfItems.length > 0 && posts.length > 0 ? (
                   pageOfItems.map((item, i) => (
                     <div key={i} className="col-lg-12">
                       <div className="single_post post_type12 mb30">
@@ -176,11 +159,12 @@ const SearchPage = (props) => {
                     </b>
                   </div>
                 )}
-                {posts.length > 0 && (
-                  <Pagination items={posts} onChangePage={onChangePage} />
-                )}
               </div>
+              {posts.length > 0 && (
+                <Pagination items={posts} onChangePage={onChangePage} />
+              )}
             </div>
+
             <div className="col-md-6 col-lg-4">
               <WidgetTab
                 data={JSON.parse(localStorage.getItem("carousel-post"))}

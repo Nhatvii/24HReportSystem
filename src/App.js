@@ -43,7 +43,6 @@ const App = (props) => {
       <Routes />
       <ToastContainer position="top-right" autoClose={10000} />
       <ScrollTopButton />
-      
     </Fragment>
   );
 };
