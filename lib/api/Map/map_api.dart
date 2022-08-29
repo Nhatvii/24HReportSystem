@@ -15,14 +15,14 @@ class MapApi {
 
     if (response.statusCode == 200) {
       var jsonData = jsonDecode(response.body);
-      print(jsonData['results'][1]['formatted_address']);
+      // print(jsonData['results'][1]['formatted_address']);
       return jsonData['results'][1]['formatted_address'];
     }
   }
 
   // Search Auto Complete
   Future<List<Map>> getListPlaceByKeyWord(String keyWord) async {
-    print('Keyword: $keyWord');
+    // print('Keyword: $keyWord');
     if (keyWord.isNotEmpty || keyWord != '') {
       var url = Uri.parse(
           "${constants.goongDomain}/Place/AutoComplete?api_key=${constants.apiKey}&input=$keyWord");

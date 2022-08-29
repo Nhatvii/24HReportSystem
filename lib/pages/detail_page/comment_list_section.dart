@@ -139,7 +139,6 @@ class CommentListSection extends StatelessWidget {
                             isDense: true,
                           ),
                           onSubmitted: (value) {
-                            print('Update comment');
                             postDetailPagePresenter.updateComment(
                                 index, comment.commentId, sheetState);
                           },
@@ -150,7 +149,6 @@ class CommentListSection extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: 0.025.sw),
                       child: GestureDetector(
                         onTap: () {
-                          print('Hủy');
                           postDetailPagePresenter.onCancelEdit(
                               index, sheetState);
                         },
@@ -212,7 +210,6 @@ class CommentListSection extends StatelessWidget {
                                     children: [
                                       GestureDetector(
                                         onTap: () {
-                                          print('Chỉnh sửa');
                                           postDetailPagePresenter.onEditComment(
                                               index,
                                               comment.commentTitle,

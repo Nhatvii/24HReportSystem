@@ -40,7 +40,7 @@ class MapPageReportModel {
     }
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.best);
-    print(position);
+    // print(position);
     LatLng currentPosition = LatLng(position.latitude, position.longitude);
     return currentPosition;
   }

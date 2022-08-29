@@ -102,7 +102,15 @@ class _ReportSendHistoryPageState extends State<ReportSendHistoryPage>
               }
             }
             if (snapshot.hasError) {
-              print(snapshot.error);
+              return SizedBox(
+                height: 0.8.sh,
+                child: Center(
+                  child: Text(
+                    'Xảy ra lỗi...',
+                    style: TextStyle(fontSize: 16.sp),
+                  ),
+                ),
+              );
             }
             return Container();
           },

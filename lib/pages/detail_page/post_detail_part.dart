@@ -170,7 +170,14 @@ class PostDetailPart extends StatelessWidget {
           );
         }
         if (snapshot.hasError) {
-          print(snapshot.error);
+          return SizedBox(
+            height: 0.85.sh,
+            width: 1.sw,
+            child: Text(
+              'Xảy ra lỗi...',
+              style: TextStyle(fontSize: 16.sp),
+            ),
+          );
         }
         return Container();
       },

@@ -36,6 +36,7 @@ class _ReportSendDetailPageState extends State<ReportSendDetailPage>
   }
 
   @override
+  // ignore: must_call_super
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(

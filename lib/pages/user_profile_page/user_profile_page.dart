@@ -67,7 +67,7 @@ class _UserProfilePageState extends State<UserProfilePage>
                   future: _userProfilePageModel.fetchAccountUser,
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
-                      print(snapshot.error);
+                      // print(snapshot.error);
                     }
                     if (snapshot.hasData) {
                       return Column(

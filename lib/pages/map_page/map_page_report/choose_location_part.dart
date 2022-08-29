@@ -124,7 +124,7 @@ class _MapLocationPageState extends State<MapLocationPage>
                         padding: EdgeInsets.all(0.01.sh),
                         child: Wrap(
                           children: [
-                            Text('Địa chỉ hiện tại: '),
+                            const Text('Địa chỉ hiện tại: '),
                             Text(_mapPageReportModel.location.text)
                           ],
                         )),
@@ -134,7 +134,7 @@ class _MapLocationPageState extends State<MapLocationPage>
                         },
                         child: Container(
                             padding: EdgeInsets.all(0.02.sh),
-                            child: Text('Chọn'))),
+                            child: const Text('Chọn'))),
                   ],
                 ),
               ],

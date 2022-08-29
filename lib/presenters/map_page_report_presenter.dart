@@ -78,7 +78,7 @@ class MapPageReportPresenter {
   }
 
   onMapClick(Point point, LatLng latLng) async {
-    print('$point +++++ $latLng');
+    // print('$point +++++ $latLng');
     addSymbol(
         _mapPageReportModel.mapController!, latLng.latitude, latLng.longitude);
     _mapPageReportModel.mapApi.getPlaceByLatLng(latLng).then((value) {

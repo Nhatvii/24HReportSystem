@@ -43,7 +43,7 @@ class _ListCategoryState extends State<ListCategory> {
                   }));
         }
         if (snapshot.hasError) {
-          print(snapshot.error);
+          // print(snapshot.error);
         }
         return Container(
           height: 0.043.sh,

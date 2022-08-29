@@ -92,7 +92,7 @@ class ReportSendDetailPagePresenter {
             volume: 0.25);
       } catch (e) {
         // _reportSendDetailPageView.showToast('Không có file để chạy');
-        print(e);
+        // print(e);
       }
     }
   }

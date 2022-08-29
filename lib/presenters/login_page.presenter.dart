@@ -48,7 +48,7 @@ class LoginPagePresenter {
 
   void onSignInGoogle() {
     _loginPageModel.googleServices.signInWithGoogle().then((googleUser) => {
-          print(googleUser),
+          // print(googleUser),
           if (googleUser.user!.email!.isNotEmpty)
             {
               _loginPageModel.accountApi
