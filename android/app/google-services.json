@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "926714664421",
+    "firebase_url": "https://capstone-project-2102c-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "capstone-project-2102c",
     "storage_bucket": "capstone-project-2102c.appspot.com"
   },
@@ -19,6 +20,59 @@
           "android_info": {
             "package_name": "com.example.capstone_project",
             "certificate_hash": "31d353b3ffb8ca484c40cf6386a52a656dc26069"
+          }
+        },
+        {
+          "client_id": "926714664421-2b34d95nktj5442a2agmts28vvio8mqr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.capstone_project",
+            "certificate_hash": "1499a4c8b7834b6b27ce7426c54853607723235a"
+          }
+        },
+        {
+          "client_id": "926714664421-o3pv3vhbpldtv9863eaholoa6225b98g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFb4yPYWny4-CitvLrxEMGpMlobFLJAHY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "926714664421-o3pv3vhbpldtv9863eaholoa6225b98g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:926714664421:android:01336bd1e24778722c8b0c",
+        "android_client_info": {
+          "package_name": "com.pikatech.report_system_24H"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "926714664421-abftf1kh8env8bigq3dpmi79os4er28b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pikatech.report_system_24H",
+            "certificate_hash": "31d353b3ffb8ca484c40cf6386a52a656dc26069"
+          }
+        },
+        {
+          "client_id": "926714664421-s51hscoha2s89iiio2k60jvsmmaut2if.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pikatech.report_system_24H",
+            "certificate_hash": "1499a4c8b7834b6b27ce7426c54853607723235a"
           }
         },
         {

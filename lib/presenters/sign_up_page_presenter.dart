@@ -61,48 +61,8 @@ class SignUpPagePresenter {
       _signUpPageModel.showErr = "";
       _signUpPageModel.isLoading = true;
       _signUpPageView.refreshData(_signUpPageModel);
-      // if (_signUpPageModel.emailPhone.text.contains('@gmail')) {
-      //   _signUpPageModel.accountApi
-      //       .checkAccount(_signUpPageModel.emailPhone.text, 'null')
-      //       .then((value) => {
-      //             if (value['error'] == null)
-      //               {
-      //                 _signUpPageModel.accountApi
-      //                     .signUp(
-      //                         _signUpPageModel.emailPhone.text,
-      //                         _signUpPageModel.password.text,
-      //                         '',
-      //                         _signUpPageModel.name.text)
-      //                     .then((value) => {
-      //                           if (value['error'] == null)
-      //                             {
-      //                               _signUpPageModel.accountApi
-      //                                   .checkUserAuthen(
-      //                                       _signUpPageModel.emailPhone.text)
-      //                                   .then((value) =>
-      //                                       _signUpPageView.onSignUpSuccess())
-      //                             }
-      //                           else
-      //                             {
-      //                               // _signUpPageModel.showErr = 'Xảy ra lỗi',
-      //                               _signUpPageModel.showErr =
-      //                                   value['error']['message'],
-      //                               _signUpPageView
-      //                                   .refreshData(_signUpPageModel),
-      //                             }
-      //                         }),
-      //                 _signUpPageView.refreshData(_signUpPageModel),
-      //               }
-      //             else
-      //               {
-      //                 _signUpPageModel.isLoading = false,
-      //                 _signUpPageModel.showErr = value['error']['message'],
-      //                 _signUpPageView.refreshData(_signUpPageModel),
-      //               }
-      //           });
-      // } else {
       _signUpPageModel.accountApi
-          .checkAccount('null', _signUpPageModel.phone.text)
+          .checkAccount(_signUpPageModel.phone.text)
           .then((value) => {
                 if (value['error'] == null)
                   {
@@ -116,7 +76,6 @@ class SignUpPagePresenter {
                     _signUpPageView.refreshData(_signUpPageModel),
                   }
               });
-      // }
     }
   }
 
@@ -124,9 +83,7 @@ class SignUpPagePresenter {
     _signUpPageModel.auth.verifyPhoneNumber(
         phoneNumber: '+84${_signUpPageModel.phone.text.substring(1)}',
         verificationCompleted: (PhoneAuthCredential credential) async {},
-        verificationFailed: (FirebaseAuthException exception) async {
-          print(exception.message);
-        },
+        verificationFailed: (FirebaseAuthException exception) async {},
         codeSent: (String verificationId, int? resendingToken) async {
           if (_signUpPageModel.countdownTimer != null) {
             _signUpPageModel.verificationReceived = verificationId;
@@ -162,9 +119,7 @@ class SignUpPagePresenter {
                       if (value['error'] == null)
                         {
                           _signUpPageModel.accountApi
-                              .checkUserAuthen(
-                                  // _signUpPageModel.phone.text
-                                  value['accountId'])
+                              .checkUserAuthen(value['accountId'])
                               .then((value) => {
                                     _signUpPageModel.countdownTimer!.cancel(),
                                     _signUpPageView.onSignUpSuccess()

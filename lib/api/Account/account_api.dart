@@ -111,9 +111,9 @@ class AccountApi {
   }
 
   // Check Account Exist API
-  Future checkAccount(String email, String phone) async {
+  Future checkAccount(String phone) async {
     var url = Uri.parse(
-        '${constants.localhost}/Account/CheckAccountRegister?email=$email&phoneNumber=$phone');
+        '${constants.localhost}/Account/CheckAccountRegister?phoneNumber=$phone');
     var response = await http.get(url);
     if (response.statusCode == 200) {
       var jsonData = jsonDecode(response.body);
@@ -155,8 +155,8 @@ class AccountApi {
         "email": email,
         "phoneNumber": phone,
         "username": name,
-        "address": address,
-        "identityCard": identityCard,
+        "address": address.isEmpty ? null : address,
+        "identityCard": identityCard.isEmpty ? null : identityCard,
       }),
     );
     if (response.statusCode == 200) {
@@ -170,7 +170,8 @@ class AccountApi {
   }
 
   Future checkUserAuthen(String accountId) async {
-    var url = Uri.parse('${constants.localhost}/Account');
+    var url = Uri.parse(
+        '${constants.localhost}/Account/UpdateAccountAuthen?accountID=$accountId');
     var response = await http.put(
       url,
       headers: <String, String>{

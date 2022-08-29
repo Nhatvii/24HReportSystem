@@ -116,7 +116,7 @@ class NewPost extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Lừa Đảo Qua ${post.category.subCategory}',
+                          'Lừa Đảo Qua ${post.category.subCategory} - ${post.category.rootCategoryNavigation.type}',
                           style: TextStyle(
                               fontSize: 13.sp,
                               color: Colors.grey,

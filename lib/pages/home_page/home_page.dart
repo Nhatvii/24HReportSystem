@@ -54,95 +54,99 @@ class _HomePageState extends State<HomePage> implements HomePageView {
             )),
         body: Stack(
           children: [
-            Container(
-                height: 1.sh,
-                width: 1.sw,
-                padding: EdgeInsets.only(
-                  top: 0.155.sh,
-                  left: 0.02.sh,
-                  right: 0.02.sh,
-                  bottom: 0.002.sh,
-                ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Bài Viết Mới Nhất',
-                            style: TextStyle(
-                                fontSize: 16.sp, fontWeight: FontWeight.w700),
-                          ),
-                          InkWell(
-                            onTap: () => navigateToSeeMoreNewPostPage(),
-                            child: Container(
-                              padding: EdgeInsets.all(0.01.sh),
-                              child: Text(
-                                'Xem Thêm',
-                                style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.blue),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 0.005.sh,
-                      ),
-                      NewPost(
-                        homePageModel: _homePageModel,
-                        homePagePresenter: _homePagePresenter,
-                        function: navigateToDetailPage,
-                      ),
-                      SizedBox(
-                        height: 0.015.sh,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Bài Viết Nổi Bật',
-                            style: TextStyle(
-                                fontSize: 16.sp, fontWeight: FontWeight.w700),
-                          ),
-                          InkWell(
-                            onTap: () => navigateToSeeMorePopularPostPage(),
-                            child: Container(
-                              padding: EdgeInsets.all(0.01.sh),
-                              child: Text(
-                                'Xem Thêm',
-                                style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.blue),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 0.005.sh,
-                      ),
-                      PopularPost(
-                        homePageModel: _homePageModel,
-                        function: navigateToDetailPage,
-                      ),
-                    ],
+            RefreshIndicator(
+              onRefresh: () => _homePagePresenter.init(),
+              child: Container(
+                  height: 1.sh,
+                  width: 1.sw,
+                  padding: EdgeInsets.only(
+                    top: 0.155.sh,
+                    left: 0.02.sh,
+                    right: 0.02.sh,
+                    bottom: 0.002.sh,
                   ),
-                )),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Bài Viết Mới Nhất',
+                              style: TextStyle(
+                                  fontSize: 16.sp, fontWeight: FontWeight.w700),
+                            ),
+                            InkWell(
+                              onTap: () => navigateToSeeMoreNewPostPage(),
+                              child: Container(
+                                padding: EdgeInsets.all(0.01.sh),
+                                child: Text(
+                                  'Xem Thêm',
+                                  style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.blue),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 0.005.sh,
+                        ),
+                        NewPost(
+                          homePageModel: _homePageModel,
+                          homePagePresenter: _homePagePresenter,
+                          function: navigateToDetailPage,
+                        ),
+                        SizedBox(
+                          height: 0.015.sh,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Bài Viết Nổi Bật',
+                              style: TextStyle(
+                                  fontSize: 16.sp, fontWeight: FontWeight.w700),
+                            ),
+                            InkWell(
+                              onTap: () => navigateToSeeMorePopularPostPage(),
+                              child: Container(
+                                padding: EdgeInsets.all(0.01.sh),
+                                child: Text(
+                                  'Xem Thêm',
+                                  style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.blue),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 0.005.sh,
+                        ),
+                        PopularPost(
+                          homePageModel: _homePageModel,
+                          function: navigateToDetailPage,
+                        ),
+                      ],
+                    ),
+                  )),
+            ),
             Positioned(
               top: 0,
               child: Container(
                 height: 0.14.sh,
                 width: 1.sw,
                 padding: EdgeInsets.only(
-                    top: 0.025.sh,
-                    left: 0.025.sh,
-                    right: 0.025.sh,),
+                  top: 0.025.sh,
+                  left: 0.025.sh,
+                  right: 0.025.sh,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   boxShadow: [

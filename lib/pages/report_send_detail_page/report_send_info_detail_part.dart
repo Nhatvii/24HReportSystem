@@ -132,7 +132,7 @@ class ReportSendInfoDetailPart extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: 0.01.sh),
                     child: Text(
-                      snapshot.data!.description,
+                      Bidi.stripHtmlIfNeeded(snapshot.data!.description),
                       style: TextStyle(
                         fontSize: 13.sp,
                       ),

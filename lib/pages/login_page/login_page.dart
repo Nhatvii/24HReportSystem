@@ -7,7 +7,7 @@ import 'package:capstone_project/presenters/login_page.presenter.dart';
 import 'package:capstone_project/views/login_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+// import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -159,40 +159,40 @@ class _LoginPageState extends State<LoginPage> implements LoginPageView {
                         SizedBox(
                           height: 0.025.sh,
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            print('Google');
-                            _loginPagePresenter.onSignInGoogle();
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey, width: 1),
-                              borderRadius: BorderRadius.circular(20.r),
-                            ),
-                            padding: EdgeInsets.all(0.01.sh),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  FontAwesomeIcons.google,
-                                  size: 22.sp,
-                                  color: Colors.blue,
-                                ),
-                                SizedBox(
-                                  width: 0.02.sh,
-                                ),
-                                Text(
-                                  'Đăng nhập với Google',
-                                  style: TextStyle(
-                                    fontSize: 16.sp,
-                                    color: Colors.blue,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                        // GestureDetector(
+                        //   onTap: () {
+                        //     print('Google');
+                        //     _loginPagePresenter.onSignInGoogle();
+                        //   },
+                        //   child: Container(
+                        //     decoration: BoxDecoration(
+                        //       border: Border.all(color: Colors.grey, width: 1),
+                        //       borderRadius: BorderRadius.circular(20.r),
+                        //     ),
+                        //     padding: EdgeInsets.all(0.01.sh),
+                        //     child: Row(
+                        //       mainAxisAlignment: MainAxisAlignment.center,
+                        //       children: [
+                        //         Icon(
+                        //           FontAwesomeIcons.google,
+                        //           size: 22.sp,
+                        //           color: Colors.blue,
+                        //         ),
+                        //         SizedBox(
+                        //           width: 0.02.sh,
+                        //         ),
+                        //         Text(
+                        //           'Đăng nhập với Google',
+                        //           style: TextStyle(
+                        //             fontSize: 16.sp,
+                        //             color: Colors.blue,
+                        //             fontWeight: FontWeight.w500,
+                        //           ),
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
                         SizedBox(
                           height: 0.025.sh,
                         ),

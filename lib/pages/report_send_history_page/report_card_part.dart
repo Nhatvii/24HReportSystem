@@ -1,5 +1,6 @@
 import 'package:capstone_project/entities/report.dart';
 import 'package:flutter/material.dart';
+// import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
@@ -104,7 +105,7 @@ class ReportCardPart extends StatelessWidget {
                   ],
                 ),
                 SizedBox(
-                   height: 0.008.sh,
+                  height: 0.008.sh,
                 ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,7 +118,7 @@ class ReportCardPart extends StatelessWidget {
                     SizedBox(
                       width: 0.7.sw,
                       child: Text(
-                        report.description,
+                        Bidi.stripHtmlIfNeeded(report.description),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                         style: TextStyle(fontSize: 12.sp),

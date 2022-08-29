@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:capstone_project/components/alert_dialog.dart';
-import 'package:capstone_project/components/rounded_text.dart';
 import 'package:capstone_project/models/send_report_page_model.dart';
 import 'package:capstone_project/pages/main_page/main_page.dart';
 import 'package:capstone_project/pages/report_send_history_page/report_send_history_page.dart';

@@ -2,7 +2,6 @@ import 'package:capstone_project/components/post_title_description.dart';
 import 'package:capstone_project/entities/post.dart';
 import 'package:capstone_project/models/home_page_model.dart';
 import 'package:flutter/material.dart';
-// import 'package:sizer/sizer.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PopularPost extends StatelessWidget {

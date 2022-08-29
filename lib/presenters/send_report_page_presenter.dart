@@ -159,9 +159,6 @@ class SendReportPagePresenter {
       await _sendReportPageModel.audioPlayer.pause();
     } else {
       try {
-        // await _sendReportPageModel.audioPlayer.play(
-        //     DeviceFileSource(_sendReportPageModel.recordFile.path),
-        //     volume: 1);
         await _sendReportPageModel.audioPlayer
             .play(UrlSource(_sendReportPageModel.recordUrl!), volume: 0.25);
       } catch (e) {

@@ -26,6 +26,7 @@ class _UserProfilePageState extends State<UserProfilePage>
     super.initState();
     _userProfilePagePresenter = UserProfilePagePresenter();
     _userProfilePagePresenter.view = this;
+    _userProfilePagePresenter.init();
   }
 
   @override

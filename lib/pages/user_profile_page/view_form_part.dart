@@ -54,7 +54,7 @@ class ViewFormPart extends StatelessWidget {
 Widget titleAndContent(String title, String content) {
   return Container(
     width: 1.sw,
-    margin: EdgeInsets.only(bottom: 0.025.sh),
+    margin: EdgeInsets.only(bottom: 0.04.sh),
     child: Row(
       children: [
         Text(

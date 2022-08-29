@@ -1,4 +1,3 @@
-
 import 'package:capstone_project/api/Account/account_api.dart';
 import 'package:capstone_project/constants/constants.dart';
 import 'package:capstone_project/entities/account.dart';
@@ -23,7 +22,17 @@ class UserProfilePageModel {
     phone = TextEditingController();
     identityCard = TextEditingController();
     fetchAccountUser = accountApi.getAccountInfo();
-    accountApi.getAccountInfo().then((value) => {
+    // accountApi.getAccountInfo().then((value) => {
+    //       email.text = value.email,
+    //       name.text = value.accountInfo.username,
+    //       phone.text = value.phoneNumber,
+    //       address.text = value.accountInfo.address,
+    //       identityCard.text = value.accountInfo.identityCard,
+    //     });
+  }
+
+  Future<void> init() async {
+    await accountApi.getAccountInfo().then((value) => {
           email.text = value.email,
           name.text = value.accountInfo.username,
           phone.text = value.phoneNumber,
