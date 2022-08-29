@@ -12,6 +12,7 @@ import {
 } from "reactstrap";
 import categoryApi from "../../api/categoryApi";
 import { toast } from "react-toastify";
+import logo from "../../assets/img/logo.png";
 const menus = [
   {
     id: 1,
@@ -184,6 +185,13 @@ const MainMenu = ({ className, dark }) => {
           <div className="container">
             <div className="row justify-content-between">
               <nav className="navbar navbar-expand-lg col-lg-8 align-self-center">
+                <img
+                  src={logo}
+                  alt="logo"
+                  width={50}
+                  height={50}
+                  className="collapse navbar-collapse navbar-responsive-collapse mr-2"
+                />
                 <div className="site-nav-inner">
                   <button
                     className="navbar-toggler"

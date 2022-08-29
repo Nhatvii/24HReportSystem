@@ -17,7 +17,10 @@ const HomePage = () => {
     try {
       const params = { Status: 3 };
       const response = await postApi.getByStatus(params);
-      localStorage.setItem("carousel-post", JSON.stringify(response));
+      localStorage.setItem(
+        "carousel-post",
+        JSON.stringify(response.filter((e) => e.video === "null"))
+      );
       setPostList(JSON.parse(localStorage.getItem("carousel-post")));
     } catch (err) {
       console.log(err.message);

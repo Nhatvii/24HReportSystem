@@ -1,20 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import WidgetTab from "../WidgetTab";
-import "../../../node_modules/slick-carousel/slick/slick.css";
-import ModalVideo from "react-modal-video";
-
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import "./style.scss";
 import Slider from "react-slick";
-import postApi from "../../api/postApi";
 import moment from "moment";
 // Thumbnail nhỏ
 
 const PostGallery = (props) => {
-  const [nav2, setNav2] = useState(null);
-  const [vModal, setVModal] = useState(false);
-  const [videoId, setVideoId] = useState("0r6C3z3TEKw");
-
   const { className, data } = props;
   return (
     <div className={`post_gallary_area mb20 ${className}`}>
@@ -24,13 +18,7 @@ const PostGallery = (props) => {
             <div className="row">
               <div className="col-xl-8">
                 <div className="slider_demo2">
-                  <Slider
-                    asNavFor={nav2}
-                    arrows={false}
-                    fade={true}
-                    autoplay
-                    autoplaySpeed={5000}
-                  >
+                  <Slider fade={true} autoplay autoplaySpeed={2000}>
                     {JSON.parse(localStorage.getItem("carousel-post")) &&
                     JSON.parse(localStorage.getItem("carousel-post")).length > 0
                       ? JSON.parse(localStorage.getItem("carousel-post")).map(
@@ -101,12 +89,6 @@ const PostGallery = (props) => {
           </div>
         </div>
       </div>
-      <ModalVideo
-        channel="youtube"
-        isOpen={vModal}
-        videoId={videoId}
-        onClose={() => this.modalHandler(false)}
-      />
     </div>
   );
 };

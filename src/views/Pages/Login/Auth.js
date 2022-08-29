@@ -15,6 +15,7 @@ class Auth extends Component {
         <BrowserRouter basename="/">
           <div className="App">
             <div className="appAside">
+              {/* Fake store */}
               <MobileStoreButton
                 className="google-app"
                 width="10.3rem"

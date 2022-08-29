@@ -709,7 +709,7 @@ a.social_medium {
 
 .single_post {
   position: relative;
-  z-index: 2;
+  z-index: 1;
   @include transition(all .3s);
 
   .single_post_text {
