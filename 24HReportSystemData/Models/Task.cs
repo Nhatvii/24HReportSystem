@@ -10,6 +10,7 @@ namespace _24HReportSystemData.Models
     {
         public Task()
         {
+            InverseSubTask = new HashSet<Task>();
             Posts = new HashSet<Post>();
             ReportTasks = new HashSet<ReportTask>();
         }
@@ -28,6 +29,10 @@ namespace _24HReportSystemData.Models
         public virtual Board Board { get; set; }
         [JsonIgnore]
         public virtual Account Editor { get; set; }
+        [JsonIgnore]
+        public virtual Task SubTask { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<Task> InverseSubTask { get; set; }
         public virtual ICollection<Post> Posts { get; set; }
         public virtual ICollection<ReportTask> ReportTasks { get; set; }
     }

@@ -5,6 +5,8 @@ using _24HReportSystemData.Parameters;
 using _24HReportSystemData.Response;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.ML;
+using Microsoft.ML.Data;
 using ReportSystemData.Repositories;
 using ReportSystemData.Service.Base;
 using ReportSystemData.ViewModel.Comment;
@@ -125,6 +127,8 @@ namespace ReportSystemData.Service
 
                 //Load model and predict output
                 var result = _24HReportSystemData.BadwordFilterMLModel.Predict(sampleData);
+                //MLContext mlContext = new MLContext();
+                //DatabaseLoader loader = mlContext.Data.CreateDatabaseLoader<HouseData>();
                 double totalScore01 = result.Score[0] + result.Score[1];
 
                 if ((totalScore01 < result.Score[2]) || result.Score[1] > 0.3 || result.Score[2] > 0.29)

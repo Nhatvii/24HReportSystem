@@ -29,10 +29,11 @@ namespace ReportSystemData.Service
         Task<Account> RegisterAsync(CreateAccountViewModel account);
         Account GetAccountByID(string email);
         SuccessResponse UpdateAccount(UpdateAccountViewModel model);
-        SuccessResponse CheckAccountRegister(string email, string phoneNumber);
+        SuccessResponse CheckAccountRegister(string phoneNumber);
         List<Account> GetAllEditorAccount();
         Account GetMinWorkLoad(int rootCate);
-        Task<SuccessResponse> LoginWithGoogleAsync(string email);
+        Task<Account> LoginWithGoogleAsync(string email);
+        SuccessResponse UpdateAccountAuthen(string accountID);
     }
     public partial class AccountService : BaseService<Account>, IAccountService
     {
@@ -90,7 +91,7 @@ namespace ReportSystemData.Service
             }
             return null;
         }
-        public async Task<SuccessResponse> LoginWithGoogleAsync(string email)
+        public async Task<Account> LoginWithGoogleAsync(string email)
         {
             if(FirebaseApp.DefaultInstance == null)
             {
@@ -104,13 +105,37 @@ namespace ReportSystemData.Service
                 var account = await FirebaseAuth.DefaultInstance.GetUserByEmailAsync(email);
                 if(account.EmailVerified)
                 {
-                    return new SuccessResponse((int)HttpStatusCode.OK, "Email và số điện thoại hợp lệ");
+                    var tmpAcc = Get().Where(p => p.Email.Equals(account.Email))
+                        .Include(r => r.AccountInfo)
+                        .ThenInclude(p => p.SpecializeNavigation)
+                        .Include(r => r.Role)
+                        .FirstOrDefault();
+                    if (tmpAcc != null)
+                    {
+                        return tmpAcc;
+                    }
+                    else
+                    {
+                        var acc = new CreateAccountViewModel()
+                        {
+                            Email = account.Email,
+                            Password = "123456",
+                            RoleId = 1,
+                            PhoneNumber = account.PhoneNumber,
+                            Username = account.DisplayName
+                        };
+                        var tmp = await RegisterAsync(acc);
+                        if (tmp != null)
+                        {
+                            return tmp;
+                        }
+                    }
                 }
                 return null;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                throw new ErrorResponse(ex.Message, (int)HttpStatusCode.NotFound);
             }
             return null;
         }
@@ -127,28 +152,41 @@ namespace ReportSystemData.Service
             }
             return null;
         }
-        public SuccessResponse CheckAccountRegister(string email, string phoneNumber)
+        public SuccessResponse CheckAccountRegister(string phoneNumber)
         {
-            var acc = Get().Where(ac => ac.Email.Equals(email) && ac.PhoneNumber.Equals(phoneNumber)).FirstOrDefault();
-            if (acc != null)
-            {
-                throw new ErrorResponse("Email & số điện thoại đã tồn tại!!!", (int)HttpStatusCode.NotFound);
-            }
+            //var acc = Get().Where(ac => ac.Email.Equals(email) && ac.PhoneNumber.Equals(phoneNumber)).FirstOrDefault();
+            //if (acc != null)
+            //{
+            //    throw new ErrorResponse("Email hoặc số điện thoại đã tồn tại!!!", (int)HttpStatusCode.NotFound);
+            //}
             var checkDupliPhone = Get().Where(ac => ac.PhoneNumber.Equals(phoneNumber)).FirstOrDefault();
             if(checkDupliPhone != null)
             {
                 throw new ErrorResponse("Số điện thoại đã tồn tại!!!", (int)HttpStatusCode.NotFound);
             }
-            var checkDupliEmail = Get().Where(ac => ac.Email.Equals(email)).FirstOrDefault();
-            if (checkDupliEmail != null)
+            //var checkDupliEmail = Get().Where(ac => ac.Email.Equals(email)).FirstOrDefault();
+            //if (checkDupliEmail != null)
+            //{
+            //    throw new ErrorResponse("Email đã tồn tại!!!", (int)HttpStatusCode.NotFound);
+            //}
+            //if (acc == null)
+            //{
+                return new SuccessResponse((int)HttpStatusCode.OK, "Số điện thoại hợp lệ");
+            //}
+            //throw new ErrorResponse("Email hoặc số điện thoại không hợp lệ!!!", (int)HttpStatusCode.NotFound);
+        }
+        public SuccessResponse UpdateAccountAuthen(string accountID)
+        {
+            if(!String.IsNullOrEmpty(accountID))
             {
-                throw new ErrorResponse("Email đã tồn tại!!!", (int)HttpStatusCode.NotFound);
+                var check = _accountInfoService.UpdateAccountInfoAuthen(accountID);
+                if(check)
+                {
+                    return new SuccessResponse((int)HttpStatusCode.OK, "Tài khoản đã được xác minh");
+                }
+                throw new ErrorResponse("Tài khoản xác minh thất bại!!!", (int)HttpStatusCode.NotFound);
             }
-            if (acc == null)
-            {
-                return new SuccessResponse((int)HttpStatusCode.OK, "Email và số điện thoại hợp lệ");
-            }
-            throw new ErrorResponse("Email hoặc số điện thoại không hợp lệ!!!", (int)HttpStatusCode.NotFound);
+            throw new ErrorResponse("AccountID không tồn tại!!!", (int)HttpStatusCode.NotFound);
         }
         public bool CheckAvaiAccount(string email)
         {
@@ -188,6 +226,7 @@ namespace ReportSystemData.Service
                     throw new ErrorResponse("Sai định dạng chứng minh nhân dân!!!", (int)HttpStatusCode.NotFound);
                 }
             }
+
             var accountTmp = new Account()
             {
                 AccountId = Guid.NewGuid().ToString(),
@@ -223,6 +262,35 @@ namespace ReportSystemData.Service
             var account = GetAccountByID(model.AccountID);
             if (account != null)
             {
+                //CheckAccountRegister(model.Email, model.PhoneNumber);
+                if (!String.IsNullOrEmpty(account.PhoneNumber))
+                {
+                    if (!account.PhoneNumber.Equals(model.PhoneNumber))
+                    {
+                        if (!String.IsNullOrEmpty(model.PhoneNumber))
+                        {
+                            var checkDupliPhone = Get().Where(ac => ac.PhoneNumber.Equals(model.PhoneNumber)).FirstOrDefault();
+                            if (checkDupliPhone != null)
+                            {
+                                throw new ErrorResponse("Số điện thoại đã tồn tại!!!", (int)HttpStatusCode.NotFound);
+                            }
+                        }
+                    }
+                }
+                if (!String.IsNullOrEmpty(account.Email))
+                {
+                    if (!account.Email.Equals(model.Email))
+                    {
+                        if (!String.IsNullOrEmpty(model.Email))
+                        {
+                            var checkDupliEmail = Get().Where(ac => ac.Email.Equals(model.Email)).FirstOrDefault();
+                            if (checkDupliEmail != null)
+                            {
+                                throw new ErrorResponse("Email đã tồn tại!!!", (int)HttpStatusCode.NotFound);
+                            }
+                        }
+                    }
+                }
                 if (model.Email != null)
                 {
                     bool isEmail = Regex.IsMatch(model.Email, @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z", RegexOptions.IgnoreCase);

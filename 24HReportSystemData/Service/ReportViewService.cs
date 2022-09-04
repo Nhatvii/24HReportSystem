@@ -49,8 +49,7 @@ namespace ReportSystemData.Service
                     var reportView = new ReportView()
                     {
                         ReportId = report.ReportId,
-                        UserId = report.UserId,
-                        IsView = true
+                        UserId = report.UserId
                     };
                     await CreateAsyn(reportView);
                 }

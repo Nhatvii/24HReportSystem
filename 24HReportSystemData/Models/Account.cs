@@ -13,7 +13,10 @@ namespace _24HReportSystemData.Models
             Boards = new HashSet<Board>();
             Comments = new HashSet<Comment>();
             Emotions = new HashSet<Emotion>();
+            PostSaves = new HashSet<PostSave>();
+            PostViews = new HashSet<PostView>();
             Posts = new HashSet<Post>();
+            Promotions = new HashSet<Promotion>();
             ReportEditors = new HashSet<Report>();
             ReportStaffs = new HashSet<Report>();
             ReportUsers = new HashSet<Report>();
@@ -32,11 +35,18 @@ namespace _24HReportSystemData.Models
         public virtual AccountInfo AccountInfo { get; set; }
         [JsonIgnore]
         public virtual ICollection<Board> Boards { get; set; }
+        [JsonIgnore]
         public virtual ICollection<Comment> Comments { get; set; }
         [JsonIgnore]
         public virtual ICollection<Emotion> Emotions { get; set; }
         [JsonIgnore]
+        public virtual ICollection<PostSave> PostSaves { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<PostView> PostViews { get; set; }
+        [JsonIgnore]
         public virtual ICollection<Post> Posts { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<Promotion> Promotions { get; set; }
         [JsonIgnore]
         public virtual ICollection<Report> ReportEditors { get; set; }
         [JsonIgnore]

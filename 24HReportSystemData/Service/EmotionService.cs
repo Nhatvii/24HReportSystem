@@ -19,9 +19,9 @@ namespace ReportSystemData.Service
         List<Emotion> GetAllEmotion(EmotionParameters emotionParameters);
         Task<SuccessResponse> ChangeStatusEmotion(EditStatusEmotion statusEmotion);
         bool CheckEmotion(string postID, string userID);
-        Task<SuccessResponse> CreateEmotionView(EditStatusEmotion statusEmotion);
-        Task<SuccessResponse> CreateEmotionSave(EditStatusEmotion statusEmotion);
-        List<Emotion> GetListPostSave(string userID);
+        //Task<SuccessResponse> CreateEmotionView(EditStatusEmotion statusEmotion);
+        //Task<SuccessResponse> CreateEmotionSave(EditStatusEmotion statusEmotion);
+        //List<Emotion> GetListPostSave(string userID);
     }
     public partial class EmotionService : BaseService<Emotion>, IEmotionService
     {
@@ -44,10 +44,6 @@ namespace ReportSystemData.Service
             if (emotionParameters.EmotionStatus != null)
             {
                 emotionTmp = emotionTmp.Where(e => e.EmotionStatus == emotionParameters.EmotionStatus).ToList();
-            }
-            if (emotionParameters.IsView != null)
-            {
-                emotionTmp = emotionTmp.Where(e => e.IsView == emotionParameters.IsView).ToList();
             }
             return emotionTmp;
         }
@@ -80,28 +76,28 @@ namespace ReportSystemData.Service
                 return new SuccessResponse((int)HttpStatusCode.OK, "Cập nhật trạng thái thành công");
             }
         }
-        public async Task<SuccessResponse> CreateEmotionView(EditStatusEmotion statusEmotion)
-        {
-            var emotionTmp = CheckEmotion(statusEmotion.PostId, statusEmotion.UserId);
-            if (!emotionTmp)
-            {
-                var emo = new Emotion()
-                {
-                    PostId = statusEmotion.PostId,
-                    UserId = statusEmotion.UserId,
-                    IsView = true
-                };
-                await CreateAsyn(emo);
-                return new SuccessResponse((int)HttpStatusCode.OK, "View Success");
-            }
-            else
-            {
-                var emo = Get().Where(e => e.PostId.Equals(statusEmotion.PostId) && e.UserId.Equals(statusEmotion.UserId)).FirstOrDefault();
-                emo.IsView = true;
-                Update(emo);
-                return new SuccessResponse((int)HttpStatusCode.OK, "View Success");
-            }
-        }
+        //public async Task<SuccessResponse> CreateEmotionView(EditStatusEmotion statusEmotion)
+        //{
+        //    var emotionTmp = CheckEmotion(statusEmotion.PostId, statusEmotion.UserId);
+        //    if (!emotionTmp)
+        //    {
+        //        var emo = new Emotion()
+        //        {
+        //            PostId = statusEmotion.PostId,
+        //            UserId = statusEmotion.UserId,
+        //            IsView = true
+        //        };
+        //        await CreateAsyn(emo);
+        //        return new SuccessResponse((int)HttpStatusCode.OK, "View Success");
+        //    }
+        //    else
+        //    {
+        //        var emo = Get().Where(e => e.PostId.Equals(statusEmotion.PostId) && e.UserId.Equals(statusEmotion.UserId)).FirstOrDefault();
+        //        emo.IsView = true;
+        //        Update(emo);
+        //        return new SuccessResponse((int)HttpStatusCode.OK, "View Success");
+        //    }
+        //}
 
         public bool CheckEmotion(string postID, string userID)
         {
@@ -113,43 +109,43 @@ namespace ReportSystemData.Service
             return false;
         }
 
-        public async Task<SuccessResponse> CreateEmotionSave(EditStatusEmotion statusEmotion)
-        {
-            var emotionTmp = CheckEmotion(statusEmotion.PostId, statusEmotion.UserId);
-            if (!emotionTmp)
-            {
-                var emo = new Emotion()
-                {
-                    PostId = statusEmotion.PostId,
-                    UserId = statusEmotion.UserId,
-                    IsSave = true
-                };
-                await CreateAsyn(emo);
-                return new SuccessResponse((int)HttpStatusCode.OK, "Lưu thành công");
-            }
-            else
-            {
-                var emo = Get().Where(e => e.PostId.Equals(statusEmotion.PostId) && e.UserId.Equals(statusEmotion.UserId)).FirstOrDefault();
-                if (emo.IsSave == true)
-                {
-                    emo.IsSave = false;
-                }
-                else
-                {
-                    emo.IsSave = true;
-                }
-                Update(emo);
-                return new SuccessResponse((int)HttpStatusCode.OK, "Lưu thành công");
-            }
-        }
-        public List<Emotion> GetListPostSave(string userID)
-        {
-            var listEmo = Get().Where(p => p.UserId.Equals(userID) && p.IsSave == true).ToList();
-            if(listEmo != null)
-            {
-                return listEmo;
-            }
-            return null;
-        }
+        //public async Task<SuccessResponse> CreateEmotionSave(EditStatusEmotion statusEmotion)
+        //{
+        //    var emotionTmp = CheckEmotion(statusEmotion.PostId, statusEmotion.UserId);
+        //    if (!emotionTmp)
+        //    {
+        //        var emo = new Emotion()
+        //        {
+        //            PostId = statusEmotion.PostId,
+        //            UserId = statusEmotion.UserId,
+        //            IsSave = true
+        //        };
+        //        await CreateAsyn(emo);
+        //        return new SuccessResponse((int)HttpStatusCode.OK, "Lưu thành công");
+        //    }
+        //    else
+        //    {
+        //        var emo = Get().Where(e => e.PostId.Equals(statusEmotion.PostId) && e.UserId.Equals(statusEmotion.UserId)).FirstOrDefault();
+        //        if (emo.IsSave == true)
+        //        {
+        //            emo.IsSave = false;
+        //        }
+        //        else
+        //        {
+        //            emo.IsSave = true;
+        //        }
+        //        Update(emo);
+        //        return new SuccessResponse((int)HttpStatusCode.OK, "Lưu thành công");
+        //    }
+        //}
+        //public List<Emotion> GetListPostSave(string userID)
+        //{
+        //    var listEmo = Get().Where(p => p.UserId.Equals(userID) && p.IsSave == true).ToList();
+        //    if(listEmo != null)
+        //    {
+        //        return listEmo;
+        //    }
+        //    return null;
+        //}
     }
 }

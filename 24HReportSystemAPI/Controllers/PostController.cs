@@ -62,21 +62,21 @@ namespace ReportSystemAPI.Controllers
             return Ok(_repository.DeletePost(id));
         }
 
-        [HttpPut]
-        [Produces("application/json")]
-        [Route("UpdateViewCount")]
-        public async Task<IActionResult> UpdateViewCount(UpdateViewCountViewModel post)
-        {
-            return Ok(await _repository.UpdateViewCount(post));
-        }
+        //[HttpPut]
+        //[Produces("application/json")]
+        //[Route("UpdateViewCount")]
+        //public async Task<IActionResult> UpdateViewCount(UpdateViewCountViewModel post)
+        //{
+        //    return Ok(await _repository.UpdateViewCount(post));
+        //}
 
-        [HttpPut]
-        [Produces("application/json")]
-        [Route("UpdatePostSave")]
-        public async Task<IActionResult> UpdatePostSave(UpdateViewCountViewModel post)
-        {
-            return Ok(await _repository.UpdatePostSave(post));
-        }
+        //[HttpPut]
+        //[Produces("application/json")]
+        //[Route("UpdatePostSave")]
+        //public async Task<IActionResult> UpdatePostSave(UpdateViewCountViewModel post)
+        //{
+        //    return Ok(await _repository.UpdatePostSave(post));
+        //}
 
         [HttpPut]
         [Produces("application/json")]
@@ -86,12 +86,12 @@ namespace ReportSystemAPI.Controllers
             return Ok(_repository.UpdateShareCount(postID));
         }
 
-        [HttpGet]
-        [Produces("application/json")]
-        [Route("GetListPostSave")]
-        public ActionResult<Post> GetListPostSave(string userID)
-        {
-            return Ok(_repository.GetListPostSave(userID));
-        }
+        //[HttpGet]
+        //[Produces("application/json")]
+        //[Route("GetListPostSave")]
+        //public ActionResult<Post> GetListPostSave(string userID)
+        //{
+        //    return Ok(_repository.GetListPostSave(userID));
+        //}
     }
 }

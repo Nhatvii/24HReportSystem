@@ -17,9 +17,11 @@ namespace _24HReportSystemData.Models
         public int WorkLoad { get; set; }
         [JsonIgnore]
         public int? Specialize { get; set; }
-
+        public string OfficeId { get; set; }
         [JsonIgnore]
         public virtual Account Account { get; set; }
+        [JsonIgnore]
+        public virtual OfficeInfo Office { get; set; }
         public virtual RootCategory SpecializeNavigation { get; set; }
     }
 }

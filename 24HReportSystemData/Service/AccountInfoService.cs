@@ -22,6 +22,7 @@ namespace ReportSystemData.Service
         //void UpdateAccountWordLoad();
         List<AccountInfo> GetMinWorkLoad();
         void UpdateAccountWorkLoad(string email, int workNum);
+        bool UpdateAccountInfoAuthen(string accountID);
     }
     public class AccountInfoService : BaseService<AccountInfo>, IAccountInfoService
     {
@@ -73,11 +74,19 @@ namespace ReportSystemData.Service
                 {
                     accInfo.Address = accountInfo.Address;
                 }
+                if (string.IsNullOrEmpty(accountInfo.Address))
+                {
+                    accInfo.Address = null;
+                }
                 if (accountInfo.IdentityCard != null)
                 {
                     accInfo.IdentityCard = accountInfo.IdentityCard;
                 }
-                if(accountInfo.IsAuthen != null)
+                if (string.IsNullOrEmpty(accountInfo.IdentityCard))
+                {
+                    accInfo.IdentityCard = null;
+                }
+                if (accountInfo.IsAuthen != null)
                 {
                     accInfo.IsAuthen = (bool)accountInfo.IsAuthen;
                 }
@@ -85,6 +94,17 @@ namespace ReportSystemData.Service
                 {
                     accInfo.Specialize = accountInfo.Specialize;
                 }
+                Update(accInfo);
+                return true;
+            }
+            return false;
+        }
+        public bool UpdateAccountInfoAuthen(string accountID)
+        {
+            var accInfo = GetAccountInfoByID(accountID);
+            if (accInfo != null)
+            {
+                accInfo.IsAuthen = true;
                 Update(accInfo);
                 return true;
             }

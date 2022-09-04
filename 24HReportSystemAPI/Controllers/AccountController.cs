@@ -53,9 +53,9 @@ namespace _24HReportSystemAPI.Controllers
         [HttpGet]
         [Route("CheckAccountRegister")]
         [Produces("application/json")]
-        public ActionResult<Report> CheckAccountRegister(string email, string phoneNumber)
+        public ActionResult<Report> CheckAccountRegister(string phoneNumber)
         {
-            return Ok(_repository.CheckAccountRegister(email, phoneNumber));
+            return Ok(_repository.CheckAccountRegister( phoneNumber));
         }
 
         [HttpPost]
@@ -82,6 +82,13 @@ namespace _24HReportSystemAPI.Controllers
         public ActionResult<Account> UpdateAccount(UpdateAccountViewModel account)
         {
             return Ok(_repository.UpdateAccount(account));
+        }
+        [HttpPut]
+        [Produces("application/json")]
+        [Route("UpdateAccountAuthen")]
+        public ActionResult<Account> UpdateAccount(string accountID)
+        {
+            return Ok(_repository.UpdateAccountAuthen(accountID));
         }
     }
 }

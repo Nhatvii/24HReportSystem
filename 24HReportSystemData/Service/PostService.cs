@@ -25,9 +25,9 @@ namespace ReportSystemData.Service
         SuccessResponse UpdatePost(UpdatePostViewModel post);
         SuccessResponse UpdatePublicPost(UpdatePublicPostViewModel post);
         SuccessResponse DeletePost(string id);
-        Task<SuccessResponse> UpdateViewCount(UpdateViewCountViewModel model);
-        Task<SuccessResponse> UpdatePostSave(UpdateViewCountViewModel model);
-        List<Post> GetListPostSave(string userID);
+        SuccessResponse UpdateViewCount(UpdateViewCountViewModel model);
+        //Task<SuccessResponse> UpdatePostSave(UpdateViewCountViewModel model);
+        //List<Post> GetListPostSave(string userID);
         SuccessResponse UpdateShareCount(string postID);
         bool UpdateTaskID(string postID, string taskID);
         Post GetPostWithTaskID(string taskID);
@@ -64,7 +64,7 @@ namespace ReportSystemData.Service
             {
                 post = post.Where(p => p.Category.RootCategory == postParameters.RootCategoryID).ToList();
             }
-            if(postParameters.SubCategoryID.HasValue && postParameters.SubCategoryID > 0)
+            if (postParameters.SubCategoryID.HasValue && postParameters.SubCategoryID > 0)
             {
                 post = post.Where(p => p.Category.CategoryId == postParameters.SubCategoryID).ToList();
             }
@@ -117,7 +117,7 @@ namespace ReportSystemData.Service
             var post = Get().Where(r => r.PostId == id)
                 .Include(p => p.Category).ThenInclude(p => p.RootCategoryNavigation)
                 .Include(p => p.Editor).ThenInclude(p => p.AccountInfo).ToList();
-            if(post[0] == null)
+            if (post[0] == null)
             {
                 throw new ErrorResponse("Bài viết không tồn tại!!!", (int)HttpStatusCode.NotFound);
             }
@@ -245,33 +245,20 @@ namespace ReportSystemData.Service
             throw new ErrorResponse("Bài viết không tồn tại!!!", (int)HttpStatusCode.NotFound);
         }
 
-        public async Task<SuccessResponse> UpdateViewCount(UpdateViewCountViewModel model)
+        public SuccessResponse UpdateViewCount(UpdateViewCountViewModel model)
         {
-            var statusemo = _mapper.Map<EditStatusEmotion>(model);
-            await _emotionService.CreateEmotionView(statusemo);
-
-            var emoPara = new EmotionParameters()
-            {
-                PostId = model.PostId,
-                IsView = true
-            };
-            var listEmo = _emotionService.GetAllEmotion(emoPara);
-            if (listEmo != null)
-            {
-                var post = GetPostById(model.PostId);
-                post.ViewCount = listEmo.Count();
-                Update(post);
-                return new SuccessResponse((int)HttpStatusCode.OK, "Cập nhật thành công");
-            }
-            return new SuccessResponse((int)HttpStatusCode.OK, "Clear");
-        }
-
-        public async Task<SuccessResponse> UpdatePostSave(UpdateViewCountViewModel model)
-        {
-            var emo = _mapper.Map<EditStatusEmotion>(model);
-            await _emotionService.CreateEmotionSave(emo);
+            var post = GetPostById(model.PostId);
+            post.ViewCount = model.Count;
+            Update(post);
             return new SuccessResponse((int)HttpStatusCode.OK, "Cập nhật thành công");
         }
+
+        //public async Task<SuccessResponse> UpdatePostSave(UpdateViewCountViewModel model)
+        //{
+        //    var emo = _mapper.Map<EditStatusEmotion>(model);
+        //    await _emotionService.CreateEmotionSave(emo);
+        //    return new SuccessResponse((int)HttpStatusCode.OK, "Cập nhật thành công");
+        //}
 
         public List<Post> UpdatePostEmoCmtShare(List<Post> post)
         {
@@ -285,27 +272,27 @@ namespace ReportSystemData.Service
             }
             return post;
         }
-        public List<Post> GetListPostSave(string userID)
-        {
-            var listPost = new List<Post>();
-            var listEmo = _emotionService.GetListPostSave(userID);
-            if (listEmo != null)
-            {
-                foreach (var item in listEmo)
-                {
-                    var postTmp = Get().Where(p => p.PostId.Equals(item.PostId) && p.Status.Equals(PostConstrants.STATUS_POST_PUBLIC)).Include(p => p.Category).ThenInclude(p => p.RootCategoryNavigation).Include(p => p.Editor).ThenInclude(p => p.AccountInfo).FirstOrDefault();
-                    if(postTmp != null)
-                    {
-                        listPost.Add(postTmp);
-                    }
-                }
-                if (listPost != null)
-                {
-                    return listPost;
-                }
-            }
-            return null;
-        }
+        //public List<Post> GetListPostSave(string userID)
+        //{
+        //    var listPost = new List<Post>();
+        //    var listEmo = _emotionService.GetListPostSave(userID);
+        //    if (listEmo != null)
+        //    {
+        //        foreach (var item in listEmo)
+        //        {
+        //            var postTmp = Get().Where(p => p.PostId.Equals(item.PostId) && p.Status.Equals(PostConstrants.STATUS_POST_PUBLIC)).Include(p => p.Category).ThenInclude(p => p.RootCategoryNavigation).Include(p => p.Editor).ThenInclude(p => p.AccountInfo).FirstOrDefault();
+        //            if(postTmp != null)
+        //            {
+        //                listPost.Add(postTmp);
+        //            }
+        //        }
+        //        if (listPost != null)
+        //        {
+        //            return listPost;
+        //        }
+        //    }
+        //    return null;
+        //}
 
         public SuccessResponse UpdateShareCount(string postID)
         {
@@ -340,7 +327,7 @@ namespace ReportSystemData.Service
             else
             {
                 var post = Get().Where(p => p.PostId.Equals(postID) && p.IsDelete == false).FirstOrDefault();
-                if(post != null)
+                if (post != null)
                 {
                     post.TaskId = taskID;
                     Update(post);

@@ -6,13 +6,13 @@ using System.Collections.Generic;
 
 namespace _24HReportSystemData.Models
 {
-    public partial class ReportView
+    public partial class PostView
     {
-        public string ReportId { get; set; }
+        public string PostId { get; set; }
         public string UserId { get; set; }
 
         [JsonIgnore]
-        public virtual Report Report { get; set; }
+        public virtual Post Post { get; set; }
         [JsonIgnore]
         public virtual Account User { get; set; }
     }
