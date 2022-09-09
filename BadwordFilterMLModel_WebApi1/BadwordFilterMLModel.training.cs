@@ -8,7 +8,7 @@ using Microsoft.ML.Data;
 using Microsoft.ML.Trainers;
 using Microsoft.ML;
 
-namespace _24HReportSystemData
+namespace BadwordFilterMLModel_WebApi1
 {
     public partial class BadwordFilterMLModel
     {

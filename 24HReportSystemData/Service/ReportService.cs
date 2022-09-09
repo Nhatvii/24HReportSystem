@@ -73,7 +73,7 @@ namespace ReportSystemData.Service
                 .Include(c => c.Staff)
                 .Include(c => c.User)
                 .Include(c => c.Editor)
-                .Include(cate => cate.Category).ThenInclude(c => c.RootCategoryNavigation).ToList();
+                .Include(cate => cate.Category).ToList();
             if (reportParameters.Status.HasValue && reportParameters.Status > 0)
             {
                 reports = GetListReportWithStatus(reportParameters.Status);
@@ -351,7 +351,7 @@ namespace ReportSystemData.Service
                     if (report.CategoryId != 1)
                     {
                         var rootCate = _categoryService.GetCategoryByID(report.CategoryId);
-                        var acc = _accountService.GetMinWorkLoad(rootCate.RootCategory);
+                        var acc = _accountService.GetMinWorkLoad((int)rootCate.RootCategoryId);
                         if(acc == null)
                         {
                             throw new ErrorResponse("Không thể tìm thấy Editor phù hợp cho task này!!!", (int)HttpStatusCode.NotFound);

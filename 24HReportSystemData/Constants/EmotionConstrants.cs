@@ -11,5 +11,6 @@ namespace _24HReportSystemData.Constants
         public const string STATUS_EMOTION_VIEW = "View";
         public const string STATUS_EMOTION_LIKE = "Like";
         public const string STATUS_EMOTION_UNLIKE = "Unlike";
+        public const string STATUS_EMOTION_SAVE = "Save";
     }
 }

@@ -52,7 +52,7 @@ namespace ReportSystemData.Service
         public List<Post> GetAllPost(PostParameters postParameters)
         {
             var post = Get().Where(p => p.IsDelete == false)
-                .Include(p => p.Category).ThenInclude(p => p.RootCategoryNavigation)
+                .Include(p => p.Category).ThenInclude(p => p.RootCategory)
                 .Include(p => p.Editor).ThenInclude(p => p.AccountInfo)
                 .Include(p => p.Editor).ThenInclude(p => p.Role).ToList();
             UpdatePostEmoCmtShare(post);
@@ -62,7 +62,7 @@ namespace ReportSystemData.Service
             }
             if (postParameters.RootCategoryID.HasValue && postParameters.RootCategoryID > 0)
             {
-                post = post.Where(p => p.Category.RootCategory == postParameters.RootCategoryID).ToList();
+                post = post.Where(p => p.Category.RootCategoryId == postParameters.RootCategoryID).ToList();
             }
             if (postParameters.SubCategoryID.HasValue && postParameters.SubCategoryID > 0)
             {
@@ -115,7 +115,7 @@ namespace ReportSystemData.Service
         public Post GetPostById(string id)
         {
             var post = Get().Where(r => r.PostId == id)
-                .Include(p => p.Category).ThenInclude(p => p.RootCategoryNavigation)
+                .Include(p => p.Category)
                 .Include(p => p.Editor).ThenInclude(p => p.AccountInfo).ToList();
             if (post[0] == null)
             {
@@ -264,7 +264,7 @@ namespace ReportSystemData.Service
         {
             foreach (var item in post)
             {
-                var listLike = _emotionService.GetAllEmotion(new EmotionParameters() { PostId = item.PostId, EmotionStatus = true });
+                var listLike = _emotionService.GetAllEmotion(new EmotionParameters() { PostId = item.PostId, EmotionStatus = EmotionConstrants.STATUS_EMOTION_LIKE });
                 item.LikeCount = listLike.Count();
                 var listCmt = _commentService.GetAllComment(new CommentParameters() { PostId = item.PostId });
                 item.CommentCount = listCmt.Count();

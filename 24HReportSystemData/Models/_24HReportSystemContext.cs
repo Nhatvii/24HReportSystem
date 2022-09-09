@@ -26,16 +26,11 @@ namespace _24HReportSystemData.Models
         public virtual DbSet<Emotion> Emotions { get; set; }
         public virtual DbSet<OfficeInfo> OfficeInfos { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
-        public virtual DbSet<PostSave> PostSaves { get; set; }
-        public virtual DbSet<PostView> PostViews { get; set; }
-        public virtual DbSet<Promotion> Promotions { get; set; }
-        public virtual DbSet<PromotionHistory> PromotionHistories { get; set; }
         public virtual DbSet<Report> Reports { get; set; }
         public virtual DbSet<ReportDetail> ReportDetails { get; set; }
         public virtual DbSet<ReportTask> ReportTasks { get; set; }
         public virtual DbSet<ReportView> ReportViews { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
-        public virtual DbSet<RootCategory> RootCategories { get; set; }
         public virtual DbSet<Task> Tasks { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -97,6 +92,8 @@ namespace _24HReportSystemData.Models
                     .HasMaxLength(50)
                     .HasColumnName("Office_ID");
 
+                entity.Property(e => e.TotalScore).HasColumnName("Total_Score");
+
                 entity.Property(e => e.Username)
                     .IsRequired()
                     .HasMaxLength(30);
@@ -115,7 +112,7 @@ namespace _24HReportSystemData.Models
                 entity.HasOne(d => d.SpecializeNavigation)
                     .WithMany(p => p.AccountInfos)
                     .HasForeignKey(d => d.Specialize)
-                    .HasConstraintName("FK_Account_Info_Root_Category");
+                    .HasConstraintName("FK_Account_Info_Category");
             });
 
             modelBuilder.Entity<Board>(entity =>
@@ -157,18 +154,16 @@ namespace _24HReportSystemData.Models
                     .ValueGeneratedNever()
                     .HasColumnName("Category_ID");
 
-                entity.Property(e => e.RootCategory).HasColumnName("Root_Category");
+                entity.Property(e => e.RootCategoryId).HasColumnName("Root_Category_ID");
 
-                entity.Property(e => e.SubCategory)
+                entity.Property(e => e.Type)
                     .IsRequired()
-                    .HasMaxLength(50)
-                    .HasColumnName("Sub_Category");
+                    .HasMaxLength(50);
 
-                entity.HasOne(d => d.RootCategoryNavigation)
-                    .WithMany(p => p.Categories)
-                    .HasForeignKey(d => d.RootCategory)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Category_Root_Category");
+                entity.HasOne(d => d.RootCategory)
+                    .WithMany(p => p.InverseRootCategory)
+                    .HasForeignKey(d => d.RootCategoryId)
+                    .HasConstraintName("FK_Category_Category");
             });
 
             modelBuilder.Entity<Comment>(entity =>
@@ -243,7 +238,10 @@ namespace _24HReportSystemData.Models
                     .HasMaxLength(50)
                     .HasColumnName("User_ID");
 
-                entity.Property(e => e.EmotionStatus).HasColumnName("Emotion_Status");
+                entity.Property(e => e.EmotionStatus)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnName("Emotion_Status");
 
                 entity.HasOne(d => d.Post)
                     .WithMany(p => p.Emotions)
@@ -365,117 +363,6 @@ namespace _24HReportSystemData.Models
                     .WithMany(p => p.Posts)
                     .HasForeignKey(d => d.TaskId)
                     .HasConstraintName("FK_Post_Task");
-            });
-
-            modelBuilder.Entity<PostSave>(entity =>
-            {
-                entity.HasKey(e => new { e.PostId, e.UserId });
-
-                entity.ToTable("Post_Save");
-
-                entity.Property(e => e.PostId)
-                    .HasMaxLength(50)
-                    .HasColumnName("Post_ID");
-
-                entity.Property(e => e.UserId)
-                    .HasMaxLength(50)
-                    .HasColumnName("User_ID");
-
-                entity.HasOne(d => d.Post)
-                    .WithMany(p => p.PostSaves)
-                    .HasForeignKey(d => d.PostId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Post_Save_Post");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.PostSaves)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Post_Save_Account");
-            });
-
-            modelBuilder.Entity<PostView>(entity =>
-            {
-                entity.HasKey(e => new { e.PostId, e.UserId });
-
-                entity.ToTable("Post_View");
-
-                entity.Property(e => e.PostId)
-                    .HasMaxLength(50)
-                    .HasColumnName("Post_ID");
-
-                entity.Property(e => e.UserId)
-                    .HasMaxLength(50)
-                    .HasColumnName("User_ID");
-
-                entity.HasOne(d => d.Post)
-                    .WithMany(p => p.PostViews)
-                    .HasForeignKey(d => d.PostId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Post_View_Post");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.PostViews)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Post_View_Account");
-            });
-
-            modelBuilder.Entity<Promotion>(entity =>
-            {
-                entity.ToTable("Promotion");
-
-                entity.Property(e => e.PromotionId)
-                    .HasMaxLength(50)
-                    .HasColumnName("Promotion_ID");
-
-                entity.Property(e => e.TotalScore).HasColumnName("Total_Score");
-
-                entity.Property(e => e.UserId)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .HasColumnName("User_ID");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Promotions)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Promotion_Account");
-            });
-
-            modelBuilder.Entity<PromotionHistory>(entity =>
-            {
-                entity.ToTable("Promotion_History");
-
-                entity.Property(e => e.PromotionHistoryId)
-                    .HasMaxLength(50)
-                    .HasColumnName("Promotion_History_ID");
-
-                entity.Property(e => e.CreateTime)
-                    .HasColumnType("datetime")
-                    .HasColumnName("Create_Time");
-
-                entity.Property(e => e.PromotionId)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .HasColumnName("Promotion_ID");
-
-                entity.Property(e => e.ReportId)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .HasColumnName("Report_ID");
-
-                entity.HasOne(d => d.Promotion)
-                    .WithMany(p => p.PromotionHistories)
-                    .HasForeignKey(d => d.PromotionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Promotion_History_Promotion");
-
-                entity.HasOne(d => d.Report)
-                    .WithMany(p => p.PromotionHistories)
-                    .HasForeignKey(d => d.ReportId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Promotion_History_Report");
             });
 
             modelBuilder.Entity<Report>(entity =>
@@ -646,19 +533,6 @@ namespace _24HReportSystemData.Models
                     .IsRequired()
                     .HasMaxLength(50)
                     .HasColumnName("Role_Name");
-            });
-
-            modelBuilder.Entity<RootCategory>(entity =>
-            {
-                entity.ToTable("Root_Category");
-
-                entity.Property(e => e.RootCategoryId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("Root_Category_ID");
-
-                entity.Property(e => e.Type)
-                    .IsRequired()
-                    .HasMaxLength(50);
             });
 
             modelBuilder.Entity<Task>(entity =>

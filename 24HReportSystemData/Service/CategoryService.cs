@@ -29,27 +29,32 @@ namespace ReportSystemData.Service
     public partial class CategoryService : BaseService<Category>, ICategoryService
     {
         private readonly IMapper _mapper;
-        private readonly IRootCategoryService _rootCategoryService;
-        public CategoryService(DbContext context, IMapper mapper, ICategoryRepository repository, IRootCategoryService rootCategoryService) : base(context, repository)
+        public CategoryService(DbContext context, IMapper mapper, ICategoryRepository repository) : base(context, repository)
         {
             _dbContext = context;
             _mapper = mapper;
-            _rootCategoryService = rootCategoryService;
         }
 
         public List<Category> GetAllCategory(SubCategoryParameters subCategoryParameters)
         {
-            var category = Get().Where(r => r.CategoryId != 1).Include(r => r.RootCategoryNavigation).ToList();
+            var category = Get().ToList();
             if(subCategoryParameters.RootCategoryId.HasValue || subCategoryParameters.RootCategoryId > 0)
             {
-                category = category.Where(p => p.RootCategory == subCategoryParameters.RootCategoryId).ToList();
+                category = category.Where(p => p.RootCategoryId == subCategoryParameters.RootCategoryId).ToList();
+            }
+            if(subCategoryParameters.IsRootCategory != null)
+            {
+                if((bool)subCategoryParameters.IsRootCategory)
+                {
+                    category = category.Where(p => p.RootCategoryId == null).ToList();
+                }
             }
             return category;
         }
 
         public Category GetCategoryByID(int id)
         {
-            var category = Get().Where(r => r.CategoryId == id).Include(r => r.RootCategoryNavigation).FirstOrDefault();
+            var category = Get().Where(r => r.CategoryId == id).FirstOrDefault();
             return category;
         }
         
@@ -60,13 +65,9 @@ namespace ReportSystemData.Service
             {
                 throw new ErrorResponse("Danh mục phụ này đã tồn tại", (int)HttpStatusCode.Conflict);
             }
-            var check = _rootCategoryService.GetRootCategoryByID(cate.RootCategoryID);
-            if (check == null)
-            {
-                throw new ErrorResponse("Danh mục gốc không tồn tại!!!", (int)HttpStatusCode.NotFound);
-            }
             var cateTmp = _mapper.Map<Category>(cate);
-            cateTmp.RootCategory = cate.RootCategoryID;
+            cateTmp.RootCategoryId = cate.RootCategoryID;
+            cateTmp.Type = cate.SubCategory;
             await CreateAsyn(cateTmp);
             return new SuccessResponse((int)HttpStatusCode.OK, "Tạo thành công");
         }
@@ -82,8 +83,11 @@ namespace ReportSystemData.Service
             //    }
             //}
             var cateTmp = Get().Where(r => r.CategoryId == cate.CategoryId).FirstOrDefault();
-            cateTmp.SubCategory = cate.SubCategory;
-            cateTmp.RootCategory = cate.RootCategory;
+            cateTmp.Type = cate.SubCategory;
+            if (cate.RootCategory.HasValue && cate.RootCategory > 0)
+            {
+                cateTmp.RootCategoryId = cate.RootCategory;
+            }
             Update(cateTmp);
             return new SuccessResponse((int)HttpStatusCode.OK, "Cập nhật thành công");
         }
@@ -109,7 +113,7 @@ namespace ReportSystemData.Service
         }
         public bool CheckAvaiCategoryWithRoot(int id)
         {
-            var check = Get().Where(r => r.RootCategory == id).FirstOrDefault();
+            var check = Get().Where(r => r.RootCategoryId == id).FirstOrDefault();
             if(check == null)
             {
                 return true;
@@ -118,7 +122,7 @@ namespace ReportSystemData.Service
         }
         public bool CheckDuplicateCategoryType(string cateType)
         {
-            var check = Get().Where(p => p.SubCategory.Equals(cateType.ToLower())).FirstOrDefault();
+            var check = Get().Where(p => p.Type.ToLower().Equals(cateType.ToLower())).FirstOrDefault();
             if(check != null)
             {
                 return true;

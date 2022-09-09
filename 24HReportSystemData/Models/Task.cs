@@ -29,7 +29,6 @@ namespace _24HReportSystemData.Models
         public virtual Board Board { get; set; }
         [JsonIgnore]
         public virtual Account Editor { get; set; }
-        [JsonIgnore]
         public virtual Task SubTask { get; set; }
         [JsonIgnore]
         public virtual ICollection<Task> InverseSubTask { get; set; }

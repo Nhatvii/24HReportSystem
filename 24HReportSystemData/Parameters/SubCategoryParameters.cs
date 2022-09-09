@@ -9,5 +9,6 @@ namespace _24HReportSystemData.Parameters
     public class SubCategoryParameters
     {
         public int? RootCategoryId { get; set; }
+        public bool? IsRootCategory { get; set; }
     }
 }

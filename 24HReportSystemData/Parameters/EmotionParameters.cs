@@ -10,7 +10,6 @@ namespace _24HReportSystemData.Parameters
     {
         public string PostId { get; set; }
         public string UserId { get; set; }
-        public bool? EmotionStatus { get; set; }
-        public bool? IsView { get; set; }
+        public string? EmotionStatus { get; set; }
     }
 }

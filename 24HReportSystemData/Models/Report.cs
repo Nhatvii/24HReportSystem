@@ -10,7 +10,6 @@ namespace _24HReportSystemData.Models
     {
         public Report()
         {
-            PromotionHistories = new HashSet<PromotionHistory>();
             ReportDetails = new HashSet<ReportDetail>();
             ReportTasks = new HashSet<ReportTask>();
             ReportViews = new HashSet<ReportView>();
@@ -29,6 +28,7 @@ namespace _24HReportSystemData.Models
         public string EditorId { get; set; }
         public string Status { get; set; }
         public bool IsDelete { get; set; }
+        public int Score { get; set; }
 
         [JsonIgnore]
         public virtual Category Category { get; set; }
@@ -38,8 +38,6 @@ namespace _24HReportSystemData.Models
         public virtual Account Staff { get; set; }
         [JsonIgnore]
         public virtual Account User { get; set; }
-        [JsonIgnore]
-        public virtual ICollection<PromotionHistory> PromotionHistories { get; set; }
         public virtual ICollection<ReportDetail> ReportDetails { get; set; }
         [JsonIgnore]
         public virtual ICollection<ReportTask> ReportTasks { get; set; }

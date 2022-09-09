@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.32228.343
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "24HReportSystemData", "24HReportSystemData\24HReportSystemData.csproj", "{5BAD8CED-7EB4-4F49-A808-3CEACB371A94}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "24HReportSystemData", "24HReportSystemData\24HReportSystemData.csproj", "{5BAD8CED-7EB4-4F49-A808-3CEACB371A94}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "24HReportSystemAPI", "24HReportSystemAPI\24HReportSystemAPI.csproj", "{120C90D9-F736-43DB-AE76-CF629D367B6F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "24HReportSystemAPI", "24HReportSystemAPI\24HReportSystemAPI.csproj", "{120C90D9-F736-43DB-AE76-CF629D367B6F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

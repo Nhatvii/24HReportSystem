@@ -12,8 +12,6 @@ namespace _24HReportSystemData.Models
         {
             Comments = new HashSet<Comment>();
             Emotions = new HashSet<Emotion>();
-            PostSaves = new HashSet<PostSave>();
-            PostViews = new HashSet<PostView>();
         }
 
         public string PostId { get; set; }
@@ -45,9 +43,5 @@ namespace _24HReportSystemData.Models
         public virtual ICollection<Comment> Comments { get; set; }
         [JsonIgnore]
         public virtual ICollection<Emotion> Emotions { get; set; }
-        [JsonIgnore]
-        public virtual ICollection<PostSave> PostSaves { get; set; }
-        [JsonIgnore]
-        public virtual ICollection<PostView> PostViews { get; set; }
     }
 }

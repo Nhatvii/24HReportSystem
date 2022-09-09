@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using System.IO;
 using System.Collections.Generic;
-namespace _24HReportSystemData
+namespace BadwordFilterMLModel_ConsoleApp1
 {
     public partial class BadwordFilterMLModel
     {

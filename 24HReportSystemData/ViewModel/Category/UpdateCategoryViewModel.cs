@@ -13,6 +13,6 @@ namespace ReportSystemData.ViewModel.Category
         [StringLength(50)]
         [Required]
         public string SubCategory { get; set; }
-        public int RootCategory { get; set; }
+        public int? RootCategory { get; set; }
     }
 }
