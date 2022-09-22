@@ -74,9 +74,9 @@ namespace ReportSystemAPI.Controllers
         [HttpPut]
         [Produces("application/json")]
         [Route("CategoryUpdate")]
-        public ActionResult ChangeReportCategory(string id, int categoryID, string staffID)
+        public ActionResult ChangeReportCategory(ChangeReportCateViewModel model)
         {
-            return Ok(_repository.ChangeReportCategory(id, categoryID, staffID));
+            return Ok(_repository.ChangeReportCategory(model));
         }
         [HttpGet]
         [Produces("application/json")]

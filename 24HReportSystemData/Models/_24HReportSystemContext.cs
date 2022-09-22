@@ -24,6 +24,7 @@ namespace _24HReportSystemData.Models
         public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<CommentBadword> CommentBadwords { get; set; }
         public virtual DbSet<Emotion> Emotions { get; set; }
+        public virtual DbSet<NotifyInfo> NotifyInfos { get; set; }
         public virtual DbSet<OfficeInfo> OfficeInfos { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
         public virtual DbSet<Report> Reports { get; set; }
@@ -45,28 +46,54 @@ namespace _24HReportSystemData.Models
             {
                 entity.ToTable("Account");
 
+                entity.HasIndex(e => e.PhoneNumber, "IX_Phone_Number")
+                    .IsUnique();
+
                 entity.Property(e => e.AccountId)
                     .HasMaxLength(50)
                     .HasColumnName("Account_ID");
 
                 entity.Property(e => e.Email).HasMaxLength(50);
 
-                entity.Property(e => e.Password)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                entity.Property(e => e.IsActive).HasColumnName("Is_Active");
+
+                entity.Property(e => e.IsAuthen).HasColumnName("Is_Authen");
+
+                entity.Property(e => e.OfficeId)
+                    .HasMaxLength(50)
+                    .HasColumnName("Office_ID");
+
+                entity.Property(e => e.Password).IsRequired();
 
                 entity.Property(e => e.PhoneNumber)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .HasColumnName("Phone_Number")
                     .IsFixedLength(true);
 
                 entity.Property(e => e.RoleId).HasColumnName("Role_ID");
 
+                entity.Property(e => e.TokenId)
+                    .HasMaxLength(200)
+                    .HasColumnName("Token_ID");
+
+                entity.Property(e => e.TotalScore).HasColumnName("Total_Score");
+
+                entity.HasOne(d => d.Office)
+                    .WithMany(p => p.Accounts)
+                    .HasForeignKey(d => d.OfficeId)
+                    .HasConstraintName("FK_Account_Office_Info");
+
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.Accounts)
                     .HasForeignKey(d => d.RoleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Account_Role");
+
+                entity.HasOne(d => d.SpecializeNavigation)
+                    .WithMany(p => p.Accounts)
+                    .HasForeignKey(d => d.Specialize)
+                    .HasConstraintName("FK_Account_Category");
             });
 
             modelBuilder.Entity<AccountInfo>(entity =>
@@ -81,38 +108,20 @@ namespace _24HReportSystemData.Models
 
                 entity.Property(e => e.Address).HasMaxLength(200);
 
+                entity.Property(e => e.Fullname)
+                    .IsRequired()
+                    .HasMaxLength(30);
+
                 entity.Property(e => e.IdentityCard)
                     .HasMaxLength(12)
                     .HasColumnName("Identity_Card")
                     .IsFixedLength(true);
-
-                entity.Property(e => e.IsAuthen).HasColumnName("Is_Authen");
-
-                entity.Property(e => e.OfficeId)
-                    .HasMaxLength(50)
-                    .HasColumnName("Office_ID");
-
-                entity.Property(e => e.TotalScore).HasColumnName("Total_Score");
-
-                entity.Property(e => e.Username)
-                    .IsRequired()
-                    .HasMaxLength(30);
 
                 entity.HasOne(d => d.Account)
                     .WithOne(p => p.AccountInfo)
                     .HasForeignKey<AccountInfo>(d => d.AccountId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Account_Info_Account");
-
-                entity.HasOne(d => d.Office)
-                    .WithMany(p => p.AccountInfos)
-                    .HasForeignKey(d => d.OfficeId)
-                    .HasConstraintName("FK_Account_Info_Office_Info");
-
-                entity.HasOne(d => d.SpecializeNavigation)
-                    .WithMany(p => p.AccountInfos)
-                    .HasForeignKey(d => d.Specialize)
-                    .HasConstraintName("FK_Account_Info_Category");
             });
 
             modelBuilder.Entity<Board>(entity =>
@@ -256,6 +265,60 @@ namespace _24HReportSystemData.Models
                     .HasConstraintName("FK_Emotion_Account");
             });
 
+            modelBuilder.Entity<NotifyInfo>(entity =>
+            {
+                entity.HasKey(e => e.NotifyId);
+                entity.ToTable("Notify_Info");
+
+                entity.Property(e => e.AcceptedDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("Accepted_Date");
+
+                entity.Property(e => e.Latitude).HasColumnType("decimal(8, 6)");
+
+                entity.Property(e => e.Longitude).HasColumnType("decimal(9, 6)");
+
+                entity.Property(e => e.NotifyId)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnName("Notify_ID");
+
+                entity.Property(e => e.NotifyStatus).HasColumnName("Notify_Status");
+
+                entity.Property(e => e.OfficeId)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnName("Office_ID");
+
+                entity.Property(e => e.OfficerId)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnName("Officer_ID");
+
+                entity.Property(e => e.UserId)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnName("User_ID");
+
+                entity.HasOne(d => d.Office)
+                    .WithMany()
+                    .HasForeignKey(d => d.OfficeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Notify_Info_Office_Info");
+
+                entity.HasOne(d => d.Officer)
+                    .WithMany()
+                    .HasForeignKey(d => d.OfficerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Notify_Info_Account");
+
+                entity.HasOne(d => d.User)
+                    .WithMany()
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Notify_Info_Account1");
+            });
+
             modelBuilder.Entity<OfficeInfo>(entity =>
             {
                 entity.HasKey(e => e.OfficeId);
@@ -266,9 +329,15 @@ namespace _24HReportSystemData.Models
                     .HasMaxLength(50)
                     .HasColumnName("Office_ID");
 
+                entity.Property(e => e.ActiveOfficer).HasColumnName("Active_Officer");
+
                 entity.Property(e => e.District)
                     .IsRequired()
                     .HasMaxLength(100);
+
+                entity.Property(e => e.IsActive).HasColumnName("Is_Active");
+
+                entity.Property(e => e.IsDelete).HasColumnName("Is_Delete");
 
                 entity.Property(e => e.Latitude).HasColumnType("decimal(8, 6)");
 

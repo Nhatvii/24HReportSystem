@@ -72,6 +72,7 @@ namespace _24HReportSystemAPI.Controllers
         }
 
         [HttpPost]
+        [Produces("application/json")]
         [Route("Register")]
         public async Task<IActionResult> Register(CreateAccountViewModel acc)
         {

@@ -1,4 +1,6 @@
 ﻿using _24HReportSystemData.Models;
+using _24HReportSystemData.ViewModel.Notify;
+using _24HReportSystemData.ViewModel.Office;
 using _24HReportSystemData.ViewModel.Report;
 using AutoMapper;
 using ReportSystemData.Parameter.Report;
@@ -34,6 +36,10 @@ namespace _24HReportSystemData.AutoMapper
 
             CreateMap<ReportResponseWithUserID, Report>();
             CreateMap<Report, ReportResponseWithUserID>();
+
+            CreateMap<CreateOfficeViewModel, OfficeInfo>();
+
+            CreateMap<CreateNotifyViewModel, NotifyInfo>();
         }
     }
 }

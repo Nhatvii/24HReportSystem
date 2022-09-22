@@ -23,12 +23,24 @@ namespace _24HReportSystemData.Models
 
         public string AccountId { get; set; }
         public string Email { get; set; }
+        [JsonIgnore]
         public string Password { get; set; }
         [JsonIgnore]
         public int RoleId { get; set; }
         public string PhoneNumber { get; set; }
+        public bool IsAuthen { get; set; }
+        public int WorkLoad { get; set; }
+        [JsonIgnore]
+        public int? Specialize { get; set; }
+        public int TotalScore { get; set; }
+        public string OfficeId { get; set; }
+        public string TokenId { get; set; }
+        public bool IsActive { get; set; }
 
+        [JsonIgnore]
+        public virtual OfficeInfo Office { get; set; }
         public virtual Role Role { get; set; }
+        public virtual Category SpecializeNavigation { get; set; }
         public virtual AccountInfo AccountInfo { get; set; }
         [JsonIgnore]
         public virtual ICollection<Board> Boards { get; set; }

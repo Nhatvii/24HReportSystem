@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -34,24 +35,35 @@ namespace ReportSystemData.Service
         Account GetMinWorkLoad(int rootCate);
         Task<Account> LoginWithGoogleAsync(string email);
         SuccessResponse UpdateAccountAuthen(string accountID);
+        bool UpdateAccountWorkLoad(string email, int workNum);
+        int CheckAccountIsActiveNotify(string officeID);
+        Account GetAccountNotify(string officeID);
+
     }
     public partial class AccountService : BaseService<Account>, IAccountService
     {
         private readonly IAccountInfoService _accountInfoService;
-        public AccountService(DbContext context, IAccountRepository repository, IAccountInfoService accountInfoService) : base(context, repository)
+        private readonly ICategoryService _categoryService;
+        public AccountService(DbContext context, IAccountRepository repository, IAccountInfoService accountInfoService, ICategoryService categoryService) : base(context, repository)
         {
             _dbContext = context;
             _accountInfoService = accountInfoService;
+            _categoryService = categoryService;
         }
         public List<Account> GetAllAccount()
         {
-            var account = Get().Include(role => role.Role).Include(info => info.AccountInfo).ThenInclude(p => p.SpecializeNavigation).ToList();
+            var account = Get().Include(role => role.Role).Include(info => info.AccountInfo).ToList();
             return account;
         }
         public List<Account> GetAllEditorAccount()
         {
             var listAcc = Get().Where(p => p.RoleId == 3).ToList();
             return listAcc;
+        }
+        public Account GetAccountNotify(string officeID)
+        {
+            var account = Get().Where(p => p.OfficeId.Equals(officeID) && p.TokenId != null && p.IsActive == true).FirstOrDefault();
+            return account;
         }
         public Account Login(LoginParameter login)
         {
@@ -61,7 +73,7 @@ namespace ReportSystemData.Service
             //}
             var isEmail = Regex.IsMatch(login.Account, @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z", RegexOptions.IgnoreCase);
             var isPhoneNumber = Regex.IsMatch(login.Account, @"^[0-9]{10}$", RegexOptions.IgnoreCase);
-            if(isEmail && isPhoneNumber)
+            if (isEmail && isPhoneNumber)
             {
                 throw new ErrorResponse("Email hoặc mật khấu không hợp lệ!!!", (int)HttpStatusCode.NotFound);
             }
@@ -93,7 +105,7 @@ namespace ReportSystemData.Service
         }
         public async Task<Account> LoginWithGoogleAsync(string email)
         {
-            if(FirebaseApp.DefaultInstance == null)
+            if (FirebaseApp.DefaultInstance == null)
             {
                 FirebaseApp.Create(new AppOptions()
                 {
@@ -103,11 +115,10 @@ namespace ReportSystemData.Service
             try
             {
                 var account = await FirebaseAuth.DefaultInstance.GetUserByEmailAsync(email);
-                if(account.EmailVerified)
+                if (account.EmailVerified)
                 {
                     var tmpAcc = Get().Where(p => p.Email.Equals(account.Email))
                         .Include(r => r.AccountInfo)
-                        .ThenInclude(p => p.SpecializeNavigation)
                         .Include(r => r.Role)
                         .FirstOrDefault();
                     if (tmpAcc != null)
@@ -143,8 +154,8 @@ namespace ReportSystemData.Service
         {
             var acc = Get().Where(ac => ac.AccountId.Equals(email))
                 .Include(r => r.AccountInfo)
-                .ThenInclude(p => p.SpecializeNavigation)
                 .Include(r => r.Role)
+                .Include(r => r.SpecializeNavigation)
                 .FirstOrDefault();
             if (acc != null)
             {
@@ -160,7 +171,7 @@ namespace ReportSystemData.Service
             //    throw new ErrorResponse("Email hoặc số điện thoại đã tồn tại!!!", (int)HttpStatusCode.NotFound);
             //}
             var checkDupliPhone = Get().Where(ac => ac.PhoneNumber.Equals(phoneNumber)).FirstOrDefault();
-            if(checkDupliPhone != null)
+            if (checkDupliPhone != null)
             {
                 throw new ErrorResponse("Số điện thoại đã tồn tại!!!", (int)HttpStatusCode.NotFound);
             }
@@ -171,17 +182,19 @@ namespace ReportSystemData.Service
             //}
             //if (acc == null)
             //{
-                return new SuccessResponse((int)HttpStatusCode.OK, "Số điện thoại hợp lệ");
+            return new SuccessResponse((int)HttpStatusCode.OK, "Số điện thoại hợp lệ");
             //}
             //throw new ErrorResponse("Email hoặc số điện thoại không hợp lệ!!!", (int)HttpStatusCode.NotFound);
         }
         public SuccessResponse UpdateAccountAuthen(string accountID)
         {
-            if(!String.IsNullOrEmpty(accountID))
+            if (!String.IsNullOrEmpty(accountID))
             {
-                var check = _accountInfoService.UpdateAccountInfoAuthen(accountID);
-                if(check)
+                var acc = GetAccountByID(accountID);
+                if (acc != null)
                 {
+                    acc.IsAuthen = true;
+                    Update(acc);
                     return new SuccessResponse((int)HttpStatusCode.OK, "Tài khoản đã được xác minh");
                 }
                 throw new ErrorResponse("Tài khoản xác minh thất bại!!!", (int)HttpStatusCode.NotFound);
@@ -226,22 +239,25 @@ namespace ReportSystemData.Service
                     throw new ErrorResponse("Sai định dạng chứng minh nhân dân!!!", (int)HttpStatusCode.NotFound);
                 }
             }
-
+            var pass = QuickHash(account.Password);
             var accountTmp = new Account()
             {
                 AccountId = Guid.NewGuid().ToString(),
                 Email = account.Email,
-                Password = account.Password,
+                Password = pass,
                 RoleId = account.RoleId,
-                PhoneNumber = account.PhoneNumber
+                PhoneNumber = account.PhoneNumber,
+                WorkLoad = 0,
+                TotalScore = 0,
+                OfficeId = !String.IsNullOrEmpty(account.OfficeId) ? account.OfficeId : null,
+                TokenId = !String.IsNullOrEmpty(account.TokenId) ? account.TokenId : null
             };
             var accountInfoTmp = new AccountInfo()
             {
                 AccountId = accountTmp.AccountId,
-                Username = account.Username,
+                Fullname = account.Username,
                 Address = account.Address,
                 IdentityCard = account.IdentityCard,
-                WorkLoad = 0
             };
             await CreateAsyn(accountTmp);
             var check = await _accountInfoService.CreateAccountInfoAsync(accountInfoTmp);
@@ -256,7 +272,24 @@ namespace ReportSystemData.Service
             }
             throw new ErrorResponse("Email này đã tồn tại. Vui lòng chọn Email khác!!!", (int)HttpStatusCode.NoContent);
         }
-
+        public string ParseSHA256(string randomString)
+        {
+            var crypt = new System.Security.Cryptography.SHA256Managed();
+            var hash = new System.Text.StringBuilder();
+            byte[] crypto = crypt.ComputeHash(Encoding.UTF8.GetBytes(randomString));
+            foreach (byte theByte in crypto)
+            {
+                hash.Append(theByte.ToString("x2"));
+            }
+            return hash.ToString();
+        }
+        public string QuickHash(string secret)
+        {
+            using var sha256 = SHA256.Create();
+            var secretBytes = Encoding.UTF8.GetBytes(secret);
+            var secretHash = sha256.ComputeHash(secretBytes);
+            return Convert.ToHexString(secretHash);
+        }
         public SuccessResponse UpdateAccount(UpdateAccountViewModel model)
         {
             var account = GetAccountByID(model.AccountID);
@@ -297,10 +330,10 @@ namespace ReportSystemData.Service
                     if (!isEmail)
                     {
                         throw new ErrorResponse("Sai định dạng Email!!!", (int)HttpStatusCode.NotFound);
-                    }else
+                    }
+                    else
                     {
                         account.Email = model.Email;
-                        Update(account);
                     }
                 }
                 if (model.PhoneNumber != null)
@@ -313,7 +346,6 @@ namespace ReportSystemData.Service
                     else
                     {
                         account.PhoneNumber = model.PhoneNumber;
-                        Update(account);
                     }
                 }
                 if (model.IdentityCard != null)
@@ -327,8 +359,25 @@ namespace ReportSystemData.Service
                 if (model.Password != null)
                 {
                     account.Password = model.Password;
-                    Update(account);
                 }
+                if (model.Specialize.HasValue && model.Specialize > 0)
+                {
+                    var checkAvaiCate = _categoryService.CheckAvaiCategoryWithRoot((int)model.Specialize);
+                    if (!checkAvaiCate)
+                    {
+                        throw new ErrorResponse("Danh mục không tồn tại!!!", (int)HttpStatusCode.NotFound);
+                    }
+                    account.Specialize = model.Specialize;
+                }
+                if (model.TokenId != null)
+                {
+                    account.TokenId = model.TokenId;
+                }
+                if (model.IsActive != null)
+                {
+                    account.IsActive = (bool)model.IsActive;
+                }
+                Update(account);
                 var check = _accountInfoService.UpdateAccountInfo(model);
                 if (check)
                 {
@@ -341,19 +390,47 @@ namespace ReportSystemData.Service
 
         public Account GetMinWorkLoad(int rootCate)
         {
-            var acc = _accountInfoService.GetMinWorkLoad();
-            var listAcc = Get().Where(p => p.RoleId == 3).ToList();
-            foreach (var item in acc)
+            var listAcc = Get().Where(p => p.RoleId == 3).OrderBy(p => p.WorkLoad).ToList();
+            foreach (var item in listAcc)
             {
-                foreach (var items in listAcc)
+                if (item.Specialize == rootCate)
                 {
-                    if(item.AccountId.Equals(items.AccountId) && item.Specialize == rootCate)
-                    {
-                        return items;
-                    }
+                    return item;
                 }
             }
             return null;
+        }
+        public bool UpdateAccountWorkLoad(string accountID, int workNum)
+        {
+            var acc = GetAccountByID(accountID);
+            if (acc != null)
+            {
+                acc.WorkLoad = workNum;
+                Update(acc);
+                return true;
+            }
+            return false;
+        }
+
+        public int CheckAccountIsActiveNotify(string officeID)
+        {
+            var listAcc = Get().Where(p => p.OfficeId.Equals(officeID)).ToList();
+            if (listAcc != null)
+            {
+                var activeOfficerNum = 0;
+                foreach (var item in listAcc)
+                {
+                    if (item.IsActive)
+                    {
+                        activeOfficerNum++;
+                    }
+                }
+                if (activeOfficerNum != 0)
+                {
+                    return activeOfficerNum;
+                }
+            }
+            return 0;
         }
     }
 }

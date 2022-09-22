@@ -113,8 +113,8 @@ namespace ReportSystemData.Service
         }
         public bool CheckAvaiCategoryWithRoot(int id)
         {
-            var check = Get().Where(r => r.RootCategoryId == id).FirstOrDefault();
-            if(check == null)
+            var check = Get().Where(r => r.CategoryId == id && r.RootCategoryId == null).FirstOrDefault();
+            if(check != null)
             {
                 return true;
             }

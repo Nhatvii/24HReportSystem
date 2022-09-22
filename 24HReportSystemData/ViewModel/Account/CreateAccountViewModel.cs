@@ -17,5 +17,7 @@ namespace ReportSystemData.ViewModel.Account
         public string Username { get; set; }
         public string Address { get; set; }
         public string IdentityCard { get; set; }
+        public string OfficeId { get; set; }
+        public string TokenId { get; set; }
     }
 }

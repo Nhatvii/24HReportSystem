@@ -56,6 +56,11 @@ namespace _24HReportSystemData.DependencyInjection
             services.AddScoped<IBoardService, BoardService>();
             services.AddScoped<IBoardRepository, BoardRepository>();
 
+            services.AddScoped<IOfficeService, OfficeService>();
+            services.AddScoped<IOfficeRepository, OfficeRepository>();
+
+            services.AddScoped<INotifyInfoService, NotifyInfoService>();
+            services.AddScoped<INotifyInfoRepository, NotifyInfoRepository>();
         }
     }
 }

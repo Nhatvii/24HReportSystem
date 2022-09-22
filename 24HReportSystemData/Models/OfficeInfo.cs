@@ -10,7 +10,7 @@ namespace _24HReportSystemData.Models
     {
         public OfficeInfo()
         {
-            AccountInfos = new HashSet<AccountInfo>();
+            Accounts = new HashSet<Account>();
         }
 
         public string OfficeId { get; set; }
@@ -19,8 +19,11 @@ namespace _24HReportSystemData.Models
         public decimal Latitude { get; set; }
         public decimal Longitude { get; set; }
         public string PhoneNumber { get; set; }
+        public int ActiveOfficer { get; set; }
+        public bool IsActive { get; set; }
+        public bool IsDelete { get; set; }
 
         [JsonIgnore]
-        public virtual ICollection<AccountInfo> AccountInfos { get; set; }
+        public virtual ICollection<Account> Accounts { get; set; }
     }
 }

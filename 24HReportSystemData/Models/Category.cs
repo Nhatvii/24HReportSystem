@@ -10,7 +10,7 @@ namespace _24HReportSystemData.Models
     {
         public Category()
         {
-            AccountInfos = new HashSet<AccountInfo>();
+            Accounts = new HashSet<Account>();
             InverseRootCategory = new HashSet<Category>();
             Posts = new HashSet<Post>();
             Reports = new HashSet<Report>();
@@ -23,7 +23,7 @@ namespace _24HReportSystemData.Models
 
         public virtual Category RootCategory { get; set; }
         [JsonIgnore]
-        public virtual ICollection<AccountInfo> AccountInfos { get; set; }
+        public virtual ICollection<Account> Accounts { get; set; }
         [JsonIgnore]
         public virtual ICollection<Category> InverseRootCategory { get; set; }
         [JsonIgnore]

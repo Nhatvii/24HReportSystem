@@ -270,7 +270,7 @@ namespace ReportSystemData.Service
             List<Task> listTaskReview = new List<Task>();
             foreach (var item in listTask)
             {
-                var acc = _accountInfoService.GetAccountInfoByID(item.EditorId);
+                var acc = _accountService.GetAccountByID(item.EditorId);
                 if (acc.Specialize != null)
                 {
                     listTaskReview.Add(item);
@@ -296,7 +296,7 @@ namespace ReportSystemData.Service
         public void UpdateAccountWordLoad(string email)
         {
             var workNum = GetNumUserWorkLoad(email);
-            _accountInfoService.UpdateAccountWorkLoad(email, workNum);
+            _accountService.UpdateAccountWorkLoad(email, workNum);
         }
         public int GetNumUserWorkLoad(string email)
         {

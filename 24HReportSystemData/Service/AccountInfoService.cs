@@ -20,9 +20,6 @@ namespace ReportSystemData.Service
         AccountInfo GetAccountInfoByID(string email);
         List<AccountInfo> GetAllAccountInfo();
         //void UpdateAccountWordLoad();
-        List<AccountInfo> GetMinWorkLoad();
-        void UpdateAccountWorkLoad(string email, int workNum);
-        bool UpdateAccountInfoAuthen(string accountID);
     }
     public class AccountInfoService : BaseService<AccountInfo>, IAccountInfoService
     {
@@ -68,7 +65,7 @@ namespace ReportSystemData.Service
             {
                 if (accountInfo.Username != null)
                 {
-                    accInfo.Username = accountInfo.Username;
+                    accInfo.Fullname = accountInfo.Username;
                 }
                 if (accountInfo.Address != null)
                 {
@@ -86,25 +83,6 @@ namespace ReportSystemData.Service
                 {
                     accInfo.IdentityCard = null;
                 }
-                if (accountInfo.IsAuthen != null)
-                {
-                    accInfo.IsAuthen = (bool)accountInfo.IsAuthen;
-                }
-                if(accountInfo.Specialize != null)
-                {
-                    accInfo.Specialize = accountInfo.Specialize;
-                }
-                Update(accInfo);
-                return true;
-            }
-            return false;
-        }
-        public bool UpdateAccountInfoAuthen(string accountID)
-        {
-            var accInfo = GetAccountInfoByID(accountID);
-            if (accInfo != null)
-            {
-                accInfo.IsAuthen = true;
                 Update(accInfo);
                 return true;
             }
@@ -112,21 +90,7 @@ namespace ReportSystemData.Service
         }
         public List<AccountInfo> GetAllAccountInfo()
         {
-            var accInfo = Get().Where(p => p.IsAuthen == true).ToList();
-            return accInfo;
-        }
-        public void UpdateAccountWorkLoad(string email, int workNum)
-        {
-            var acc = GetAccountInfoByID(email);
-            if(acc != null)
-            {
-                acc.WorkLoad = workNum;
-                Update(acc);
-            }
-        }
-        public List<AccountInfo> GetMinWorkLoad()
-        {
-            var accInfo = Get().OrderBy(p => p.WorkLoad).ToList();
+            var accInfo = Get().ToList();
             return accInfo;
         }
         //public void UpdateAccountWordLoad()

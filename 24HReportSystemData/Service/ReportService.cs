@@ -36,7 +36,7 @@ namespace ReportSystemData.Service
         Report GetReportByID(string id);
         public SuccessResponse ChangeReportStatus(ChangeReportStatusViewModel model);
         SuccessResponse DeleteReport(string id);
-        SuccessResponse ChangeReportCategory(string id, int categoryID, string staffID);
+        SuccessResponse ChangeReportCategory(ChangeReportCateViewModel model);
         SuccessResponse UpdateReportEditor(string reportID, string editorID);
         List<ReportResponseWithUserID> ListReportWithUserID(string UserID);
         string UploadFileGenerater(ChangeReportStatusViewModel data);
@@ -309,8 +309,8 @@ namespace ReportSystemData.Service
             var listAccount = _accountService.GetAllEditorAccount();
             foreach (var item in listAccount)
             {
-                var workNum = GetNumUserWorkLoad(item.Email);
-                _accountInfoService.UpdateAccountWorkLoad(item.Email, workNum);
+                var workNum = GetNumUserWorkLoad(item.AccountId);
+                _accountService.UpdateAccountWorkLoad(item.Email, workNum);
             }
         }
 
@@ -409,16 +409,26 @@ namespace ReportSystemData.Service
             throw new ErrorResponse("Báo cáo không tồn tại!!!", (int)HttpStatusCode.NotFound);
         }
 
-        public SuccessResponse ChangeReportCategory(string id, int categoryID, string staffID)
+        public SuccessResponse ChangeReportCategory(ChangeReportCateViewModel model)
         {
-            var report = GetReportByID(id);
+            var report = GetReportByID(model.ReportId);
             if (report != null)
             {
-                var checkCate = _categoryService.CheckAvailableCategory(categoryID);
+                var checkCate = _categoryService.CheckAvailableCategory((int)model.CategoryId);
                 if (checkCate)
                 {
-                    report.CategoryId = categoryID;
-                    report.StaffId = staffID;
+                    if (model.CategoryId.HasValue)
+                    {
+                        report.CategoryId = (int)model.CategoryId;
+                    }
+                    if(model.StaffId != null)
+                    {
+                        report.StaffId = model.StaffId;
+                    }
+                    if (model.Score.HasValue)
+                    {
+                        report.Score = (int)model.Score;
+                    }
                     Update(report);
                     return new SuccessResponse((int)HttpStatusCode.OK, "Cập nhật thành công");
                 }
@@ -438,7 +448,5 @@ namespace ReportSystemData.Service
             }
             throw new ErrorResponse("Báo cáo không tồn tại!!!", (int)HttpStatusCode.NotFound);
         }
-
-
     }
 }

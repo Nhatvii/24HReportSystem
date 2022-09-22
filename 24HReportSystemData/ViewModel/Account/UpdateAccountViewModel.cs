@@ -19,5 +19,7 @@ namespace _24HReportSystemData.ViewModel.Account
         public string IdentityCard { get; set; }
         public bool? IsAuthen { get; set; }
         public int? Specialize { get; set; }
+        public string TokenId { get; set; }
+        public bool? IsActive { get; set; }
     }
 }
