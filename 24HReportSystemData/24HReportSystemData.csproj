@@ -25,6 +25,7 @@
     <PackageReference Include="Microsoft.ML.Experimental" Version="0.19.1" />
     <PackageReference Include="Microsoft.ML.FastTree" Version="1.7.1" />
     <PackageReference Include="NETCore.MailKit" Version="2.1.0" />
+    <PackageReference Include="SocketIOClient" Version="3.0.6" />
     <PackageReference Include="System.Linq" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup Label="BadwordFilterMLModel">
