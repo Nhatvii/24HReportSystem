@@ -6,6 +6,7 @@ using _24HReportSystemData.ViewModel.Account;
 using _24HReportSystemData.ViewModel.Notify;
 using _24HReportSystemData.ViewModel.Office;
 using AutoMapper;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using ReportSystemData.Service;
@@ -34,13 +35,16 @@ namespace _24HReportSystemData.Service
         private readonly IMapper _mapper;
         private readonly IAccountService _accountService;
         private readonly INotifyInfoService _notifyInfoService;
+        //private readonly INotifyHubService _notifyHubService;
+        private readonly IHubContext<NotifyHubService, INotifyHubService> _notifyHubService;
 
-        public OfficeService(DbContext context, IOfficeRepository repository, IMapper mapper, IAccountService accountService, INotifyInfoService notifyInfoService) : base(context, repository)
+        public OfficeService(DbContext context, IOfficeRepository repository, IMapper mapper, IAccountService accountService, INotifyInfoService notifyInfoService, IHubContext<NotifyHubService, INotifyHubService> notifyHubService) : base(context, repository)
         {
             _dbContext = context;
             _mapper = mapper;
             _accountService = accountService;
             _notifyInfoService = notifyInfoService;
+            _notifyHubService = notifyHubService;
         }
 
         public List<OfficeInfo> GetAllOffice(OfficeParameters officeParameters)
@@ -177,7 +181,14 @@ namespace _24HReportSystemData.Service
                     IsActive = false
                 };
                 _accountService.UpdateAccount(updateAcc);
-                firebaseNoti(acc.PhoneNumber, oriLat, oriLng, tmpOffice, officer.TokenId);
+                //firebaseNoti(acc.PhoneNumber, oriLat, oriLng, tmpOffice, officer.TokenId);
+                var notiHub = new NotifyHubService();
+                var tmp = _notifyHubService.Clients.Client(officer.TokenId).SendPrivateMessage(officer.TokenId, modelNotify);
+                Console.WriteLine(tmp);
+                //if(string.IsNullOrEmpty(tmp))
+                //{
+                //    throw new ErrorResponse("Gửi tín hiệu thất bại !!!", (int)HttpStatusCode.Conflict);
+                //}
                 return new SuccessResponse((int)HttpStatusCode.OK, "Gửi tín hiệu thành công");
             }
             else
@@ -185,6 +196,7 @@ namespace _24HReportSystemData.Service
                 throw new ErrorResponse("Cơ quan không tồn tại!!!", (int)HttpStatusCode.NotFound);
             }
         }
+
         public string GetNearestPosition(string ori, string des, string vehicle)
         {
             string url = $"https://rsapi.goong.io/DistanceMatrix?origins={ori}&destinations={des}&vehicle={vehicle}&api_key=6k91iLdrCs4UMY6OFnyb3EXIkDTfhmClgBwbVb5s";

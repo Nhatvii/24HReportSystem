@@ -9,7 +9,6 @@ namespace ReportSystemData.ViewModel.Category
     {
         [Required]
         public string SubCategory { get; set; }
-        [Required]
-        public int RootCategoryID { get; set; }
+        public int? RootCategoryID { get; set; }
     }
 }

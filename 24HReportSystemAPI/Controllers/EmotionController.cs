@@ -48,5 +48,12 @@ namespace ReportSystemAPI.Controllers
         {
             return Ok(await _repository.CreateEmotionSave(post));
         }
+        [HttpPost]
+        [Produces("application/json")]
+        [Route("CreatePostView")]
+        public async Task<IActionResult> CreatePostView(EditStatusEmotion post)
+        {
+            return Ok(await _repository.CreateEmotionView(post));
+        }
     }
 }

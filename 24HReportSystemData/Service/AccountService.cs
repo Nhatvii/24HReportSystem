@@ -24,7 +24,7 @@ namespace ReportSystemData.Service
 {
     public partial interface IAccountService : IBaseService<Account>
     {
-        List<Account> GetAllAccount();
+        List<Account> GetAllAccount(AccountParameters accountParameters);
         Account Login(LoginParameter login);
         bool CheckAvaiAccount(string email);
         Task<Account> RegisterAsync(CreateAccountViewModel account);
@@ -50,9 +50,57 @@ namespace ReportSystemData.Service
             _accountInfoService = accountInfoService;
             _categoryService = categoryService;
         }
-        public List<Account> GetAllAccount()
+        public List<Account> GetAllAccount(AccountParameters accountParameters)
         {
             var account = Get().Include(role => role.Role).Include(info => info.AccountInfo).ToList();
+            if(accountParameters.RoleId != null)
+            {
+                account = account.Where(p => p.RoleId.Equals(accountParameters.RoleId)).ToList();
+            }
+            if(accountParameters.IsActive != null)
+            {
+                if(accountParameters.IsActive == true)
+                {
+                    account = account.Where(p => p.IsActive == true).ToList();
+                }
+                else if(accountParameters.IsActive == false)
+                {
+                    account = account.Where(p => p.IsActive == false).ToList();
+                }
+            }
+            if (accountParameters.IsAuthen != null)
+            {
+                if (accountParameters.IsAuthen == true)
+                {
+                    account = account.Where(p => p.IsAuthen == true).ToList();
+                }
+                else if (accountParameters.IsAuthen == false)
+                {
+                    account = account.Where(p => p.IsAuthen == false).ToList();
+                }
+            }
+            if(accountParameters.TotalScore != null)
+            {
+                if((bool)accountParameters.TotalScore)
+                {
+                    account = account.OrderByDescending(p => p.TotalScore).ToList();
+                }
+                else
+                {
+                    account = account.OrderBy(p => p.TotalScore).ToList();
+                }
+            }
+            if (accountParameters.WorkLoad != null)
+            {
+                if ((bool)accountParameters.WorkLoad)
+                {
+                    account = account.OrderByDescending(p => p.WorkLoad).ToList();
+                }
+                else
+                {
+                    account = account.OrderBy(p => p.WorkLoad).ToList();
+                }
+            }
             return account;
         }
         public List<Account> GetAllEditorAccount()

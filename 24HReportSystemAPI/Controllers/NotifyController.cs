@@ -3,6 +3,7 @@ using _24HReportSystemData.Parameters;
 using _24HReportSystemData.Service;
 using _24HReportSystemData.ViewModel.Notify;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -16,9 +17,11 @@ namespace _24HReportSystemAPI.Controllers
     public class NotifyController : ControllerBase
     {
         private readonly INotifyInfoService _repository;
-        public NotifyController(INotifyInfoService service)
+        private readonly IHubContext<NotifyHubService, INotifyHubService> _notifyHubService;
+        public NotifyController(INotifyInfoService service, IHubContext<NotifyHubService ,INotifyHubService> notifyHubService)
         {
             _repository = service;
+            _notifyHubService = notifyHubService;
         }
 
         [HttpGet]
@@ -45,6 +48,22 @@ namespace _24HReportSystemAPI.Controllers
         public ActionResult<OfficeInfo> ChangeNotifyStatus([Required]string notifyID)
         {
             return Ok(_repository.UpdateNotifyStatus(notifyID));
+        }
+
+        [HttpPost]
+        [Route("sendUserMess")]
+        public string SendUserMess(string connectID, CreateNotifyViewModel mess)
+        {
+            try
+            {
+                var tmp = _notifyHubService.Clients.Client(connectID).SendPrivateMessage(connectID, mess);
+                return "success";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
         }
     }
 }

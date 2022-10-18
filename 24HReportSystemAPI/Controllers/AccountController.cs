@@ -30,9 +30,9 @@ namespace _24HReportSystemAPI.Controllers
 
         [HttpGet]
         [Produces("application/json")]
-        public ActionResult<Account> GetAllAccount()
+        public ActionResult<Account> GetAllAccount([FromQuery]AccountParameters accountParameters)
         {
-            return Ok(_repository.GetAllAccount());
+            return Ok(_repository.GetAllAccount(accountParameters));
         }
         //[HttpGet]
         //[Route("GetEmailTest")]

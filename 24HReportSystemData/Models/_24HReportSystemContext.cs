@@ -160,7 +160,6 @@ namespace _24HReportSystemData.Models
                 entity.ToTable("Category");
 
                 entity.Property(e => e.CategoryId)
-                    .ValueGeneratedNever()
                     .HasColumnName("Category_ID");
 
                 entity.Property(e => e.RootCategoryId).HasColumnName("Root_Category_ID");

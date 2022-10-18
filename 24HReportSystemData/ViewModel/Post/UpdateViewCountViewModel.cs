@@ -7,6 +7,5 @@ namespace ReportSystemData.ViewModel.Post
     public class UpdateViewCountViewModel
     {
         public string PostId { get; set; }
-        public int Count { get; set; }
     }
 }

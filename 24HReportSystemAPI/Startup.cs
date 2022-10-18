@@ -17,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Microsoft.Owin.Cors;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -37,7 +38,39 @@ namespace _24HReportSystemAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
+
+            //services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder => builder
+                    .WithOrigins("http://localhost:3000")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+            });
+
+            //services.AddCors(options => options.AddPolicy("CorsPolicy",
+            //builder =>
+            //{
+            //    builder.AllowAnyHeader()
+            //           .AllowAnyMethod()
+            //           .SetIsOriginAllowed((host) => true)
+            //           .AllowCredentials();
+            //}));
+
+            //services.AddCors(options =>
+            //    options.AddDefaultPolicy(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
+
+            //services.AddCors(options =>
+            //{
+            //    options.AddPolicy("ClientPermission", policy =>
+            //    {
+            //        policy.AllowAnyHeader()
+            //            .AllowAnyMethod()
+            //            .WithOrigins("http://localhost:3000")
+            //            .AllowCredentials();
+            //    });
+            //});
             services.AddControllersWithViews()
                 .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
@@ -93,6 +126,7 @@ namespace _24HReportSystemAPI
             .Get<EmailConfiguration>();
             services.AddSingleton(emailConfig);
             services.AddControllers();
+            services.AddSignalR();
             services.AddAutoMapper(typeof(MappingProfile).Assembly);
             services.IntializerDI();
             services.AddScoped<IEmailSender, EmailSender>();
@@ -105,13 +139,11 @@ namespace _24HReportSystemAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseCors(builder =>
-            {
-                builder
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader();
-            });
+            //app.UseCors("ClientPermission");
+
+            //app.UseCors("CorsPolicy");
+            //app.UseCors();
+
             if (env.IsDevelopment() || env.IsProduction())
             {
                 app.UseDeveloperExceptionPage();
@@ -122,12 +154,26 @@ namespace _24HReportSystemAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            //app.UseCors(builder =>
+            //{
+            //    builder
+            //    .AllowAnyOrigin()
+            //    .AllowCredentials(*)
+            //    .AllowAnyMethod()
+            //    .AllowAnyHeader();
+            //});
+            app.UseCors("CorsPolicy");
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapControllers();
+            //});
+            app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
+                endpoints.MapHub<NotifyHubService>("/notify");
+                
             });
         }
     }

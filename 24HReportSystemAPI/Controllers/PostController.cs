@@ -62,13 +62,13 @@ namespace ReportSystemAPI.Controllers
             return Ok(_repository.DeletePost(id));
         }
 
-        //[HttpPut]
-        //[Produces("application/json")]
-        //[Route("UpdateViewCount")]
-        //public async Task<IActionResult> UpdateViewCount(UpdateViewCountViewModel post)
-        //{
-        //    return Ok(await _repository.UpdateViewCount(post));
-        //}
+        [HttpPut]
+        [Produces("application/json")]
+        [Route("UpdateViewCount")]
+        public ActionResult UpdateViewCount(UpdateViewCountViewModel post)
+        {
+            return Ok(_repository.UpdateViewCount(post));
+        }
 
         //[HttpPut]
         //[Produces("application/json")]

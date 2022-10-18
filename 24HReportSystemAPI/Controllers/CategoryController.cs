@@ -48,7 +48,7 @@ namespace ReportSystemAPI.Controllers
         }
         [HttpDelete]
         [Produces("application/json")]
-        public ActionResult DeleteCategory(int id)
+        public ActionResult DeleteCategory(int? id)
         {
             return Ok(_repository.DeleteCategory(id));
         }

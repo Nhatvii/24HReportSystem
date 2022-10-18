@@ -4,6 +4,7 @@ using _24HReportSystemData.Service;
 using _24HReportSystemData.ViewModel.Office;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +17,11 @@ namespace _24HReportSystemAPI.Controllers
     public class OfficeController : ControllerBase
     {
         private readonly IOfficeService _repository;
+        
         public OfficeController(IOfficeService service)
         {
             _repository = service;
+            
         }
         [HttpGet]
         [Produces("application/json")]

@@ -22,7 +22,7 @@ namespace ReportSystemData.Service
         Category GetCategoryByID(int id);
         Task<SuccessResponse> CreateCategoryAsync(CreateCategoryViewModel cate);
         SuccessResponse UpdateCategory(UpdateCategoryViewModel cate);
-        SuccessResponse DeleteCategory(int id);
+        SuccessResponse DeleteCategory(int? id);
         bool CheckAvailableCategory(int id);
         bool CheckAvaiCategoryWithRoot(int id);
     }
@@ -54,7 +54,7 @@ namespace ReportSystemData.Service
 
         public Category GetCategoryByID(int id)
         {
-            var category = Get().Where(r => r.CategoryId == id).FirstOrDefault();
+            var category = Get().Where(r => r.CategoryId == id).Include(p => p.RootCategory).FirstOrDefault();
             return category;
         }
         
@@ -66,7 +66,26 @@ namespace ReportSystemData.Service
                 throw new ErrorResponse("Danh mục phụ này đã tồn tại", (int)HttpStatusCode.Conflict);
             }
             var cateTmp = _mapper.Map<Category>(cate);
-            cateTmp.RootCategoryId = cate.RootCategoryID;
+            if(cate.RootCategoryID.HasValue && cate.RootCategoryID > 0)
+            {
+                var tmp = CheckAvaiCategoryWithRoot((int)cate.RootCategoryID);
+                if (tmp)
+                {
+                    cateTmp.RootCategoryId = cate.RootCategoryID;
+                }
+                else
+                {
+                    throw new ErrorResponse("Danh mục gốc này không tồn tại", (int)HttpStatusCode.Conflict);
+                }
+            }
+            else if(cate.RootCategoryID == 0)
+            {
+                cateTmp.RootCategoryId = 0;
+            }
+            else
+            {
+                cateTmp.RootCategoryId = null;
+            }
             cateTmp.Type = cate.SubCategory;
             await CreateAsyn(cateTmp);
             return new SuccessResponse((int)HttpStatusCode.OK, "Tạo thành công");
@@ -74,33 +93,58 @@ namespace ReportSystemData.Service
 
         public SuccessResponse UpdateCategory(UpdateCategoryViewModel cate)
         {
-            //var check = _rootCategoryService.GetRootCategoryByID(cate.RootCategory);
-            //if (cate.RootCategory.HasValue && cate.RootCategory > 0)
-            //{
-            //    if (check == null)
-            //    {
-            //        throw new ErrorResponse("RootCategory isn't available", (int)HttpStatusCode.NotFound);
-            //    }
-            //}
             var cateTmp = Get().Where(r => r.CategoryId == cate.CategoryId).FirstOrDefault();
-            cateTmp.Type = cate.SubCategory;
-            if (cate.RootCategory.HasValue && cate.RootCategory > 0)
+            if(cateTmp == null)
             {
-                cateTmp.RootCategoryId = cate.RootCategory;
+                throw new ErrorResponse("Danh mục này không tồn tại", (int)HttpStatusCode.NotFound);
+            }
+            if (cateTmp.RootCategory == null)
+            {
+                var check = Get().Where(r => r.RootCategoryId == cate.CategoryId).FirstOrDefault();
+                if (check != null && cate.RootCategoryID.HasValue && cate.RootCategoryID > 0)
+                {
+                    throw new ErrorResponse("Danh mục gốc còn tồn tại danh mục phụ", (int)HttpStatusCode.Conflict);
+                }
+            }
+            cateTmp.Type = cate.SubCategory;
+            if (cate.RootCategoryID.HasValue && cate.RootCategoryID > 0)
+            {
+                var tmp = CheckAvaiCategoryWithRoot((int)cate.RootCategoryID);
+                if (tmp)
+                {
+                    cateTmp.RootCategoryId = cate.RootCategoryID;
+                }
+                else
+                {
+                    throw new ErrorResponse("Danh mục gốc này không tồn tại", (int)HttpStatusCode.Conflict);
+                }
+            }
+            else if (cate.RootCategoryID == 0)
+            {
+                cateTmp.RootCategoryId = 0;
+            }
+            else
+            {
+                cateTmp.RootCategoryId = null;
             }
             Update(cateTmp);
             return new SuccessResponse((int)HttpStatusCode.OK, "Cập nhật thành công");
         }
 
-        public SuccessResponse DeleteCategory(int id)
+        public SuccessResponse DeleteCategory(int? id)
         {
             var cate = Get().Where(r => r.CategoryId == id).FirstOrDefault();
             if (cate != null)
             {
+                var check = Get().Where(r => r.RootCategoryId == id).FirstOrDefault();
+                if (check != null && id.HasValue && id > 0)
+                {
+                    throw new ErrorResponse("Danh mục gốc còn tồn tại danh mục phụ", (int)HttpStatusCode.Conflict);
+                }
                 Delete(cate);
                 return new SuccessResponse((int)HttpStatusCode.OK, "Xóa thành công");
             }
-            throw new ErrorResponse("Danh mục phụ không tồn tại!!!", (int)HttpStatusCode.NotFound);
+            throw new ErrorResponse("Danh mục không tồn tại!!!", (int)HttpStatusCode.NotFound);
         }
         public bool CheckAvailableCategory(int id)
         {

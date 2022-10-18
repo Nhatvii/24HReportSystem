@@ -61,6 +61,7 @@ namespace _24HReportSystemData.DependencyInjection
 
             services.AddScoped<INotifyInfoService, NotifyInfoService>();
             services.AddScoped<INotifyInfoRepository, NotifyInfoRepository>();
+
         }
     }
 }

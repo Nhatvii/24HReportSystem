@@ -63,9 +63,9 @@ namespace ReportSystemData.Service
             var accInfo = GetAccountInfoByID(accountInfo.AccountID);
             if (accInfo != null)
             {
-                if (accountInfo.Username != null)
+                if (accountInfo.Fullname != null)
                 {
-                    accInfo.Fullname = accountInfo.Username;
+                    accInfo.Fullname = accountInfo.Fullname;
                 }
                 if (accountInfo.Address != null)
                 {

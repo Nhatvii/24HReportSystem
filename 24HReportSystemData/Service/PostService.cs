@@ -248,7 +248,13 @@ namespace ReportSystemData.Service
         public SuccessResponse UpdateViewCount(UpdateViewCountViewModel model)
         {
             var post = GetPostById(model.PostId);
-            post.ViewCount = model.Count;
+            var emoViewPara = new EmotionParameters()
+            {
+                PostId = model.PostId,
+                EmotionStatus = "View"
+            };
+            var numCount = _emotionService.GetAllEmotion(emoViewPara).Count();
+            post.ViewCount = numCount;
             Update(post);
             return new SuccessResponse((int)HttpStatusCode.OK, "Cập nhật thành công");
         }
