@@ -13,6 +13,8 @@ namespace _24HReportSystemData.Models
             Boards = new HashSet<Board>();
             Comments = new HashSet<Comment>();
             Emotions = new HashSet<Emotion>();
+            NotifyInfoOfficers = new HashSet<NotifyInfo>();
+            NotifyInfoUsers = new HashSet<NotifyInfo>();
             Posts = new HashSet<Post>();
             ReportEditors = new HashSet<Report>();
             ReportStaffs = new HashSet<Report>();
@@ -48,6 +50,10 @@ namespace _24HReportSystemData.Models
         public virtual ICollection<Comment> Comments { get; set; }
         [JsonIgnore]
         public virtual ICollection<Emotion> Emotions { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<NotifyInfo> NotifyInfoOfficers { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<NotifyInfo> NotifyInfoUsers { get; set; }
         [JsonIgnore]
         public virtual ICollection<Post> Posts { get; set; }
         [JsonIgnore]

@@ -39,38 +39,16 @@ namespace _24HReportSystemAPI
         public void ConfigureServices(IServiceCollection services)
         {
 
-            //services.AddCors();
-            services.AddCors(options =>
-            {
-                options.AddPolicy("CorsPolicy", builder => builder
-                    .WithOrigins("http://localhost:3000")
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials());
-            });
-
-            //services.AddCors(options => options.AddPolicy("CorsPolicy",
-            //builder =>
-            //{
-            //    builder.AllowAnyHeader()
-            //           .AllowAnyMethod()
-            //           .SetIsOriginAllowed((host) => true)
-            //           .AllowCredentials();
-            //}));
-
-            //services.AddCors(options =>
-            //    options.AddDefaultPolicy(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
-
+            services.AddCors();
             //services.AddCors(options =>
             //{
-            //    options.AddPolicy("ClientPermission", policy =>
-            //    {
-            //        policy.AllowAnyHeader()
-            //            .AllowAnyMethod()
-            //            .WithOrigins("http://localhost:3000")
-            //            .AllowCredentials();
-            //    });
+            //    options.AddPolicy("CorsPolicy", builder => builder
+            //        .WithOrigins("http://localhost:3000")
+            //        .AllowAnyMethod()
+            //        .AllowAnyHeader()
+            //        .AllowCredentials());
             //});
+
             services.AddControllersWithViews()
                 .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
@@ -139,10 +117,6 @@ namespace _24HReportSystemAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //app.UseCors("ClientPermission");
-
-            //app.UseCors("CorsPolicy");
-            //app.UseCors();
 
             if (env.IsDevelopment() || env.IsProduction())
             {
@@ -154,15 +128,14 @@ namespace _24HReportSystemAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
-            //app.UseCors(builder =>
-            //{
-            //    builder
-            //    .AllowAnyOrigin()
-            //    .AllowCredentials(*)
-            //    .AllowAnyMethod()
-            //    .AllowAnyHeader();
-            //});
-            app.UseCors("CorsPolicy");
+            app.UseCors(builder =>
+            {
+                builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+            });
+            //app.UseCors("CorsPolicy");
 
             app.UseAuthorization();
 

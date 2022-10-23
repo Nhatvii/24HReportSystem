@@ -34,17 +34,19 @@ namespace _24HReportSystemData.Service
     {
         private readonly IMapper _mapper;
         private readonly IAccountService _accountService;
+        private readonly IAccountInfoService _accountInfoService;
         private readonly INotifyInfoService _notifyInfoService;
         //private readonly INotifyHubService _notifyHubService;
         private readonly IHubContext<NotifyHubService, INotifyHubService> _notifyHubService;
 
-        public OfficeService(DbContext context, IOfficeRepository repository, IMapper mapper, IAccountService accountService, INotifyInfoService notifyInfoService, IHubContext<NotifyHubService, INotifyHubService> notifyHubService) : base(context, repository)
+        public OfficeService(DbContext context, IOfficeRepository repository, IMapper mapper, IAccountService accountService, IAccountInfoService accountInfoService, INotifyInfoService notifyInfoService, IHubContext<NotifyHubService, INotifyHubService> notifyHubService) : base(context, repository)
         {
             _dbContext = context;
             _mapper = mapper;
             _accountService = accountService;
             _notifyInfoService = notifyInfoService;
             _notifyHubService = notifyHubService;
+            _accountInfoService = accountInfoService;
         }
 
         public List<OfficeInfo> GetAllOffice(OfficeParameters officeParameters)
@@ -183,12 +185,21 @@ namespace _24HReportSystemData.Service
                 _accountService.UpdateAccount(updateAcc);
                 //firebaseNoti(acc.PhoneNumber, oriLat, oriLng, tmpOffice, officer.TokenId);
                 var notiHub = new NotifyHubService();
-                var tmp = _notifyHubService.Clients.Client(officer.TokenId).SendPrivateMessage(officer.TokenId, modelNotify);
-                Console.WriteLine(tmp);
-                //if(string.IsNullOrEmpty(tmp))
-                //{
-                //    throw new ErrorResponse("Gửi tín hiệu thất bại !!!", (int)HttpStatusCode.Conflict);
-                //}
+                var resNotify = _mapper.Map<NotifyResponseViewModel>(modelNotify);
+                resNotify.UserName = _accountInfoService.GetAccountInfoByID(acc.AccountId).Fullname;
+                try
+                {
+                    var tmp = _notifyHubService.Clients.Client(officer.TokenId).SendPrivateMessage(officer.TokenId, resNotify);
+
+                    if (tmp.Exception != null)
+                    {
+                        throw new ErrorResponse("Gửi tín hiệu thất bại !!!", (int)HttpStatusCode.Conflict);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new ErrorResponse("Gửi tín hiệu thất bại !!!", (int)HttpStatusCode.Conflict);
+                }
                 return new SuccessResponse((int)HttpStatusCode.OK, "Gửi tín hiệu thành công");
             }
             else

@@ -11,7 +11,7 @@ namespace _24HReportSystemData.Service
     public interface INotifyHubService
     {
         Task SendOffersToUser(CreateNotifyViewModel model);
-        Task SendPrivateMessage(string connectId, CreateNotifyViewModel model);
+        Task SendPrivateMessage(string connectId, NotifyResponseViewModel model);
     }
     public class NotifyHubService : Hub<INotifyHubService>
     {
@@ -19,7 +19,7 @@ namespace _24HReportSystemData.Service
         {
             await Clients.All.SendOffersToUser(model);
         }
-        public Task SendPrivateMessage(string connectionID, CreateNotifyViewModel model)
+        public Task SendPrivateMessage(string connectionID, NotifyResponseViewModel model)
         {
             var tmp = Clients.Client(connectionID).SendPrivateMessage(connectionID, model);
             return tmp;

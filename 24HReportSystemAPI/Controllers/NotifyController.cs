@@ -52,7 +52,7 @@ namespace _24HReportSystemAPI.Controllers
 
         [HttpPost]
         [Route("sendUserMess")]
-        public string SendUserMess(string connectID, CreateNotifyViewModel mess)
+        public string SendUserMess(string connectID, NotifyResponseViewModel mess)
         {
             try
             {

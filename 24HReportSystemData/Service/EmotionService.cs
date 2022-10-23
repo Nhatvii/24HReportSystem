@@ -51,11 +51,12 @@ namespace ReportSystemData.Service
 
         public async Task<SuccessResponse> ChangeStatusEmotion(EditStatusEmotion statusEmotion)
         {
-            var emotionTmp = Get().Where(e => e.PostId.Equals(statusEmotion.PostId) && e.UserId.Equals(statusEmotion.UserId)).FirstOrDefault();
+            var emotionTmp = Get().Where(e => e.PostId.Equals(statusEmotion.PostId) && e.UserId.Equals(statusEmotion.UserId) && (e.EmotionStatus.Equals("Like") || e.EmotionStatus.Equals("Unlike"))).FirstOrDefault();
             if (emotionTmp == null)
             {
                 var emo = new Emotion()
                 {
+                    EmotionId = Guid.NewGuid().ToString(),
                     PostId = statusEmotion.PostId,
                     UserId = statusEmotion.UserId,
                     EmotionStatus = EmotionConstrants.STATUS_EMOTION_LIKE
@@ -84,6 +85,7 @@ namespace ReportSystemData.Service
             {
                 var emo = new Emotion()
                 {
+                    EmotionId = Guid.NewGuid().ToString(),
                     PostId = statusEmotion.PostId,
                     UserId = statusEmotion.UserId,
                     EmotionStatus = EmotionConstrants.STATUS_EMOTION_VIEW
@@ -111,6 +113,7 @@ namespace ReportSystemData.Service
             {
                 var emo = new Emotion()
                 {
+                    EmotionId = Guid.NewGuid().ToString(),
                     PostId = statusEmotion.PostId,
                     UserId = statusEmotion.UserId,
                     EmotionStatus = EmotionConstrants.STATUS_EMOTION_SAVE

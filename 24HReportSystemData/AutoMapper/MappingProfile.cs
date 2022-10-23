@@ -40,6 +40,7 @@ namespace _24HReportSystemData.AutoMapper
             CreateMap<CreateOfficeViewModel, OfficeInfo>();
 
             CreateMap<CreateNotifyViewModel, NotifyInfo>();
+            CreateMap<CreateNotifyViewModel, NotifyResponseViewModel>();
         }
     }
 }

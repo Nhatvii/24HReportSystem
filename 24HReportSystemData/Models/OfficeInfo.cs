@@ -11,6 +11,7 @@ namespace _24HReportSystemData.Models
         public OfficeInfo()
         {
             Accounts = new HashSet<Account>();
+            NotifyInfos = new HashSet<NotifyInfo>();
         }
 
         public string OfficeId { get; set; }
@@ -25,5 +26,7 @@ namespace _24HReportSystemData.Models
 
         [JsonIgnore]
         public virtual ICollection<Account> Accounts { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<NotifyInfo> NotifyInfos { get; set; }
     }
 }

@@ -159,8 +159,7 @@ namespace _24HReportSystemData.Models
             {
                 entity.ToTable("Category");
 
-                entity.Property(e => e.CategoryId)
-                    .HasColumnName("Category_ID");
+                entity.Property(e => e.CategoryId).HasColumnName("Category_ID");
 
                 entity.Property(e => e.RootCategoryId).HasColumnName("Root_Category_ID");
 
@@ -234,22 +233,26 @@ namespace _24HReportSystemData.Models
 
             modelBuilder.Entity<Emotion>(entity =>
             {
-                entity.HasKey(e => new { e.PostId, e.UserId });
-
                 entity.ToTable("Emotion");
 
-                entity.Property(e => e.PostId)
+                entity.Property(e => e.EmotionId)
                     .HasMaxLength(50)
-                    .HasColumnName("Post_ID");
-
-                entity.Property(e => e.UserId)
-                    .HasMaxLength(50)
-                    .HasColumnName("User_ID");
+                    .HasColumnName("Emotion_ID");
 
                 entity.Property(e => e.EmotionStatus)
                     .IsRequired()
                     .HasMaxLength(50)
                     .HasColumnName("Emotion_Status");
+
+                entity.Property(e => e.PostId)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnName("Post_ID");
+
+                entity.Property(e => e.UserId)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnName("User_ID");
 
                 entity.HasOne(d => d.Post)
                     .WithMany(p => p.Emotions)
@@ -267,7 +270,12 @@ namespace _24HReportSystemData.Models
             modelBuilder.Entity<NotifyInfo>(entity =>
             {
                 entity.HasKey(e => e.NotifyId);
+
                 entity.ToTable("Notify_Info");
+
+                entity.Property(e => e.NotifyId)
+                    .HasMaxLength(50)
+                    .HasColumnName("Notify_ID");
 
                 entity.Property(e => e.AcceptedDate)
                     .HasColumnType("datetime")
@@ -276,11 +284,6 @@ namespace _24HReportSystemData.Models
                 entity.Property(e => e.Latitude).HasColumnType("decimal(8, 6)");
 
                 entity.Property(e => e.Longitude).HasColumnType("decimal(9, 6)");
-
-                entity.Property(e => e.NotifyId)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .HasColumnName("Notify_ID");
 
                 entity.Property(e => e.NotifyStatus).HasColumnName("Notify_Status");
 
@@ -300,19 +303,19 @@ namespace _24HReportSystemData.Models
                     .HasColumnName("User_ID");
 
                 entity.HasOne(d => d.Office)
-                    .WithMany()
+                    .WithMany(p => p.NotifyInfos)
                     .HasForeignKey(d => d.OfficeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Notify_Info_Office_Info");
 
                 entity.HasOne(d => d.Officer)
-                    .WithMany()
+                    .WithMany(p => p.NotifyInfoOfficers)
                     .HasForeignKey(d => d.OfficerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Notify_Info_Account");
 
                 entity.HasOne(d => d.User)
-                    .WithMany()
+                    .WithMany(p => p.NotifyInfoUsers)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Notify_Info_Account1");
