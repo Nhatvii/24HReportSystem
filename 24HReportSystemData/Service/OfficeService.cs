@@ -28,7 +28,7 @@ namespace _24HReportSystemData.Service
         Task<SuccessResponse> CreateOfficeAsync(CreateOfficeViewModel model);
         SuccessResponse UpdateOffice(UpdateOfficeViewModel model);
         SuccessResponse DeleteOffice(string OfficeID);
-        Task<SuccessResponse> GetDirectionAsync(GetDirectionViewModel model);
+        Task<SosInfoResponse> GetDirectionAsync(GetDirectionViewModel model);
     }
     public partial class OfficeService : BaseService<OfficeInfo>, IOfficeService
     {
@@ -140,7 +140,7 @@ namespace _24HReportSystemData.Service
             }
             return listOfficeActive;
         }
-        public async Task<SuccessResponse> GetDirectionAsync(GetDirectionViewModel model)
+        public async Task<SosInfoResponse> GetDirectionAsync(GetDirectionViewModel model)
         {
             var acc = _accountService.GetAccountByID(model.AccountId);
             var ori = "" + model.Latitude + "," + model.Longitude + "";
@@ -176,7 +176,7 @@ namespace _24HReportSystemData.Service
                     Latitude = model.Latitude,
                     Longitude = model.Longitude
                 };
-                await _notifyInfoService.CreateNotifyAsync(modelNotify);
+                var notiCreate = await _notifyInfoService.CreateNotifyAsync(modelNotify);
                 var updateAcc = new UpdateAccountViewModel()
                 {
                     AccountID = officer.AccountId,
@@ -200,7 +200,19 @@ namespace _24HReportSystemData.Service
                 {
                     throw new ErrorResponse("Gửi tín hiệu thất bại !!!", (int)HttpStatusCode.Conflict);
                 }
-                return new SuccessResponse((int)HttpStatusCode.OK, "Gửi tín hiệu thành công");
+                var noti = _notifyInfoService.GetNotifyByID(notiCreate.Message);
+                var SosRes = new SosInfoResponse()
+                {
+                    OfficeId = tmpOffice,
+                    NotifyId = notiCreate.Message,
+                    OfficeName = noti.Office.OfficeName,
+                    District = noti.Office.District,
+                    Latitude = noti.Office.Latitude,
+                    Longitude = noti.Office.Longitude,
+                    OfficerName = officer.AccountInfo.Fullname,
+                    OfficerPhoneNumber = officer.PhoneNumber
+                };
+                return SosRes;
             }
             else
             {

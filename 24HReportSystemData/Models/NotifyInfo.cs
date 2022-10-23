@@ -9,6 +9,7 @@ namespace _24HReportSystemData.Models
     public partial class NotifyInfo
     {
         public string NotifyId { get; set; }
+        [JsonIgnore]
         public string OfficeId { get; set; }
         [JsonIgnore]
         public string OfficerId { get; set; }
@@ -19,7 +20,6 @@ namespace _24HReportSystemData.Models
         public bool NotifyStatus { get; set; }
         public DateTime AcceptedDate { get; set; }
 
-        [JsonIgnore]
         public virtual OfficeInfo Office { get; set; }
         public virtual Account Officer { get; set; }
         public virtual Account User { get; set; }

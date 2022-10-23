@@ -36,6 +36,7 @@ namespace _24HReportSystemData.Service
             var noti = Get().Where(p => p.AcceptedDate.Date == DateTime.Today)
                 .Include(p => p.Officer).ThenInclude(p => p.AccountInfo)
                 .Include(p => p.User).ThenInclude(p => p.AccountInfo)
+                .Include(p => p.Office)
                 .ToList();
             if(notifyParameters.OfficeId != null)
             {
@@ -45,7 +46,11 @@ namespace _24HReportSystemData.Service
         }
         public NotifyInfo GetNotifyByID(string notifyID)
         {
-            var notify = Get().Where(p => p.NotifyId.Equals(notifyID)).FirstOrDefault();
+            var notify = Get().Where(p => p.NotifyId.Equals(notifyID))
+                .Include(p => p.Officer).ThenInclude(p => p.AccountInfo)
+                .Include(p => p.User).ThenInclude(p => p.AccountInfo)
+                .Include(p => p.Office)
+                .FirstOrDefault();
             if (notify != null)
             {
                 return notify;
@@ -59,7 +64,7 @@ namespace _24HReportSystemData.Service
             notify.NotifyStatus = true;
             notify.AcceptedDate = DateTime.Now;
             await CreateAsyn(notify);
-            return new SuccessResponse((int)HttpStatusCode.OK, "Tạo thông báo thành công");
+            return new SuccessResponse((int)HttpStatusCode.OK, notify.NotifyId);
         }
 
         public SuccessResponse UpdateNotifyStatus(string notifyID)
