@@ -34,13 +34,7 @@ namespace ReportSystemAPI.Controllers
         {
             return Ok(await _repository.ChangeStatusEmotion(statusEmotion));
         }
-        [HttpGet]
-        [Produces("application/json")]
-        [Route("GetListPostSave")]
-        public ActionResult<Post> GetListPostSave(string userID)
-        {
-            return Ok(_repository.GetListPostSave(userID));
-        }
+
         [HttpPost]
         [Produces("application/json")]
         [Route("CreatePostSave")]

@@ -31,6 +31,7 @@ namespace ReportSystemData.Service
         SuccessResponse UpdateShareCount(string postID);
         bool UpdateTaskID(string postID, string taskID);
         Post GetPostWithTaskID(string taskID);
+        List<Post> GetListPostSave(string userID);
     }
     public partial class PostService : BaseService<Post>, IPostService
     {
@@ -341,6 +342,17 @@ namespace ReportSystemData.Service
                 }
                 throw new ErrorResponse("Bài viết không tồn tại!!!", (int)HttpStatusCode.NotFound);
             }
+        }
+        public List<Post> GetListPostSave(string userID)
+        {
+            var listEmo = _emotionService.GetListPostSave(userID);
+            var listPost = new List<Post>();
+            foreach (var item in listEmo)
+            {
+                var post = GetPostById(item.PostId);
+                listPost.Add(post);
+            }
+            return listPost;
         }
     }
 }

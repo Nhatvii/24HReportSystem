@@ -86,12 +86,12 @@ namespace ReportSystemAPI.Controllers
             return Ok(_repository.UpdateShareCount(postID));
         }
 
-        //[HttpGet]
-        //[Produces("application/json")]
-        //[Route("GetListPostSave")]
-        //public ActionResult<Post> GetListPostSave(string userID)
-        //{
-        //    return Ok(_repository.GetListPostSave(userID));
-        //}
+        [HttpGet]
+        [Produces("application/json")]
+        [Route("GetListPostSave")]
+        public ActionResult<Post> GetListPostSave(string userID)
+        {
+            return Ok(_repository.GetListPostSave(userID));
+        }
     }
 }

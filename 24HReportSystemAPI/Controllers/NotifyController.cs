@@ -52,11 +52,11 @@ namespace _24HReportSystemAPI.Controllers
 
         [HttpPost]
         [Route("sendUserMess")]
-        public string SendUserMess(string connectID, NotifyResponseViewModel mess)
+        public string SendUserMess(string connectID, string mess)
         {
             try
             {
-                var tmp = _notifyHubService.Clients.Client(connectID).SendPrivateMessage(connectID, mess);
+                var tmp = _notifyHubService.Clients.Client(connectID).SendPrivateMessageToUser(connectID, mess);
                 return "success";
             }
             catch (Exception ex)

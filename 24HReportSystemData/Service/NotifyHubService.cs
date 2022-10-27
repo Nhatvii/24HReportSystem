@@ -12,6 +12,7 @@ namespace _24HReportSystemData.Service
     {
         Task SendOffersToUser(CreateNotifyViewModel model);
         Task SendPrivateMessage(string connectId, NotifyResponseViewModel model);
+        Task SendPrivateMessageToUser(string connectionID, string msg);
     }
     public class NotifyHubService : Hub<INotifyHubService>
     {
@@ -22,6 +23,11 @@ namespace _24HReportSystemData.Service
         public Task SendPrivateMessage(string connectionID, NotifyResponseViewModel model)
         {
             var tmp = Clients.Client(connectionID).SendPrivateMessage(connectionID, model);
+            return tmp;
+        }
+        public Task SendPrivateMessageToUser(string connectionID, string msg)
+        {
+            var tmp = Clients.Client(connectionID).SendPrivateMessageToUser(connectionID, msg);
             return tmp;
         }
     }
