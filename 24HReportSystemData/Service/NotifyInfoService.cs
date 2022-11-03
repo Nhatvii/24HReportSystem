@@ -2,9 +2,12 @@
 using _24HReportSystemData.Parameters;
 using _24HReportSystemData.Repositories;
 using _24HReportSystemData.Response;
+using _24HReportSystemData.ViewModel.Account;
 using _24HReportSystemData.ViewModel.Notify;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using ReportSystemData.Parameter.Report;
+using ReportSystemData.Service;
 using ReportSystemData.Service.Base;
 using System;
 using System.Collections.Generic;
@@ -21,14 +24,21 @@ namespace _24HReportSystemData.Service
         NotifyInfo GetNotifyByID(string notifyID);
         Task<SuccessResponse> CreateNotifyAsync(CreateNotifyViewModel model);
         SuccessResponse UpdateNotifyStatus(string notifyID);
+        SuccessResponse CompleteNotify(CompleteNotifyViewModel model);
+        
     }
     public partial class NotifyInfoService : BaseService<NotifyInfo>, INotifyInfoService
     {
         private readonly IMapper _mapper;
-        public NotifyInfoService(DbContext context, INotifyInfoRepository repository, IMapper mapper) : base(context, repository)
+        private readonly IReportService _reportService;
+        private readonly IAccountService _accountService;
+
+        public NotifyInfoService(DbContext context, INotifyInfoRepository repository, IMapper mapper, IReportService reportService, IAccountService accountService) : base(context, repository)
         {
             _dbContext = context;
             _mapper = mapper;
+            _reportService = reportService;
+            _accountService = accountService;
         }
 
         public List<NotifyInfo> GetAllNotify(NotifyParameters notifyParameters)
@@ -79,5 +89,33 @@ namespace _24HReportSystemData.Service
             throw new ErrorResponse("Thông báo không tồn tại!!!", (int)HttpStatusCode.NotFound);
         }
 
+        public SuccessResponse CompleteNotify(CompleteNotifyViewModel model)
+        {
+            var notify = GetNotifyByID(model.NotifyId);
+            notify.NotifyStatus = false;
+            notify.ExecuteTime = model.ExecuteTime;
+            notify.SumaryContent = model.SumaryContent;
+            Update(notify);
+            var updateAcc = new UpdateAccountViewModel()
+            {
+                AccountID = model.OfficerId,
+                IsActive = false
+            };
+            _accountService.UpdateAccount(updateAcc);
+            var reportInfo = new CreateReportViewModel()
+            {
+                Location = "" + notify.Latitude + "," + notify.Longitude + "",
+                TimeFraud = notify.AcceptedDate,
+                Description = model.SumaryContent,
+                IsAnonymous = false
+            };
+            var res = _reportService.CreateReportForCompleteNoti(reportInfo);
+
+            if (res.Result.StatusCode == 200)
+            {
+                return new SuccessResponse((int)HttpStatusCode.OK, "Hoàn thành thông báo");
+            }
+            throw new ErrorResponse("Hoàn thành thất bại!!!", (int)HttpStatusCode.NotFound);
+        }
     }
 }

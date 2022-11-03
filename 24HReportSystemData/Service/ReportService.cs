@@ -40,6 +40,7 @@ namespace ReportSystemData.Service
         SuccessResponse UpdateReportEditor(string reportID, string editorID);
         List<ReportResponseWithUserID> ListReportWithUserID(string UserID);
         string UploadFileGenerater(ChangeReportStatusViewModel data);
+        Task<SuccessResponse> CreateReportForCompleteNoti(CreateReportViewModel model);
         //Task<bool> NotifyAsync(string to, string title, string body);
     }
     public partial class ReportService : BaseService<Report>, IReportService
@@ -82,13 +83,14 @@ namespace ReportSystemData.Service
             {
                 reports = reports.Where(c => (c.StaffId != null) && c.StaffId.Equals(reportParameters.StaffID)).ToList();
             }
-            if(reportParameters.IsEditor != null)
+            if(reportParameters.IsReport != null)
             {
-                if(reportParameters.IsEditor == true)
+                if(reportParameters.IsReport == true)
                 {
-                    reports = reports.Where(c => c.EditorId == null).ToList();
+                    reports = reports.Where(c => c.Status.Equals(ReportConstants.STATUS_REPORT_REPORT)).ToList();
                 }
             }
+            
             return reports;
         }
         public List<ReportResponseWithUserID> ListReportWithUserID(string UserID)
@@ -218,6 +220,17 @@ namespace ReportSystemData.Service
 
         //    return false;
         //}
+        public async Task<SuccessResponse> CreateReportForCompleteNoti(CreateReportViewModel model)
+        {
+            var reportTmp = _mapper.Map<Report>(model);
+            reportTmp.ReportId = Guid.NewGuid().ToString();
+            reportTmp.CreateTime = DateTime.Now;
+            reportTmp.IsAnonymous = model.IsAnonymous;
+            reportTmp.Status = ReportConstants.STATUS_REPORT_REPORT;
+            reportTmp.CategoryId = 0;
+            await CreateAsyn(reportTmp);
+            return new SuccessResponse((int)HttpStatusCode.OK, "Tạo thành công");
+        }
         public async Task<SuccessResponse> CreateReportAsync(CreateReportViewModel report)
         {
             if (report.StaffID == null )
@@ -228,7 +241,7 @@ namespace ReportSystemData.Service
                 reportTmp.Status = ReportConstants.STATUS_REPORT_NEW;
                 reportTmp.IsAnonymous = report.IsAnonymous;
                 reportTmp.UserId = report.UserID;
-                reportTmp.CategoryId = 1;
+                reportTmp.CategoryId = 0;
                 await CreateAsyn(reportTmp);
                 await _reportDetailService.CreateReportDetail(reportTmp.ReportId, report.Image, report.Video, report.Record);
                 return new SuccessResponse((int)HttpStatusCode.OK, "Tạo thành công");

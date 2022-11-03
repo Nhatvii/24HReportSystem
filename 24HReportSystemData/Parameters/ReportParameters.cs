@@ -11,5 +11,6 @@ namespace _24HReportSystemData.Parameters
         public int? Status { get; set; }
         public string StaffID { get; set; }
         public bool? IsEditor { get; set; }
+        public bool? IsReport { get; set; }
     }
 }

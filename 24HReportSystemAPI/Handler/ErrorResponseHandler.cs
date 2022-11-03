@@ -11,7 +11,7 @@ namespace _24HReportSystemAPI.Handler
     public class ErrorResponseHandler : IExceptionFilter
     {
         public void OnException(ExceptionContext context)
-        {
+       {
             if (context.Exception is ErrorResponse)
             {
                 context.ExceptionHandled = true;

@@ -71,5 +71,10 @@ namespace _24HReportSystemData
             ITransformer mlModel = mlContext.Model.Load(MLNetModelPath, out var _);
             return mlContext.Model.CreatePredictionEngine<ModelInput, ModelOutput>(mlModel);
         }
+
+        internal static void RetrainPipeline(ITransformer data)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

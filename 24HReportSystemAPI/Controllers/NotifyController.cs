@@ -65,5 +65,12 @@ namespace _24HReportSystemAPI.Controllers
                 throw;
             }
         }
+        [HttpPut]
+        [Produces("application/json")]
+        [Route("CompleteNotify")]
+        public ActionResult<OfficeInfo> CompleteNotify(CompleteNotifyViewModel model)
+        {
+            return Ok(_repository.CompleteNotify(model));
+        }
     }
 }

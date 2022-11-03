@@ -12,5 +12,6 @@ namespace _24HReportSystemData.Constants
         public const string STATUS_REPORT_PENDING = "Pending";
         public const string STATUS_REPORT_APPROVE = "Approved";
         public const string STATUS_REPORT_DENIED = "Denied";
+        public const string STATUS_REPORT_REPORT = "Report";
     }
 }

@@ -186,6 +186,7 @@ namespace _24HReportSystemData.Service
                 //firebaseNoti(acc.PhoneNumber, oriLat, oriLng, tmpOffice, officer.TokenId);
                 var notiHub = new NotifyHubService();
                 var resNotify = _mapper.Map<NotifyResponseViewModel>(modelNotify);
+                resNotify.NotifyId = notiCreate.Message;
                 resNotify.UserName = _accountInfoService.GetAccountInfoByID(acc.AccountId).Fullname;
                 try
                 {

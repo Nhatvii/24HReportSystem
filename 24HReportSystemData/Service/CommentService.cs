@@ -7,6 +7,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.ML;
 using Microsoft.ML.Data;
+using Microsoft.ML.Trainers;
 using ReportSystemData.Repositories;
 using ReportSystemData.Service.Base;
 using ReportSystemData.ViewModel.Comment;
@@ -17,6 +18,13 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
+
+using Microsoft.ML;
+using Microsoft.ML.Data;
+using Microsoft.Extensions.Configuration;
+using System.IO;
+using Microsoft.Data.SqlClient;
+
 namespace ReportSystemData.Service
 {
     public partial interface ICommentService : IBaseService<Comment>
@@ -26,6 +34,7 @@ namespace ReportSystemData.Service
         Task<SuccessResponse> CreateCommentAsync(CreateCommentViewModel comment);
         SuccessResponse UpdateComment(UpdateCommentViewModel comment);
         SuccessResponse DeleteComment(string id);
+        string RetrainData();
     }
     public partial class CommentService : BaseService<Comment>, ICommentService
     {
@@ -156,7 +165,95 @@ namespace ReportSystemData.Service
             }
             throw new ErrorResponse("Bình luận không tồn tại!!!", (int)HttpStatusCode.NotFound);
         }
+        public string RetrainData()
+        {
+            var context = new MLContext();
+            DatabaseLoader loader = context.Data.CreateDatabaseLoader<CommentBadword>();
+            //string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=24HReportSystem;UserID=sa;Password=nhatvi1801;Integrated Security=True;Connect Timeout=30";
+            string connectionString = GetDbConnection();
 
+            string sqlCommand = "SELECT Text, Label_ID FROM Comment_Badword";
+
+            DatabaseSource dbSource = new DatabaseSource(SqlClientFactory.Instance, connectionString, sqlCommand);
+            var data = loader.Load(dbSource);
+            var preview = data.Preview();
+            //_24HReportSystemData.BadwordFilterMLModel.RetrainPipeline(data);
+
+           // var loader = context.Data.CreateDatabaseLoader<CommentBadword>();
+
+            // var connectionString = GetDbConnection();
+
+            // var sqlCommand = "Select `Text`, Label_ID From Comment_Badword";
+
+            // var dbSource = new DatabaseSource(SqlClientFactory.Instance, connectionString, sqlCommand);
+
+            //var data = loader.Load(dbSource);
+
+            // var set = context.Data.TrainTestSplit(data, testFraction: 0.2, samplingKeyColumnName: null);
+            // var trainingData = set.TrainSet;
+            // var testData = set.TestSet;
+
+            // var pipeline = context.Transforms
+            //    .Conversion.MapValueToKey(outputColumnName: "Label", inputColumnName: "Text")
+            //    .Append(context.Transforms.Concatenate("Text", "Label_ID"))
+            //    .Append(context.MulticlassClassification.Trainers.OneVersusAll(context.BinaryClassification.Trainers.AveragedPerceptron("Label", "Features", numberOfIterations: 10))
+            //    .Append(context.Transforms.Conversion.MapKeyToValue("PredictedLabel")));
+            // //var pipeline = context.Transforms.Concatenate("Text", "Label_ID").Append(context.Transforms.NormalizeMinMax("label"));
+            // //Console.WriteLine("=============== Starting 10 fold cross validation ===============");
+            // //var crossValResults = context.MulticlassClassification.CrossValidate(data: trainingData, estimator: pipeline, numberOfFolds: 10, labelColumnName: "Label");
+            // //var metricsInMultipleFolds = crossValResults.Select(r => r.Metrics);
+            // //var microAccuracyValues = metricsInMultipleFolds.Select(m => m.MicroAccuracy);
+            // //var microAccuracyAverage = microAccuracyValues.Average();
+            // //var macroAccuracyValues = metricsInMultipleFolds.Select(m => m.MacroAccuracy);
+            // //var macroAccuracyAverage = macroAccuracyValues.Average();
+            // //var logLossValues = metricsInMultipleFolds.Select(m => m.LogLoss);
+            // //var logLossAverage = logLossValues.Average();
+            // //var logLossReductionValues = metricsInMultipleFolds.Select(m => m.LogLossReduction);
+            // //var logLossReductionAverage = logLossReductionValues.Average(); Console.WriteLine($"*************************************************************************************************************");
+
+            // //Console.WriteLine($"*       Metrics Multi-class Classification model      ");
+            // //Console.WriteLine($"*------------------------------------------------------------------------------------------------------------");
+            // //Console.WriteLine($"*       Average MicroAccuracy:   {microAccuracyAverage:0.###} ");
+            // //Console.WriteLine($"*       Average MacroAccuracy:    {macroAccuracyAverage:0.###} ");
+            // //Console.WriteLine($"*       Average LogLoss:          {logLossAverage:#.###} ");
+            // //Console.WriteLine($"*       Average LogLossReduction: {logLossReductionAverage:#.###} ");
+            // //Console.WriteLine($"*************************************************************************************************************");
+            // //Console.WriteLine($"Training process is starting. {DateTime.Now.ToLongTimeString()}");
+            // var model = pipeline.Fit(trainingData);
+            // //var model = context.Transforms.DropColumns("SamplingKeyColumn").Fit(trainingData);
+            // Console.WriteLine($"Training process has finished. {DateTime.Now.ToLongTimeString()}");
+            // var predictionEngine = context.Model.CreatePredictionEngine<CommentBadword, DiabetesMLPrediction>(model);
+
+            // var badword = new CommentBadword()
+            // {
+            //     Text = "Đụ má mày",
+            //     LabelId = 3
+            // };
+
+            // var prediction = predictionEngine.Predict(badword);
+            // Console.WriteLine($"Diabetes? {prediction.Text} | Prediction: {(Convert.ToBoolean(prediction.Prediction) ? "Yes" : "No")} | Probability: {prediction.Probability} ");
+            // Console.WriteLine("Saving the model");
+            // context.Model.Save(model, trainingData.Schema, "MLModel.zip");
+            // return ($"Diabetes? {prediction.Text} | Prediction: {(Convert.ToBoolean(prediction.Prediction) ? "Yes" : "No")} | Probability: {prediction.Probability} ");
+            return "";
+        }
+        public class DiabetesMLPrediction : CommentBadword
+        {
+            [ColumnName("PredictedLabel")]
+            public float Prediction { get; set; }
+
+            public float Probability { get; set; }
+
+            public float[] Score { get; set; }
+        }
+        private string GetDbConnection()
+        {
+            var builder = new ConfigurationBuilder()
+               .SetBasePath(Directory.GetCurrentDirectory())
+               .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+            return builder.Build().GetConnectionString("ReportSystemConnection");
+        }
         //public bool CheckBadWords(string input)
         //{
         //    ReadCSV readCsv = new ReadCSV();

@@ -27,6 +27,7 @@ namespace _24HReportSystemData.Models
         public virtual DbSet<NotifyInfo> NotifyInfos { get; set; }
         public virtual DbSet<OfficeInfo> OfficeInfos { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
+        public virtual DbSet<PostRecommend> PostRecommends { get; set; }
         public virtual DbSet<Report> Reports { get; set; }
         public virtual DbSet<ReportDetail> ReportDetails { get; set; }
         public virtual DbSet<ReportTask> ReportTasks { get; set; }
@@ -281,6 +282,10 @@ namespace _24HReportSystemData.Models
                     .HasColumnType("datetime")
                     .HasColumnName("Accepted_Date");
 
+                entity.Property(e => e.ExecuteTime)
+                    .HasMaxLength(50)
+                    .HasColumnName("Execute_Time");
+
                 entity.Property(e => e.Latitude).HasColumnType("decimal(8, 6)");
 
                 entity.Property(e => e.Longitude).HasColumnType("decimal(9, 6)");
@@ -296,6 +301,8 @@ namespace _24HReportSystemData.Models
                     .IsRequired()
                     .HasMaxLength(50)
                     .HasColumnName("Officer_ID");
+
+                entity.Property(e => e.SumaryContent).HasColumnName("Sumary_Content");
 
                 entity.Property(e => e.UserId)
                     .IsRequired()
@@ -436,6 +443,21 @@ namespace _24HReportSystemData.Models
                     .HasConstraintName("FK_Post_Task");
             });
 
+            modelBuilder.Entity<PostRecommend>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("Post_Recommend");
+
+                entity.Property(e => e.AccountId)
+                    .HasMaxLength(50)
+                    .HasColumnName("Account_ID");
+
+                entity.Property(e => e.PostId)
+                    .HasMaxLength(50)
+                    .HasColumnName("Post_ID");
+            });
+
             modelBuilder.Entity<Report>(entity =>
             {
                 entity.ToTable("Report");
@@ -489,22 +511,22 @@ namespace _24HReportSystemData.Models
                     .WithMany(p => p.Reports)
                     .HasForeignKey(d => d.CategoryId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Report_Catgory");
+                    .HasConstraintName("FK_Report_Category");
 
                 entity.HasOne(d => d.Editor)
                     .WithMany(p => p.ReportEditors)
                     .HasForeignKey(d => d.EditorId)
-                    .HasConstraintName("FK_Report_Account5");
+                    .HasConstraintName("FK_Report_Account2");
 
                 entity.HasOne(d => d.Staff)
                     .WithMany(p => p.ReportStaffs)
                     .HasForeignKey(d => d.StaffId)
-                    .HasConstraintName("FK_Report_Account3");
+                    .HasConstraintName("FK_Report_Account");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.ReportUsers)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_Report_Account4");
+                    .HasConstraintName("FK_Report_Account1");
             });
 
             modelBuilder.Entity<ReportDetail>(entity =>
