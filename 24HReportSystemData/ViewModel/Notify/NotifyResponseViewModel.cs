@@ -15,5 +15,6 @@ namespace _24HReportSystemData.ViewModel.Notify
         public decimal Latitude { get; set; }
         public decimal Longitude { get; set; }
         public string NotifyId { get; set; }
+        public string UserTokenId { get; set; }
     }
 }

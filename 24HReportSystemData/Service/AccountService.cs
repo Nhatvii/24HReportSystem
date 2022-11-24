@@ -37,7 +37,7 @@ namespace ReportSystemData.Service
         SuccessResponse UpdateAccountAuthen(string accountID);
         bool UpdateAccountWorkLoad(string email, int workNum);
         int CheckAccountIsActiveNotify(string officeID);
-        Account GetAccountNotify(string officeID);
+        Task<Account> GetAccountNotify(string officeID);
 
     }
     public partial class AccountService : BaseService<Account>, IAccountService
@@ -52,18 +52,25 @@ namespace ReportSystemData.Service
         }
         public List<Account> GetAllAccount(AccountParameters accountParameters)
         {
-            var account = Get().Include(role => role.Role).Include(info => info.AccountInfo).ToList();
-            if(accountParameters.RoleId != null)
+            var account = Get().Include(role => role.Role)
+                .Include(info => info.AccountInfo)
+                .Include(c => c.SpecializeNavigation)
+                .ToList();
+            if (accountParameters.RoleId != null)
             {
                 account = account.Where(p => p.RoleId.Equals(accountParameters.RoleId)).ToList();
             }
-            if(accountParameters.IsActive != null)
+            if (accountParameters.OfficeId != null)
             {
-                if(accountParameters.IsActive == true)
+                account = account.Where(p => !String.IsNullOrEmpty(p.OfficeId) ? p.OfficeId.Equals(accountParameters.OfficeId) : false).ToList();
+            }
+            if (accountParameters.IsActive != null)
+            {
+                if (accountParameters.IsActive == true)
                 {
                     account = account.Where(p => p.IsActive == true).ToList();
                 }
-                else if(accountParameters.IsActive == false)
+                else if (accountParameters.IsActive == false)
                 {
                     account = account.Where(p => p.IsActive == false).ToList();
                 }
@@ -79,9 +86,9 @@ namespace ReportSystemData.Service
                     account = account.Where(p => p.IsAuthen == false).ToList();
                 }
             }
-            if(accountParameters.TotalScore != null)
+            if (accountParameters.TotalScore != null)
             {
-                if((bool)accountParameters.TotalScore)
+                if ((bool)accountParameters.TotalScore)
                 {
                     account = account.OrderByDescending(p => p.TotalScore).ToList();
                 }
@@ -108,10 +115,19 @@ namespace ReportSystemData.Service
             var listAcc = Get().Where(p => p.RoleId == 3).ToList();
             return listAcc;
         }
-        public Account GetAccountNotify(string officeID)
+        public async Task<Account> GetAccountNotify(string officeID)
         {
             var account = Get().Where(p => p.OfficeId.Equals(officeID) && p.TokenId != null && p.IsActive == true).FirstOrDefault();
-            return account;
+            if (account != null)
+            {
+                if (account.IsActive == true)
+                {
+                    account.IsActive = false;
+                    Update(account);
+                    return account;
+                }
+            }
+            return null;
         }
         public Account Login(LoginParameter login)
         {
@@ -131,7 +147,7 @@ namespace ReportSystemData.Service
             }
             if (isEmail && !isPhoneNumber)
             {
-                var account = Get().Where(acc => acc.Email.Equals(login.Account) && acc.Password.Equals(login.Password))
+                var account = Get().Where(acc => acc.Email.Equals(login.Account) && acc.Password.Equals(ParseSHA256(login.Password)))
                     .Include(role => role.Role).Include(info => info.AccountInfo).FirstOrDefault();
                 if (account != null)
                 {
@@ -141,7 +157,7 @@ namespace ReportSystemData.Service
             }
             if (!isEmail && isPhoneNumber)
             {
-                var account = Get().Where(acc => acc.PhoneNumber.Equals(login.Account) && acc.Password.Equals(login.Password))
+                var account = Get().Where(acc => acc.PhoneNumber.Equals(login.Account) && acc.Password.Equals(ParseSHA256(login.Password)))
                     .Include(role => role.Role).Include(info => info.AccountInfo).FirstOrDefault();
                 if (account != null)
                 {
@@ -181,7 +197,7 @@ namespace ReportSystemData.Service
                             Password = "123456",
                             RoleId = 1,
                             PhoneNumber = account.PhoneNumber,
-                            Username = account.DisplayName
+                            Fullname = account.DisplayName
                         };
                         var tmp = await RegisterAsync(acc);
                         if (tmp != null)
@@ -303,7 +319,7 @@ namespace ReportSystemData.Service
             var accountInfoTmp = new AccountInfo()
             {
                 AccountId = accountTmp.AccountId,
-                Fullname = account.Username,
+                Fullname = account.Fullname,
                 Address = account.Address,
                 IdentityCard = account.IdentityCard,
             };
@@ -424,6 +440,10 @@ namespace ReportSystemData.Service
                 if (model.IsActive != null)
                 {
                     account.IsActive = (bool)model.IsActive;
+                }
+                if (model.IsAuthen != null)
+                {
+                    account.IsAuthen = (bool)model.IsAuthen;
                 }
                 Update(account);
                 var check = _accountInfoService.UpdateAccountInfo(model);

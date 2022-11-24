@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 
-#nullable disable
-
 namespace _24HReportSystemData.Models
 {
     public partial class ReportTask
@@ -14,7 +12,7 @@ namespace _24HReportSystemData.Models
         public DateTime CreateTime { get; set; }
         public string Status { get; set; }
 
-        [JsonIgnore]
+        //[JsonIgnore]
         public virtual Report Report { get; set; }
         [JsonIgnore]
         public virtual Task Task { get; set; }

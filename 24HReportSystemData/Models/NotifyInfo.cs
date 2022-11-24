@@ -21,6 +21,7 @@ namespace _24HReportSystemData.Models
         public DateTime AcceptedDate { get; set; }
         public string ExecuteTime { get; set; }
         public string SumaryContent { get; set; }
+        public string Type { get; set; }
 
         public virtual OfficeInfo Office { get; set; }
         public virtual Account Officer { get; set; }

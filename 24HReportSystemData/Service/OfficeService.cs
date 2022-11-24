@@ -17,6 +17,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace _24HReportSystemData.Service
@@ -36,7 +37,6 @@ namespace _24HReportSystemData.Service
         private readonly IAccountService _accountService;
         private readonly IAccountInfoService _accountInfoService;
         private readonly INotifyInfoService _notifyInfoService;
-        //private readonly INotifyHubService _notifyHubService;
         private readonly IHubContext<NotifyHubService, INotifyHubService> _notifyHubService;
 
         public OfficeService(DbContext context, IOfficeRepository repository, IMapper mapper, IAccountService accountService, IAccountInfoService accountInfoService, INotifyInfoService notifyInfoService, IHubContext<NotifyHubService, INotifyHubService> notifyHubService) : base(context, repository)
@@ -133,9 +133,15 @@ namespace _24HReportSystemData.Service
             foreach (var item in listOffice)
             {
                 var getListOfficeActiveNum = _accountService.CheckAccountIsActiveNotify(item.OfficeId);
-                if(getListOfficeActiveNum > 0)
+                if (getListOfficeActiveNum > 0)
                 {
                     listOfficeActive.Add(item);
+                    item.ActiveOfficer = getListOfficeActiveNum;
+                    Update(item);
+                }
+                else {
+                    item.ActiveOfficer = 0;
+                    Update(item);
                 }
             }
             return listOfficeActive;
@@ -143,16 +149,21 @@ namespace _24HReportSystemData.Service
         public async Task<SosInfoResponse> GetDirectionAsync(GetDirectionViewModel model)
         {
             var acc = _accountService.GetAccountByID(model.AccountId);
+            var checknoti = _notifyInfoService.CheckExistNoti(model.AccountId);
+            if (checknoti)
+            {
+                throw new ErrorResponse("Người dùng đang trong hỗ trợ!!!", (int)HttpStatusCode.NotFound);
+            }
             var ori = "" + model.Latitude + "," + model.Longitude + "";
             //var listOffice = Get().Where(p => p.IsActive == true && p.IsDelete == false).ToList();
-            var listOffice = GetListOfficeActive().Where(p => p.IsActive == true && p.IsDelete == false).ToList();
+            var listOffice = GetListOfficeActive().Where(p => p.IsActive == true && p.IsDelete == false && p.ActiveOfficer > 0).ToList();
             var tmpDistance = 10000;
             var tmpDuration = 2000;
             var tmpOffice = "";
             foreach (var item in listOffice)
             {
                 var des = "" + item.Latitude + "," + item.Longitude + "";
-                var test = GetNearestPosition(ori, des, "bike");
+                var test = await GetNearestPosition(ori, des, "bike");
                 dynamic obj = JsonConvert.DeserializeObject(test);
                 Console.WriteLine(obj);
                 if ((obj.rows[0].elements[0].distance.value < tmpDistance) || obj.rows[0].elements[0].duration.value < tmpDuration)
@@ -161,12 +172,19 @@ namespace _24HReportSystemData.Service
                     tmpDuration = obj.rows[0].elements[0].duration.value;
                     tmpOffice = item.OfficeId;
                 }
+                Thread.Sleep(1 * 1000);
             }
-            if(!String.IsNullOrEmpty(tmpOffice))
+
+            if (!String.IsNullOrEmpty(tmpOffice))
             {
+
                 var oriLat = "" + model.Latitude + "";
                 var oriLng = "" + model.Longitude + "";
-                var officer = _accountService.GetAccountNotify(tmpOffice);
+                var officer =  await _accountService.GetAccountNotify(tmpOffice);
+                if (officer == null)
+                {
+                    throw new ErrorResponse("Không tìm thấy người hỗ trợ!!!", (int)HttpStatusCode.NotFound);
+                }
                 // create table notify
                 var modelNotify = new CreateNotifyViewModel()
                 {
@@ -174,20 +192,22 @@ namespace _24HReportSystemData.Service
                     OfficerId = officer.AccountId,
                     UserId = acc.AccountId,
                     Latitude = model.Latitude,
-                    Longitude = model.Longitude
+                    Longitude = model.Longitude,
+                    Type = !String.IsNullOrEmpty(model.Type) ? model.Type : null
                 };
                 var notiCreate = await _notifyInfoService.CreateNotifyAsync(modelNotify);
-                var updateAcc = new UpdateAccountViewModel()
-                {
-                    AccountID = officer.AccountId,
-                    IsActive = false
-                };
-                _accountService.UpdateAccount(updateAcc);
+                //var updateAcc = new UpdateAccountViewModel()
+                //{
+                //    AccountID = officer.AccountId,
+                //    IsActive = false
+                //};
+                //_accountService.UpdateAccount(updateAcc);
                 //firebaseNoti(acc.PhoneNumber, oriLat, oriLng, tmpOffice, officer.TokenId);
                 var notiHub = new NotifyHubService();
                 var resNotify = _mapper.Map<NotifyResponseViewModel>(modelNotify);
                 resNotify.NotifyId = notiCreate.Message;
                 resNotify.UserName = _accountInfoService.GetAccountInfoByID(acc.AccountId).Fullname;
+                resNotify.UserTokenId = acc.TokenId;
                 try
                 {
                     var tmp = _notifyHubService.Clients.Client(officer.TokenId).SendPrivateMessage(officer.TokenId, resNotify);
@@ -210,6 +230,7 @@ namespace _24HReportSystemData.Service
                     District = noti.Office.District,
                     Latitude = noti.Office.Latitude,
                     Longitude = noti.Office.Longitude,
+                    OfficerId = officer.AccountId,
                     OfficerName = officer.AccountInfo.Fullname,
                     OfficerPhoneNumber = officer.PhoneNumber
                 };
@@ -221,12 +242,18 @@ namespace _24HReportSystemData.Service
             }
         }
 
-        public string GetNearestPosition(string ori, string des, string vehicle)
+        public async Task<string> GetNearestPosition(string ori, string des, string vehicle)
         {
-            string url = $"https://rsapi.goong.io/DistanceMatrix?origins={ori}&destinations={des}&vehicle={vehicle}&api_key=6k91iLdrCs4UMY6OFnyb3EXIkDTfhmClgBwbVb5s";
-            var client = new WebClient();
-            var content = client.DownloadString(url);
-            return content;
+            try
+            {
+                var url = $"https://rsapi.goong.io/DistanceMatrix?origins={ori}&destinations={des}&vehicle={vehicle}&api_key=OUTaRH72cblwU6FbTNit8ioqbULwEtDbeCJq9ZtX";
+                var client = new WebClient();
+                var content = await client.DownloadStringTaskAsync(url);
+                return content;
+            }catch(Exception ex)
+            {
+                throw new ErrorResponse(ex.Message, (int)HttpStatusCode.Conflict);
+            }
         }
         public void firebaseNoti(string phonenumber, string lat, string lng, string officeID, string tokenID)
         {

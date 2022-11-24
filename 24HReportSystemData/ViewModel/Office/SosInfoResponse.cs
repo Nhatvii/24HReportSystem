@@ -14,6 +14,7 @@ namespace _24HReportSystemData.ViewModel.Office
         public string District { get; set; }
         public decimal Latitude { get; set; }
         public decimal Longitude { get; set; }
+        public string OfficerId { get; set; }
         public string OfficerName { get; set; }
         public string OfficerPhoneNumber { get; set; }
     }

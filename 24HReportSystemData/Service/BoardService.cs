@@ -42,7 +42,7 @@ namespace _24HReportSystemData.Service
 
         public Board GetLastedBoard()
         {
-            var board = Get().OrderByDescending(p => p.CreateTime).FirstOrDefault();
+            var board = Get().Where(p => p.IsDelete == false).OrderByDescending(p => p.CreateTime).FirstOrDefault();
             return board;
         }
         public SuccessResponse CreateBoard(CreateBoardViewModel model)

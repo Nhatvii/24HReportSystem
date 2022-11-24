@@ -19,5 +19,6 @@ namespace _24HReportSystemData.ViewModel.Notify
         public decimal Latitude { get; set; }
         [Required]
         public decimal Longitude { get; set; }
+        public string Type { get; set; }
     }
 }

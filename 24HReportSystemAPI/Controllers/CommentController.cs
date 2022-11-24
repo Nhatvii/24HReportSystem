@@ -75,6 +75,6 @@ namespace ReportSystemAPI.Controllers
 
         //    //return Ok(users);
         //    return Ok(_repository.RetrainData());
-        }
+        //}
     }
 }

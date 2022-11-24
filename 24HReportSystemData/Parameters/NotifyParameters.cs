@@ -9,5 +9,7 @@ namespace _24HReportSystemData.Parameters
     public class NotifyParameters
     {
         public string OfficeId { get; set; }
+        public bool? IsToday { get; set; }
+        public bool? Status { get; set; }
     }
 }

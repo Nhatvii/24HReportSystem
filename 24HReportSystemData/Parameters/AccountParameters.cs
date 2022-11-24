@@ -9,6 +9,7 @@ namespace _24HReportSystemData.Parameters
     public class AccountParameters
     {
         public int? RoleId { get; set; }
+        public string OfficeId { get; set; }
         public bool? IsAuthen { get; set; }
         public bool? IsActive { get; set; }
         public bool? WorkLoad { get; set; }

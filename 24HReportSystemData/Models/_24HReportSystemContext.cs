@@ -304,6 +304,8 @@ namespace _24HReportSystemData.Models
 
                 entity.Property(e => e.SumaryContent).HasColumnName("Sumary_Content");
 
+                entity.Property(e => e.Type).HasMaxLength(50);
+
                 entity.Property(e => e.UserId)
                     .IsRequired()
                     .HasMaxLength(50)
@@ -359,7 +361,7 @@ namespace _24HReportSystemData.Models
 
                 entity.Property(e => e.PhoneNumber)
                     .IsRequired()
-                    .HasMaxLength(10)
+                    .HasMaxLength(11)
                     .HasColumnName("Phone_Number")
                     .IsFixedLength(true);
             });

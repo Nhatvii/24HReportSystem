@@ -1,5 +1,6 @@
 ﻿using _24HReportSystemData.Models;
 using _24HReportSystemData.Parameters;
+using _24HReportSystemData.Response;
 using _24HReportSystemData.Service;
 using _24HReportSystemData.ViewModel.Notify;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace _24HReportSystemAPI.Controllers
@@ -61,8 +63,21 @@ namespace _24HReportSystemAPI.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
-                throw;
+                throw new ErrorResponse(ex.Message, (int)HttpStatusCode.NotFound);
+            }
+        }
+        [HttpPost]
+        [Route("sendLatLng")]
+        public string SendLatLng(string connectID, string lat, string lng)
+        {
+            try
+            {
+                var tmp = _notifyHubService.Clients.Client(connectID).SendLatLngToUser(connectID, lat, lng);
+                return "success";
+            }
+            catch (Exception ex)
+            {
+                throw new ErrorResponse(ex.Message, (int)HttpStatusCode.NotFound);
             }
         }
         [HttpPut]
@@ -71,6 +86,13 @@ namespace _24HReportSystemAPI.Controllers
         public ActionResult<OfficeInfo> CompleteNotify(CompleteNotifyViewModel model)
         {
             return Ok(_repository.CompleteNotify(model));
+        }
+
+        [HttpPut]
+        [Route("SendFirebaseNotify")]
+        public ActionResult<CreateFirebaseNotiViewModel> CreateFirebaseNoti(CreateFirebaseNotiViewModel model)
+        {
+            return Ok(_repository.CreateFirebaseNoti(model));
         }
     }
 }

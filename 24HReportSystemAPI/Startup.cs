@@ -52,7 +52,8 @@ namespace _24HReportSystemAPI
             services.AddControllersWithViews()
                 .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-            ); 
+            );
+            services.AddTransient<_24HReportSystemContext>();
             services.AddDbContext<_24HReportSystemContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("ReportSystemConnection"));
