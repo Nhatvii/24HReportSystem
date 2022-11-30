@@ -5,6 +5,7 @@ using _24HReportSystemData.Response;
 using _24HReportSystemData.ViewModel.Account;
 using _24HReportSystemData.ViewModel.Notify;
 using AutoMapper;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using ReportSystemData.Parameter.Report;
@@ -30,19 +31,22 @@ namespace _24HReportSystemData.Service
         bool CheckExistNoti(string userId);
         SuccessResponse CreateFirebaseNotiViaToken(CreateFirebaseNotiViewModel model);
         SuccessResponse CreateFirebaseNotiViaTopic(CreateFirebaseNotiViewModel model);
+        SuccessResponse CancelNotify(CancelNotifyViewModel model);
     }
     public partial class NotifyInfoService : BaseService<NotifyInfo>, INotifyInfoService
     {
         private readonly IMapper _mapper;
         private readonly IReportService _reportService;
         private readonly IAccountService _accountService;
+        private readonly IHubContext<NotifyHubService, INotifyHubService> _notifyHubService;
 
-        public NotifyInfoService(DbContext context, INotifyInfoRepository repository, IMapper mapper, IReportService reportService, IAccountService accountService) : base(context, repository)
+        public NotifyInfoService(DbContext context, INotifyInfoRepository repository, IMapper mapper, IReportService reportService, IAccountService accountService, IHubContext<NotifyHubService, INotifyHubService> notifyHubService) : base(context, repository)
         {
             _dbContext = context;
             _mapper = mapper;
             _reportService = reportService;
             _accountService = accountService;
+            _notifyHubService = notifyHubService;
         }
 
         public List<NotifyInfo> GetAllNotify(NotifyParameters notifyParameters)
@@ -249,6 +253,16 @@ namespace _24HReportSystemData.Service
                 throw new ErrorResponse("Gửi thông báo thất bại!!!", (int)HttpStatusCode.NotFound);
             }
             return null;
+        }
+        public SuccessResponse CancelNotify(CancelNotifyViewModel model)
+        {
+            var noti = GetNotifyByID(model.NotifyId);
+            var tmp = _notifyHubService.Clients.Client(noti.Officer.TokenId).SendCancelNotifyToUser(noti.Officer.TokenId, model.CancelType);
+            if (tmp.Exception != null)
+            {
+                throw new ErrorResponse("Gửi tín hiệu thất bại !!!", (int)HttpStatusCode.Conflict);
+            }
+            return new SuccessResponse((int)HttpStatusCode.OK, "Hoàn thành thông báo");
         }
     }
 }

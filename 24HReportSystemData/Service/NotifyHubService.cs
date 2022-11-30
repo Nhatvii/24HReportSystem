@@ -14,6 +14,7 @@ namespace _24HReportSystemData.Service
         Task SendPrivateMessage(string connectId, NotifyResponseViewModel model);
         Task SendPrivateMessageToUser(string connectionID, string msg);
         Task SendLatLngToUser(string connectionID, string lat, string lng);
+        Task SendCancelNotifyToUser(string connectionID, string msg);
     }
     public class NotifyHubService : Hub<INotifyHubService>
     {
@@ -34,6 +35,11 @@ namespace _24HReportSystemData.Service
         public Task SendLatLngToUser(string connectionID, string lat, string lng)
         {
             var tmp = Clients.Client(connectionID).SendLatLngToUser(connectionID, lat, lng);
+            return tmp;
+        }
+        public Task SendCancelNotifyToUser(string connectionID, string msg)
+        {
+            var tmp = Clients.Client(connectionID).SendCancelNotifyToUser(connectionID, msg);
             return tmp;
         }
     }

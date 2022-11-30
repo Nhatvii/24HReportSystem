@@ -82,6 +82,13 @@ namespace _24HReportSystemAPI.Controllers
         }
         [HttpPut]
         [Produces("application/json")]
+        [Route("CancelNotify")]
+        public ActionResult<OfficeInfo> CancelNotify(CancelNotifyViewModel model)
+        {
+            return Ok(_repository.CancelNotify(model));
+        }
+        [HttpPut]
+        [Produces("application/json")]
         [Route("CompleteNotify")]
         public ActionResult<OfficeInfo> CompleteNotify(CompleteNotifyViewModel model)
         {
