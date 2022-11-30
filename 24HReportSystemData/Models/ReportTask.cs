@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 
+#nullable disable
+
 namespace _24HReportSystemData.Models
 {
     public partial class ReportTask

@@ -87,9 +87,16 @@ namespace _24HReportSystemAPI.Controllers
         [HttpPut]
         [Produces("application/json")]
         [Route("UpdateAccountAuthen")]
-        public ActionResult<Account> UpdateAccount(string accountID)
+        public ActionResult<Account> UpdateAccountAuthen(string accountID)
         {
             return Ok(_repository.UpdateAccountAuthen(accountID));
+        }
+        [HttpPut]
+        [Produces("application/json")]
+        [Route("UpdateAccountLocation")]
+        public ActionResult<Account> UpdateAccountLocation(UpdateLocationAccountViewModel model)
+        {
+            return Ok(_repository.UpdateAccountLocation(model));
         }
     }
 }

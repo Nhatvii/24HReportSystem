@@ -241,7 +241,7 @@ namespace ReportSystemData.Service
                 reportTmp.Status = ReportConstants.STATUS_REPORT_NEW;
                 reportTmp.IsAnonymous = report.IsAnonymous;
                 reportTmp.UserId = report.UserID;
-                reportTmp.CategoryId = 0;
+                reportTmp.CategoryId = -1;
                 await CreateAsyn(reportTmp);
                 await _reportDetailService.CreateReportDetail(reportTmp.ReportId, report.Image, report.Video, report.Record);
                 return new SuccessResponse((int)HttpStatusCode.OK, "Tạo thành công");
@@ -361,7 +361,7 @@ namespace ReportSystemData.Service
                 if (model.Status == 3)
                 {
                     report.Status = ReportConstants.STATUS_REPORT_APPROVE;
-                    if (report.CategoryId != 1)
+                    if (report.CategoryId != 0)
                     {
                         var rootCate = _categoryService.GetCategoryByID(report.CategoryId);
                         var acc = _accountService.GetMinWorkLoad((int)rootCate.RootCategoryId);
@@ -393,7 +393,7 @@ namespace ReportSystemData.Service
                         var task = _taskService.CreateTask(createTask);
                         UpdateReportEditor(model.ReportId, acc.AccountId);
                     }
-                    if(report.CategoryId == 1)
+                    if(report.CategoryId == 0)
                     {
                         Update(report);
                         return new SuccessResponse((int)HttpStatusCode.OK, "Báo cáo với danh mục này cần phải tạo task thủ công!!!");

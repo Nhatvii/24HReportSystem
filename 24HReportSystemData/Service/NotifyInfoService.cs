@@ -28,7 +28,8 @@ namespace _24HReportSystemData.Service
         SuccessResponse UpdateNotifyStatus(string notifyID);
         SuccessResponse CompleteNotify(CompleteNotifyViewModel model);
         bool CheckExistNoti(string userId);
-        SuccessResponse CreateFirebaseNoti(CreateFirebaseNotiViewModel model);
+        SuccessResponse CreateFirebaseNotiViaToken(CreateFirebaseNotiViewModel model);
+        SuccessResponse CreateFirebaseNotiViaTopic(CreateFirebaseNotiViewModel model);
     }
     public partial class NotifyInfoService : BaseService<NotifyInfo>, INotifyInfoService
     {
@@ -144,7 +145,7 @@ namespace _24HReportSystemData.Service
             return false;
         }
 
-        public SuccessResponse CreateFirebaseNoti(CreateFirebaseNotiViewModel model)
+        public SuccessResponse CreateFirebaseNotiViaToken(CreateFirebaseNotiViewModel model)
         {
             WebRequest tRequest = WebRequest.Create("https://fcm.googleapis.com/fcm/send");
             tRequest.Method = "post";
@@ -159,6 +160,58 @@ namespace _24HReportSystemData.Service
                 //to = "/topics/taskA",
                 //to = "/topics/" + "" + officeID + "",
                 to = model.TokenId,
+                priority = "high",
+                content_available = true,
+                notification = new
+                {
+                    body = model.Body,
+                    title = model.Title,
+                    badge = 1
+                },
+            };
+
+            try
+            {
+                string postbody = JsonConvert.SerializeObject(payload).ToString();
+                Byte[] byteArray = Encoding.UTF8.GetBytes(postbody);
+                tRequest.ContentLength = byteArray.Length;
+                using (Stream dataStream = tRequest.GetRequestStream())
+                {
+                    dataStream.Write(byteArray, 0, byteArray.Length);
+                    using (WebResponse tResponse = tRequest.GetResponse())
+                    {
+                        using (Stream dataStreamResponse = tResponse.GetResponseStream())
+                        {
+                            if (dataStreamResponse != null) using (StreamReader tReader = new StreamReader(dataStreamResponse))
+                                {
+                                    String sResponseFromServer = tReader.ReadToEnd();
+                                    //result.Response = sResponseFromServer;
+                                    return new SuccessResponse((int)HttpStatusCode.OK, "Gửi thông báo thành công");
+                                }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ErrorResponse("Gửi thông báo thất bại!!!", (int)HttpStatusCode.NotFound);
+            }
+            return null;
+        }
+        public SuccessResponse CreateFirebaseNotiViaTopic(CreateFirebaseNotiViewModel model)
+        {
+            WebRequest tRequest = WebRequest.Create("https://fcm.googleapis.com/fcm/send");
+            tRequest.Method = "post";
+            //serverKey - Key from Firebase cloud messaging server  
+            tRequest.Headers.Add(string.Format("Authorization: key={0}", "AAAA18R_leU:APA91bFs4IswdpTTW64y8Y5YyhZ43JAMr74vDjdnC1no4wWPraCQsgK5s4kfxT_BB1OIb2TeOibIIwno-mf5RtUp_88aoOQzj3lFG9EXiONntpxV0eEMMAbk-oKlt6ZKoikyG-ET5BOE"));
+            //Sender Id - From firebase project setting  
+            tRequest.Headers.Add(string.Format("Sender: id={0}", "926714664421"));
+            tRequest.ContentType = "application/json";
+            //var registrationTokens = "dIxB3uFiTE2XITKA2Aj6q5:APA91bEsOpXxCV5guoUoHU3lr_A-nItHq4xY_IzaIWQQwvvgasra2GsD21IY8KQ_Ov1t3C1HfP-Loj-eOUuwnc7DCeqe1IbebW4sc7wLcYdjBSdyNmi1ETc16QgCQ8szftewZEZ1Hc3S";
+            var payload = new
+            {
+                to = "/topics/" + "" + model.Topic + "",
+                //to = model.TokenId,
                 priority = "high",
                 content_available = true,
                 notification = new

@@ -38,6 +38,8 @@ namespace _24HReportSystemData.Models
         public string OfficeId { get; set; }
         public string TokenId { get; set; }
         public bool IsActive { get; set; }
+        public decimal? Latitude { get; set; }
+        public decimal? Longitude { get; set; }
 
         [JsonIgnore]
         public virtual OfficeInfo Office { get; set; }

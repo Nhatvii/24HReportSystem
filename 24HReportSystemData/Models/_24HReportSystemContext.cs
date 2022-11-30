@@ -60,6 +60,10 @@ namespace _24HReportSystemData.Models
 
                 entity.Property(e => e.IsAuthen).HasColumnName("Is_Authen");
 
+                entity.Property(e => e.Latitude).HasColumnType("decimal(8, 6)");
+
+                entity.Property(e => e.Longitude).HasColumnType("decimal(9, 6)");
+
                 entity.Property(e => e.OfficeId)
                     .HasMaxLength(50)
                     .HasColumnName("Office_ID");

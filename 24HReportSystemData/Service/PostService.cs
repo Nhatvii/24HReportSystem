@@ -71,7 +71,7 @@ namespace ReportSystemData.Service
             }
             if (postParameters.SearchContent != null)
             {
-                post = post.Where(p => p.Title.Contains(postParameters.SearchContent) || p.SubTitle.Contains(postParameters.SearchContent)).ToList();
+                post = post.Where(p => p.Title.Contains(postParameters.SearchContent) || p.SubTitle.Contains(postParameters.SearchContent) || p.Description.Contains(postParameters.SearchContent)).ToList();
             }
             if (postParameters.isViewCount != null)
             {
@@ -117,7 +117,8 @@ namespace ReportSystemData.Service
         {
             var post = Get().Where(r => r.PostId == id)
                 .Include(p => p.Category)
-                .Include(p => p.Editor).ThenInclude(p => p.AccountInfo).ToList();
+                .Include(p => p.Editor).ThenInclude(p => p.AccountInfo)
+                .ToList();
             if (post[0] == null)
             {
                 throw new ErrorResponse("Bài viết không tồn tại!!!", (int)HttpStatusCode.NotFound);

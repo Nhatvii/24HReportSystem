@@ -38,6 +38,7 @@ namespace ReportSystemData.Service
         bool UpdateAccountWorkLoad(string email, int workNum);
         int CheckAccountIsActiveNotify(string officeID);
         Task<Account> GetAccountNotify(string officeID);
+        SuccessResponse UpdateAccountLocation(UpdateLocationAccountViewModel model);
 
     }
     public partial class AccountService : BaseService<Account>, IAccountService
@@ -129,6 +130,21 @@ namespace ReportSystemData.Service
             }
             return null;
         }
+        public SuccessResponse ChangePassword(ChangePasswordViewModel model)
+        {
+            var acc = GetAccountByID(model.AccountID);
+            if(acc != null)
+            {
+                if(acc.Password.Equals(model.Password))
+                {
+                    throw new ErrorResponse("Xin vui lòng không nhập mật khẩu đã dùng trước đó!!!", (int)HttpStatusCode.NotFound);
+                }
+                acc.Password = model.Password;
+                Update(acc);
+                return new SuccessResponse((int)HttpStatusCode.OK, "Cập nhật thành công");
+            }
+            throw new ErrorResponse("Không tìm thấy tài khoản!!!", (int)HttpStatusCode.NotFound);
+        }
         public Account Login(LoginParameter login)
         {
             //if(login.Email != null && login.PhoneNumber != null)
@@ -212,7 +228,6 @@ namespace ReportSystemData.Service
             {
                 throw new ErrorResponse(ex.Message, (int)HttpStatusCode.NotFound);
             }
-            return null;
         }
         public Account GetAccountByID(string email)
         {
@@ -354,6 +369,18 @@ namespace ReportSystemData.Service
             var secretHash = sha256.ComputeHash(secretBytes);
             return Convert.ToHexString(secretHash);
         }
+        public SuccessResponse UpdateAccountLocation(UpdateLocationAccountViewModel model)
+        {
+            var acc = GetAccountByID(model.AccountID);
+            if(acc == null)
+            {
+                throw new ErrorResponse("Không tìm thấy Email!!!", (int)HttpStatusCode.NotFound);
+            }
+            acc.Latitude = model.Latitude;
+            acc.Longitude = model.Longitude;
+            Update(acc);
+            return new SuccessResponse((int)HttpStatusCode.OK, "Cập nhật thành công");
+        }
         public SuccessResponse UpdateAccount(UpdateAccountViewModel model)
         {
             var account = GetAccountByID(model.AccountID);
@@ -419,10 +446,6 @@ namespace ReportSystemData.Service
                     {
                         throw new ErrorResponse("Sai định dạng chứng minh nhân dân!!!", (int)HttpStatusCode.NotFound);
                     }
-                }
-                if (model.Password != null)
-                {
-                    account.Password = model.Password;
                 }
                 if (model.Specialize.HasValue && model.Specialize > 0)
                 {

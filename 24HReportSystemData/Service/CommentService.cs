@@ -18,9 +18,6 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-
-using Microsoft.ML;
-using Microsoft.ML.Data;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using Microsoft.Data.SqlClient;

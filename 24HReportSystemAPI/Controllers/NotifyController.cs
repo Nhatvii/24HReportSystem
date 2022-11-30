@@ -89,10 +89,16 @@ namespace _24HReportSystemAPI.Controllers
         }
 
         [HttpPut]
-        [Route("SendFirebaseNotify")]
-        public ActionResult<CreateFirebaseNotiViewModel> CreateFirebaseNoti(CreateFirebaseNotiViewModel model)
+        [Route("SendFirebaseNotifyViaToken")]
+        public ActionResult<CreateFirebaseNotiViewModel> CreateFirebaseNotiViaToken(CreateFirebaseNotiViewModel model)
         {
-            return Ok(_repository.CreateFirebaseNoti(model));
+            return Ok(_repository.CreateFirebaseNotiViaToken(model));
+        }
+        [HttpPut]
+        [Route("SendFirebaseNotifyViaTopic")]
+        public ActionResult<CreateFirebaseNotiViewModel> CreateFirebaseNotiViaTopic(CreateFirebaseNotiViewModel model)
+        {
+            return Ok(_repository.CreateFirebaseNotiViaTopic(model));
         }
     }
 }

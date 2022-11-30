@@ -147,7 +147,6 @@ namespace _24HReportSystemAPI
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
                 endpoints.MapHub<NotifyHubService>("/notify");
-                
             });
         }
     }
