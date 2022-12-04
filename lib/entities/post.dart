@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:capstone_project/entities/account.dart';
-import 'package:capstone_project/entities/sub_category.dart';
+import 'package:capstone_project/entities/category.dart';
+// import 'package:capstone_project/entities/sub_category.dart';
 
 List<Post> postFromJson(String str) =>
     List<Post>.from(json.decode(str).map((x) => Post.fromJson(x)));
@@ -43,7 +44,8 @@ class Post {
   int shareCount;
   // String editorId;
   String status;
-  SubCategory category;
+  // SubCategory category;
+  Category category;
   Account account;
 
   factory Post.fromJson(Map<String, dynamic> json) => Post(
@@ -63,7 +65,8 @@ class Post {
         shareCount: json["shareCount"] ?? 0,
         // editorId: json["editorId"],
         status: json["status"],
-        category: SubCategory.fromJson(json["category"]),
+        // category: SubCategory.fromJson(json["category"]),
+        category: Category.fromJson(json["category"]),
         account: Account.fromJson(json["editor"]),
       );
 

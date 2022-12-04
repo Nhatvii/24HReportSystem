@@ -5,8 +5,8 @@ class SearchPostPagePresenter {
   late SearchPostPageModel _searchPostPageModel;
   late SearchPostPageView _searchPostPageView;
 
-  SearchPostPagePresenter(String searchText) {
-    _searchPostPageModel = SearchPostPageModel(searchText);
+  SearchPostPagePresenter() {
+    _searchPostPageModel = SearchPostPageModel();
   }
 
   set view(SearchPostPageView view) {

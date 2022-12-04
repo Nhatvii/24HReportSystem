@@ -79,7 +79,8 @@ class _LoginPageState extends State<LoginPage> implements LoginPageView {
                           text: "Số Điện Thoại",
                           enabled: true,
                           isDense: false,
-                          contentPadding: EdgeInsets.symmetric(vertical: 0.02.sh),
+                          contentPadding:
+                              EdgeInsets.symmetric(vertical: 0.02.sh),
                           focus: false,
                           inputType: TextInputType.phone,
                         ),
@@ -223,6 +224,17 @@ class _LoginPageState extends State<LoginPage> implements LoginPageView {
                   ),
                 ),
               ),
+              Positioned(
+                top: 20,
+                left: 85,
+                right: 85,
+                child: SizedBox(
+                    height: 0.2.sh,
+                    child: Image.asset(
+                      'assets/images/logo_image2.png',
+                      fit: BoxFit.contain,
+                    )),
+              ),
             ],
           ),
         ),
@@ -250,7 +262,7 @@ class _LoginPageState extends State<LoginPage> implements LoginPageView {
   }
 
   @override
-  onSignInSuccess() {
+  onUserSignInSuccess() {
     Navigator.pop(context, true);
   }
 

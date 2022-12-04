@@ -1,11 +1,15 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages
 
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:capstone_project/models/send_report_page_model.dart';
 import 'package:capstone_project/views/send_report_page_view.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
 
 class SendReportPagePresenter {
   late SendReportPageModel _sendReportPageModel;
@@ -75,14 +79,116 @@ class SendReportPagePresenter {
     _sendReportPageView.refreshData(_sendReportPageModel);
   }
 
+  Future<String> sendFileToFirebase(File file) async {
+    if (extension(file.path).contains('mp4')) {
+      final fileName = basename(file.path);
+      final destination = 'report_videos/$fileName';
+
+      _sendReportPageModel.task =
+          _sendReportPageModel.firebaseApi.uploadFile(destination, file);
+      _sendReportPageModel.task!.snapshotEvents.listen((event) {
+        _sendReportPageModel.uploadProgress =
+            (event.bytesTransferred / event.totalBytes) * 100;
+        _sendReportPageView.refreshData(_sendReportPageModel);
+      });
+
+      if (_sendReportPageModel.task == null) return "";
+
+      final snapshot = await _sendReportPageModel.task!.whenComplete(() {});
+      final urlDownload = await snapshot.ref.getDownloadURL();
+      _sendReportPageModel.listVideoString.insert(0, urlDownload);
+      return urlDownload;
+    } else {
+      final fileName = basename(file.path);
+      final destination = 'report_images/$fileName';
+
+      _sendReportPageModel.task =
+          _sendReportPageModel.firebaseApi.uploadFile(destination, file);
+      _sendReportPageModel.task!.snapshotEvents.listen((event) {
+        _sendReportPageModel.uploadProgress =
+            (event.bytesTransferred / event.totalBytes) * 100;
+        _sendReportPageView.refreshData(_sendReportPageModel);
+      });
+
+      if (_sendReportPageModel.task == null) return "";
+
+      final snapshot = await _sendReportPageModel.task!.whenComplete(() {});
+      final urlDownload = await snapshot.ref.getDownloadURL();
+      _sendReportPageModel.listImageString.insert(0, urlDownload);
+      _sendReportPageModel.numberOfFile++;
+      return urlDownload;
+    }
+  }
+
+  Future selectFileFromDevice() async {
+    final result = await FilePicker.platform.pickFiles(
+        allowMultiple: true,
+        type: FileType.custom,
+        allowedExtensions: ['png', 'jpg', 'mp4']);
+
+    if (result == null) return;
+    for (var i in result.files) {
+      File fileSelect = File(i.path!);
+      if (extension(fileSelect.path).contains('mp4')) {
+        if (_sendReportPageModel.listVideo.length < 2) {
+          await sendFileToFirebase(fileSelect).then((stringUrl) async {
+            await _sendReportPageModel.generateThumbnailVideo(stringUrl).then(
+                (value) => {_sendReportPageModel.listVideo.insert(0, value)});
+          });
+        } else {
+          throw 'Không được tải lên quá 2 video';
+        }
+      } else {
+        await sendFileToFirebase(fileSelect).whenComplete(
+            () => _sendReportPageModel.listImage.insert(0, fileSelect));
+      }
+    }
+  }
+
+  Future pickImage() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.camera);
+      if (image == null) return;
+      final imagePermanent =
+          await _sendReportPageModel.saveImagePermanently(image.path);
+      _sendReportPageModel.file = imagePermanent;
+      await sendFileToFirebase(_sendReportPageModel.file!).whenComplete(() =>
+          _sendReportPageModel.listImage.insert(0, _sendReportPageModel.file!));
+    } on PlatformException catch (e) {
+      throw ('Failed to pick image: $e');
+    }
+  }
+
+  Future pickVideo() async {
+    try {
+      if (_sendReportPageModel.listVideo.length < 2) {
+        final video = await ImagePicker().pickVideo(source: ImageSource.camera);
+        if (video == null) return;
+        final videoPermanent =
+            await _sendReportPageModel.saveImagePermanently(video.path);
+        _sendReportPageModel.file = videoPermanent;
+        await sendFileToFirebase(_sendReportPageModel.file!)
+            .then((stringUrl) async {
+          await _sendReportPageModel.generateThumbnailVideo(stringUrl).then(
+              (value) => {_sendReportPageModel.listVideo.insert(0, value)});
+        });
+      } else {
+        throw ('Không được tải lên quá 2 video');
+      }
+    } on PlatformException catch (e) {
+      throw ('Failed to pick image: $e');
+    }
+  }
+
   void selectFile() async {
-    await _sendReportPageModel
-        .selectFile()
+    await selectFileFromDevice()
         .onError((error, stackTrace) => {
               _sendReportPageView.showToast(error.toString()),
             })
-        .whenComplete(
-            () => _sendReportPageView.refreshData(_sendReportPageModel));
+        .whenComplete(() => {
+              _sendReportPageModel.uploadProgress = 0,
+              _sendReportPageView.refreshData(_sendReportPageModel)
+            });
     _sendReportPageView.refreshData(_sendReportPageModel);
   }
 
@@ -102,15 +208,14 @@ class SendReportPagePresenter {
   }
 
   void openCamera() async {
-    await _sendReportPageModel.pickImage().whenComplete(
-          () => _sendReportPageView.refreshData(_sendReportPageModel),
-        );
+    await pickImage().whenComplete(
+      () => _sendReportPageView.refreshData(_sendReportPageModel),
+    );
     _sendReportPageView.refreshData(_sendReportPageModel);
   }
 
   void openVideo() async {
-    await _sendReportPageModel
-        .pickVideo()
+    await pickVideo()
         .onError((error, stackTrace) => {
               _sendReportPageView.showToast(error.toString()),
             })

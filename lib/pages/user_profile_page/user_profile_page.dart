@@ -73,31 +73,34 @@ class _UserProfilePageState extends State<UserProfilePage>
                       return Column(
                         children: [
                           SizedBox(
-                            height: 0.05.sh,
+                            height: 0.03.sh,
                           ),
                           AvatarName(
-                              height: 0.08.sh,
-                              width: 0.16.sw,
-                              radius: 35.r,
-                              text: snapshot.data!.accountInfo.username,
+                              height: 0.09.sh,
+                              width: 0.18.sw,
+                              radius: 40.r,
+                              text: snapshot.data!.accountInfo.fullname,
                               fontSize: 25.sp),
                           SizedBox(
                             height: 0.01.sh,
                           ),
-                          Text('Xin chào,',
+                          Text('Xin Chào,',
                               style: TextStyle(
                                   fontSize: 16.sp,
                                   fontWeight: FontWeight.w600)),
                           SizedBox(
+                            height: 0.005.sh,
+                          ),
+                          SizedBox(
                             width: 0.7.sw,
                             child: Center(
                               child: Text(
-                                snapshot.data!.accountInfo.username == ''
+                                snapshot.data!.accountInfo.fullname == ''
                                     ? snapshot.data!.email
-                                    : snapshot.data!.accountInfo.username,
+                                    : snapshot.data!.accountInfo.fullname,
                                 style: TextStyle(
-                                    fontSize: 22.sp,
-                                    fontWeight: FontWeight.w500),
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.w600),
                               ),
                             ),
                           ),
@@ -107,22 +110,23 @@ class _UserProfilePageState extends State<UserProfilePage>
                           Divider(
                             color: Colors.grey.shade300,
                             thickness: 1,
-                            indent: 0.05.sw,
-                            endIndent: 0.05.sw,
                           ),
                           SizedBox(
-                            height: 0.04.sh,
+                            height: 0.02.sh,
                           ),
-                          _userProfilePageModel.isEdit
-                              ? EditFormPart(
-                                  userProfilePageModel: _userProfilePageModel,
-                                  editFunction: onEditUserInfo,
-                                  cancelEditFunction: onCancelEdit,
-                                )
-                              : ViewFormPart(
-                                  userProfilePageModel: _userProfilePageModel,
-                                  isEditFunction: onClickEditInfo,
-                                ),
+                          // _userProfilePageModel.isEdit
+                          //     ? EditFormPart(
+                          //         userProfilePageModel: _userProfilePageModel,
+                          //         editFunction: onEditUserInfo,
+                          //         cancelEditFunction: onCancelEdit,
+                          //       )
+                          // :
+                          ViewFormPart(
+                            userProfilePageModel: _userProfilePageModel,
+                            isEditFunction: onClickEditInfo,
+                            confirmFunction: onEditUserInfo,
+                            cancelEditFunction: onCancelEdit,
+                          ),
                         ],
                       );
                     }

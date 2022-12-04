@@ -8,7 +8,7 @@ abstract class HomePageView {
 
   void onTapTagCategory(int categoryID, int index);
 
-  void navigateToSearchPage(String search);
+  // void navigateToSearchPage(String search);
 
   void navigateToDetailPage(Post post);
 
@@ -18,9 +18,13 @@ abstract class HomePageView {
 
   void navigateToReportSendHistoryPage();
 
+  void navigateToUserSosRequestPage();
+
   void navigateToSeeMoreNewPostPage();
 
   void navigateToSeeMorePopularPostPage();
+
+  void showLoginDialog();
 
   void logOut();
 

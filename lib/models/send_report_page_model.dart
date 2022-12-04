@@ -7,13 +7,10 @@ import 'package:capstone_project/api/Firebase/firebase_api.dart';
 import 'package:capstone_project/api/Map/map_api.dart';
 import 'package:capstone_project/api/Report/report_api.dart';
 import 'package:capstone_project/constants/constants.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_sound/flutter_sound.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -58,6 +55,8 @@ class SendReportPageModel {
   String? accountId;
   String? email;
   double uploadProgress = 0;
+  int numberOfFile = 0;
+  bool isFinishUploadingFile = false;
 
   SendReportPageModel() {
     isAgree = false;
@@ -107,81 +106,7 @@ class SendReportPageModel {
     return videoFile;
   }
 
-  Future selectFile() async {
-    // var user = auth.currentUser;
-    final result = await FilePicker.platform.pickFiles(
-        allowMultiple: true,
-        type: FileType.custom,
-        allowedExtensions: ['png', 'jpg', 'mp4']);
-
-    if (result == null) return;
-    for (var i in result.files) {
-      File fileSelect = File(i.path!);
-      // if (user != null) {
-      if (extension(fileSelect.path).contains('mp4')) {
-        if (listVideo.length < 2) {
-          await sendFileToFirebase(fileSelect).then((stringUrl) async {
-            await generateThumbnailVideo(stringUrl)
-                .then((value) => {listVideo.insert(0, value)});
-          });
-        } else {
-          throw 'Không được tải lên quá 2 video';
-        }
-      } else {
-        await sendFileToFirebase(fileSelect)
-            .whenComplete(() => listImage.insert(0, fileSelect));
-      }
-      // } else {
-      //   auth.signInAnonymously().then((value) async {
-      //     if (extension(fileSelect.path).contains('mp4')) {
-      //       if (listVideo.length < 2) {
-      //         await sendFileToFirebase(fileSelect).then((stringUrl) async {
-      //           await generateThumbnailVideo(stringUrl)
-      //               .then((value) => {listVideo.insert(0, value)});
-      //         });
-      //       } else {
-      //         throw 'Không được tải lên quá 2 video';
-      //       }
-      //     } else {
-      //       await sendFileToFirebase(fileSelect)
-      //           .whenComplete(() => listImage.insert(0, fileSelect));
-      //     }
-      //   });
-      // }
-    }
-  }
-
-  Future<String> sendFileToFirebase(File file) async {
-    if (extension(file.path).contains('mp4')) {
-      final fileName = basename(file.path);
-      final destination = 'report_videos/$fileName';
-
-      task = firebaseApi.uploadFile(destination, file);
-
-      if (task == null) return "";
-
-      final snapshot = await task!.whenComplete(() {});
-      final urlDownload = await snapshot.ref.getDownloadURL();
-      listVideoString.insert(0, urlDownload);
-      return urlDownload;
-    } else {
-      final fileName = basename(file.path);
-      final destination = 'report_images/$fileName';
-
-      task = firebaseApi.uploadFile(destination, file);
-      // task!.snapshotEvents.listen((event) {
-      //   uploadProgress =
-      //       event.bytesTransferred.toDouble() / event.totalBytes.toDouble();
-      // });
-
-      if (task == null) return "";
-
-      final snapshot = await task!.whenComplete(() {});
-      final urlDownload = await snapshot.ref.getDownloadURL();
-      listImageString.insert(0, urlDownload);
-      return urlDownload;
-    }
-  }
+  
 
   Future<void> removeSelectFileFromFirebase(File file, int index) async {
     if (extension(file.path).contains('webp')) {
@@ -217,62 +142,6 @@ class SendReportPageModel {
       initialTime: time,
       initialEntryMode: TimePickerEntryMode.dial,
     );
-  }
-
-  Future pickImage() async {
-    // var user = auth.currentUser;
-    try {
-      final image = await ImagePicker().pickImage(source: ImageSource.camera);
-      // final video = await ImagePicker().pickVideo(source: ImageSource.camera);
-      if (image == null) return;
-
-      // final imageTeporary = File(image.path);
-      final imagePermanent = await saveImagePermanently(image.path);
-      file = imagePermanent;
-      // if (user != null) {
-      await sendFileToFirebase(file!)
-          .whenComplete(() => listImage.insert(0, file!));
-      // } else {
-      //   auth.signInAnonymously().then((value) async {
-      //     await sendFileToFirebase(file!)
-      //         .whenComplete(() => listImage.insert(0, file!));
-      //   });
-      // }
-      // listImage.insert(0, file!);
-    } on PlatformException catch (e) {
-      throw ('Failed to pick image: $e');
-    }
-  }
-
-  Future pickVideo() async {
-    // var user = auth.currentUser;
-    try {
-      if (listVideo.length < 2) {
-        final video = await ImagePicker().pickVideo(source: ImageSource.camera);
-        if (video == null) return;
-
-        // final imageTeporary = File(image.path);
-        final videoPermanent = await saveImagePermanently(video.path);
-        file = videoPermanent;
-        // if (user != null) {
-        await sendFileToFirebase(file!).then((stringUrl) async {
-          await generateThumbnailVideo(stringUrl)
-              .then((value) => {listVideo.insert(0, value)});
-        });
-        // } else {
-        //   auth.signInAnonymously().then((value) async {
-        //     await sendFileToFirebase(file!).then((stringUrl) async {
-        //       await generateThumbnailVideo(stringUrl)
-        //           .then((value) => {listVideo.insert(0, value)});
-        //     });
-        //   });
-        // }
-      } else {
-        throw ('Không được tải lên quá 2 video');
-      }
-    } on PlatformException catch (e) {
-      throw ('Failed to pick image: $e');
-    }
   }
 
   Future<File> saveImagePermanently(String imagePath) async {

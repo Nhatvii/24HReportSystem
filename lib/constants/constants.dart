@@ -4,9 +4,16 @@ class Constants {
   // Domain
   final String localhost =
       // 'http://ec2-52-221-205-151.ap-southeast-1.compute.amazonaws.com/api';
-      'https://domaintestapp.online/api';
-      // 'https://24hreportsystemapi.conveyor.cloud/api';
+      // 'https://24hreportsystemapi.azurewebsites.net/api';
+      'http://24hcanhbao.com/api';
+  // 'https://24hreportsystemapi.conveyor.cloud/api';
   final String shareUrl = 'https://report24h.herokuapp.com/postDetail';
+
+  // Signal R
+  final String signalRUrl = 
+  // 'https://24hreportsystemapi.azurewebsites.net/notify';
+  'http://24hcanhbao.com/notify';
+  // 'https://24hreportsystemapi.conveyor.cloud/notify';
 
   // Status
   final int statusPublic = 3;

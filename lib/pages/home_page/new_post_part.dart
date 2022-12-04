@@ -24,7 +24,7 @@ class NewPost extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Container(
-              height: 0.43.sh,
+              height: 0.45.sh,
               alignment: Alignment.center,
               child: const CircularProgressIndicator(),
             );
@@ -36,7 +36,7 @@ class NewPost extends StatelessWidget {
                   autoPlay: true,
                   autoPlayAnimationDuration: const Duration(seconds: 2),
                   padEnds: false,
-                  height: 0.43.sh,
+                  height: 0.45.sh,
                   enableInfiniteScroll: false,
                   viewportFraction: 0.95,
                 ),
@@ -48,7 +48,7 @@ class NewPost extends StatelessWidget {
               );
             } else {
               return SizedBox(
-                  height: 0.43.sh,
+                  height: 0.45.sh,
                   child: Center(
                     child: Text(
                       'Không có bài viết nào !!!',
@@ -60,7 +60,7 @@ class NewPost extends StatelessWidget {
           }
           if (snapshot.hasError) {
             return SizedBox(
-              height: 0.43.sh,
+              height: 0.45.sh,
               child: Center(
                   child: Text(
                 'Xảy ra lỗi: Không thể tải được bài viết',
@@ -69,7 +69,7 @@ class NewPost extends StatelessWidget {
             );
           }
           return Container(
-            height: 0.43.sh,
+            height: 0.45.sh,
           );
         });
   }
@@ -80,7 +80,7 @@ class NewPost extends StatelessWidget {
       child: GestureDetector(
         onTap: () => function(post),
         child: Container(
-          height: 0.43.sh,
+          height: 0.45.sh,
           width: 1.sw,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15.r),
@@ -89,7 +89,7 @@ class NewPost extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15.r),
             ),
-            elevation: 2,
+            elevation: 3,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -116,22 +116,25 @@ class NewPost extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Lừa Đảo Qua ${post.category.subCategory} - ${post.category.rootCategoryNavigation.type}',
+                          'Lừa Đảo Qua ${post.category.type} - ${post.category.rootCategory!.type}',
                           style: TextStyle(
                               fontSize: 13.sp,
                               color: Colors.grey,
                               fontWeight: FontWeight.w500),
                         ),
                         SizedBox(
-                          height: 0.01.sh,
+                          height: 0.012.sh,
                         ),
-                        Text(post.title,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                            style: TextStyle(
-                                fontSize: 16.sp,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500)),
+                        Container(
+                          constraints: BoxConstraints(minHeight: 0.07.sh),
+                          child: Text(post.title,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontSize: 16.sp,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500)),
+                        ),
                         SizedBox(
                           height: 0.01.sh,
                         ),

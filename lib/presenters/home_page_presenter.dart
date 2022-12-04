@@ -1,7 +1,6 @@
 import 'package:capstone_project/models/home_page_model.dart';
 import 'package:capstone_project/views/home_page_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePagePresenter {
   late HomePageModel _homePageModel;
@@ -38,36 +37,25 @@ class HomePagePresenter {
 
   void logOut() async {
     if (FirebaseAuth.instance.currentUser != null) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
       _homePageModel.googleServices.signOut().whenComplete(() async {
-        await prefs
-            .remove('accountId')
-            .then((value) => _homePageModel.accountId = null);
-        await prefs
-            .remove('email')
-            .then((value) => _homePageModel.email = null);
-        await prefs
-            .remove('username')
-            .then((value) => _homePageModel.name = null);
+        await _homePageModel.userPrefs.logOut();
+        _homePageView.logOut();
       });
-      _homePageView.refreshData(_homePageModel);
-      _homePageView.logOut();
     } else {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs
-          .remove('accountId')
-          .then((value) => _homePageModel.accountId = null);
-      await prefs.remove('email').then((value) => _homePageModel.email = null);
-      await prefs
-          .remove('username')
-          .then((value) => _homePageModel.name = null);
-      _homePageView.refreshData(_homePageModel);
+      await _homePageModel.userPrefs.logOut();
       _homePageView.logOut();
     }
   }
 
   void openDrawer() {
-    _homePageModel.getInstance();
     _homePageModel.scaffoldKey.currentState!.openDrawer();
+  }
+
+  void onClickToSosPage() {
+    if (_homePageModel.userPrefs.getAccountId() != null) {
+      _homePageView.navigateToUserSosRequestPage();
+    } else {
+      _homePageView.showLoginDialog();
+    }
   }
 }

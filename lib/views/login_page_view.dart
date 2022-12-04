@@ -7,7 +7,7 @@ abstract class LoginPageView {
 
   void onSignInClicked();
 
-  onSignInSuccess();
+  onUserSignInSuccess();
   
   onSignInFail(String msg);
 

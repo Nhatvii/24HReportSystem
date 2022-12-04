@@ -31,9 +31,7 @@ class PostDetailPagePresenter {
   }
 
   void postComment(String postId, StateSetter sheetState) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? accountId = prefs.getString('accountId');
-    if (accountId != null) {
+    if (_postDetailPageModel.userPrefs.getAccountId() != null) {
       _postDetailPageModel.commentApi
           .postComment(_postDetailPageModel.comment.text, postId)
           .then((value) => {
@@ -138,9 +136,7 @@ class PostDetailPagePresenter {
   }
 
   void likePost(String postId) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? accountId = prefs.getString('accountId');
-    if (accountId != null) {
+    if (_postDetailPageModel.userPrefs.getAccountId() != null) {
       _postDetailPageModel.emotionApi.updateEmotion(postId).then((value) => {
             _postDetailPageModel.isLike = !_postDetailPageModel.isLike,
             if (_postDetailPageModel.isLike == true)
@@ -163,10 +159,8 @@ class PostDetailPagePresenter {
   }
 
   void savePost(String postId) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? accountId = prefs.getString('accountId');
-    if (accountId != null) {
-      _postDetailPageModel.postApi.updatePostSaved(postId).then((value) => {
+    if (_postDetailPageModel.userPrefs.getAccountId() != null) {
+      _postDetailPageModel.emotionApi.updatePostSaved(postId).then((value) => {
             _postDetailPageModel.isSave = !_postDetailPageModel.isSave,
             _postDetailPageView.refreshData(_postDetailPageModel),
           });
@@ -177,11 +171,6 @@ class PostDetailPagePresenter {
 
   void onNavigateDetailPage(Post post) {
     _postDetailPageView.navigateToDetailPage(post);
-  }
-
-  void checkStatusLikeSave(String postId) {
-    _postDetailPageModel.emotionApi.checkEmotion(postId);
-    _postDetailPageView.refreshData(_postDetailPageModel);
   }
 
   void checkIsSend(int check, StateSetter sheetState) {

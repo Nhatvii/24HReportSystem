@@ -95,25 +95,4 @@ class PostApi {
       throw Exception('Unable To Load Post With Search Text');
     }
   }
-
-  // Post Saved API
-  Future updatePostSaved(String postId) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var accountId = prefs.getString('accountId');
-    var url = Uri.parse('${constants.localhost}/Post/UpdatePostSave');
-    var response = await http.put(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode({
-        "postId": postId,
-        "userId": accountId,
-      }),
-    );
-    if (response.statusCode == 200) {
-      var jsonData = jsonDecode(response.body);
-      return jsonData;
-    }
-  }
 }

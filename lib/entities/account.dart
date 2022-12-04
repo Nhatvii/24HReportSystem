@@ -11,7 +11,7 @@ class Account {
     Account({
         required this.accountId,
         required this.email,
-        required this.password,
+        // required this.password,
         required this.phoneNumber,
         // required this.role,
         required this.accountInfo,
@@ -19,7 +19,7 @@ class Account {
 
     String accountId;
     String email;
-    String password;
+    // String password;
     String phoneNumber;
     // Role role;
     AccountInfo accountInfo;
@@ -27,7 +27,7 @@ class Account {
     factory Account.fromJson(Map<String, dynamic> json) => Account(
         accountId: json['accountId'],
         email: json["email"] ?? '',
-        password: json["password"],
+        // password: json["password"],
         phoneNumber: json["phoneNumber"] ?? '',
         // role: Role.fromJson(json["role"]),
         accountInfo: AccountInfo.fromJson(json["accountInfo"]),
@@ -36,7 +36,7 @@ class Account {
     Map<String, dynamic> toJson() => {
         "accountId": accountId,
         "email": email,
-        "password": password,
+        // "password": password,
         "phoneNumber": phoneNumber,
         // "role": role.toJson(),
         "accountInfo": accountInfo.toJson(),

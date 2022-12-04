@@ -7,7 +7,8 @@ class CategoryApi {
 
   // Get List Category API
   Future<List<Category>> getListCategory() async {
-    var url = Uri.parse("${constants.localhost}/RootCategory");
+    var url = Uri.parse("${constants.localhost}/Category?IsRootCategory=true");
+    // var url = Uri.parse("${constants.localhost}/RootCategory");
     var response = await http.get(url);
 
     if (response.statusCode == 200) {

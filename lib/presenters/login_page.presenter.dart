@@ -33,16 +33,14 @@ class LoginPagePresenter {
       _loginPageView.refreshData(_loginPageModel);
       _loginPageModel.accountApi
           .signIn(_loginPageModel.account.text, _loginPageModel.password.text)
-          .then((value) => {
-                if (value['error'] == null)
-                  {_loginPageView.onSignInSuccess()}
-                else
-                  {
-                    _loginPageModel.isLoading = false,
-                    _loginPageView
-                        .onSignInFail('Sai tên tài khoản hoặc mật khẩu')
-                  }
-              });
+          .then((value) async {
+        if (value != null) {
+          _loginPageView.onUserSignInSuccess();
+        } else {
+          _loginPageModel.isLoading = false;
+          _loginPageView.onSignInFail('Sai tên tài khoản hoặc mật khẩu');
+        }
+      });
     }
   }
 
@@ -55,7 +53,7 @@ class LoginPagePresenter {
                   .signInGoogle(googleUser.user!.email!)
                   .then((value) => {
                         if (value['error'] == null)
-                          {_loginPageView.onSignInSuccess()}
+                          {_loginPageView.onUserSignInSuccess()}
                         else
                           {
                             _loginPageView

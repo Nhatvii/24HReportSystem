@@ -34,7 +34,7 @@ class _ListCategoryState extends State<ListCategory> {
                     return GestureDetector(
                         onTap: () {
                           widget.homePagePresenter.onTapTagCategory(
-                              snapshot.data![index].rootCategoryId, index);
+                              snapshot.data![index].categoryId, index);
                         },
                         child: TagCate(
                             text: snapshot.data![index].type,

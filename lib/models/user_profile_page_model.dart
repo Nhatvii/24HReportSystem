@@ -34,7 +34,7 @@ class UserProfilePageModel {
   Future<void> init() async {
     await accountApi.getAccountInfo().then((value) => {
           email.text = value.email,
-          name.text = value.accountInfo.username,
+          name.text = value.accountInfo.fullname,
           phone.text = value.phoneNumber,
           address.text = value.accountInfo.address,
           identityCard.text = value.accountInfo.identityCard,

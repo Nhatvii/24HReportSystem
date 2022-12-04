@@ -27,7 +27,7 @@ class ListCategoryPopularPost extends StatelessWidget {
                   onTap: () {
                     seeMorePopularPostPagePresenter.onTapTagCategory(
                         seeMorePopularPostPageModel
-                            .listCategory[index].rootCategoryId,
+                            .listCategory[index].categoryId,
                         index);
                   },
                   child: TagCate(

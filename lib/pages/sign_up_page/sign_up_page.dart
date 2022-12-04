@@ -46,9 +46,20 @@ class _SignUpPageState extends State<SignUpPage> implements SignUpPageView {
                 ),
               ),
               Positioned(
+                top: 20,
+                left: 85,
+                right: 85,
+                child: SizedBox(
+                    height: 0.2.sh,
+                    child: Image.asset(
+                      'assets/images/logo_image2.png',
+                      fit: BoxFit.contain,
+                    )),
+              ),
+              Positioned(
                 bottom: 0,
                 child: Container(
-                  height: 0.8.sh,
+                  height: 0.75.sh,
                   width: 1.sw,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
@@ -57,19 +68,21 @@ class _SignUpPageState extends State<SignUpPage> implements SignUpPageView {
                     ),
                     color: Colors.white,
                   ),
-                  child: Container(
-                      padding: EdgeInsets.all(0.05.sh),
-                      child: _signUpPageModel.otpPhone
-                          ? OtpVerifyForm(
-                              signUpPageModel: _signUpPageModel,
-                              signUpPagePresenter: _signUpPagePresenter,
-                              onCancel: onOtpCancel,
-                            )
-                          : SignUpForm(
-                              signUpPageModel: _signUpPageModel,
-                              navigateLoginPage: navigateToLoginPage,
-                              onSignUpClicked: onSignUpClicked,
-                              showPass: showPass)),
+                  child: SingleChildScrollView(
+                    child: Container(
+                        padding: EdgeInsets.all(0.05.sh),
+                        child: _signUpPageModel.otpPhone
+                            ? OtpVerifyForm(
+                                signUpPageModel: _signUpPageModel,
+                                signUpPagePresenter: _signUpPagePresenter,
+                                onCancel: onOtpCancel,
+                              )
+                            : SignUpForm(
+                                signUpPageModel: _signUpPageModel,
+                                navigateLoginPage: navigateToLoginPage,
+                                onSignUpClicked: onSignUpClicked,
+                                showPass: showPass)),
+                  ),
                 ),
               ),
             ],

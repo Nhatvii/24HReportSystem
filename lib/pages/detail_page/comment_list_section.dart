@@ -105,7 +105,7 @@ class CommentListSection extends StatelessWidget {
               height: 0.05.sh,
               width: 0.1.sw,
               radius: 35.r,
-              text: comment.user.accountInfo.username,
+              text: comment.user.accountInfo.fullname,
               fontSize: 16.sp),
           SizedBox(
             width: 0.02.sw,
@@ -181,7 +181,7 @@ class CommentListSection extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                comment.user.accountInfo.username,
+                                comment.user.accountInfo.fullname,
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 13.sp,
@@ -205,7 +205,7 @@ class CommentListSection extends StatelessWidget {
                         child: Row(
                           children: [
                             comment.user.accountId ==
-                                    postDetailPageModel.accountId
+                                    postDetailPageModel.userPrefs.getAccountId()
                                 ? Row(
                                     children: [
                                       GestureDetector(
@@ -227,7 +227,8 @@ class CommentListSection extends StatelessWidget {
                                         width: 0.02.sw,
                                       ),
                                       GestureDetector(
-                                        onTap: () => function(comment.commentId, index, sheetState),
+                                        onTap: () => function(comment.commentId,
+                                            index, sheetState),
                                         child: Text(
                                           'Xóa',
                                           style: TextStyle(

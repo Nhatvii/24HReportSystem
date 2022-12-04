@@ -81,7 +81,7 @@ class PostDetailPart extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TagCate(
-                      text: snapshot.data!.category.subCategory,
+                      text: snapshot.data!.category.type,
                       isBeingSelected: true),
                   Row(
                     children: [
@@ -153,7 +153,7 @@ class PostDetailPart extends StatelessWidget {
               Container(
                   alignment: Alignment.centerRight,
                   child: Text(
-                    snapshot.data!.account.accountInfo.username,
+                    snapshot.data!.account.accountInfo.fullname,
                     style: TextStyle(fontSize: 16.sp),
                   )),
               SizedBox(

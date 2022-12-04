@@ -59,7 +59,7 @@ class _BottomBarState extends State<BottomBar> {
                   child: Container(
                     height: 0.07.sh,
                     width: 0.42.sw,
-                    padding: EdgeInsets.only(left: 0.01.sh),
+                    padding: EdgeInsets.only(left: 0.01.sh, bottom: 0.005.sh),
                     decoration: BoxDecoration(
                       color: Colors.grey.shade200,
                       borderRadius: BorderRadius.circular(15.r),
@@ -233,7 +233,7 @@ class _BottomBarState extends State<BottomBar> {
                           border: Border(
                               top: BorderSide(
                                   color: Colors.grey, width: 0.002.sw))),
-                      child: model.name == null
+                      child: model.userPrefs.getName() == null
                           ? GestureDetector(
                               onTap: () => widget.function(),
                               child: SizedBox(
@@ -255,7 +255,7 @@ class _BottomBarState extends State<BottomBar> {
                                     height: 0.06.sh,
                                     width: 0.12.sw,
                                     radius: 35.r,
-                                    text: model.name ?? "",
+                                    text: model.userPrefs.getName()!,
                                     fontSize: 18.sp),
                                 SizedBox(
                                   width: 0.03.sw,

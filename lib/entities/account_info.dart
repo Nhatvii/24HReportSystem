@@ -1,26 +1,26 @@
 class AccountInfo {
   AccountInfo({
-    required this.username,
+    required this.fullname,
     required this.address,
     required this.identityCard,
-    required this.isAuthen,
+    // required this.isAuthen,
   });
-  String username;
+  String fullname;
   String address;
   String identityCard;
-  bool isAuthen;
+  // bool isAuthen;
 
   factory AccountInfo.fromJson(Map<String, dynamic> json) => AccountInfo(
-        username: json["username"] ?? '',
+        fullname: json["fullname"] ?? '',
         address: json["address"] ?? '',
         identityCard: json["identityCard"] ?? '',
-        isAuthen: json["isAuthen"] ?? false,
+        // isAuthen: json["isAuthen"] ?? false,
       );
 
   Map<String, dynamic> toJson() => {
-        "username": username,
+        "fullname": fullname,
         "address": address,
         "identityCard": identityCard,
-        "isAuthen": isAuthen,
+        // "isAuthen": isAuthen,
       };
 }

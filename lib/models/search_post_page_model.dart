@@ -9,8 +9,8 @@ class SearchPostPageModel {
   Constants constants = Constants();
   PostApi postApi = PostApi();
 
-  SearchPostPageModel(String searchText) {
-    fetchListPostBySearchText = postApi.getListPostBySearchText(searchText);
-    search = TextEditingController(text: searchText);
+  SearchPostPageModel() {
+    fetchListPostBySearchText = postApi.getListPostBySearchText('');
+    search = TextEditingController();
   }
 }

@@ -9,8 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SearchPostPage extends StatefulWidget {
-  final String searchText;
-  const SearchPostPage({Key? key, required this.searchText}) : super(key: key);
+  // final String searchText;
+  const SearchPostPage({Key? key}) : super(key: key);
 
   @override
   State<SearchPostPage> createState() => _SearchPostPageState();
@@ -24,7 +24,7 @@ class _SearchPostPageState extends State<SearchPostPage>
   @override
   void initState() {
     super.initState();
-    _searchPostPagePresenter = SearchPostPagePresenter(widget.searchText);
+    _searchPostPagePresenter = SearchPostPagePresenter();
     _searchPostPagePresenter.view = this;
   }
 
@@ -39,16 +39,18 @@ class _SearchPostPageState extends State<SearchPostPage>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Những bài viết liên quan đến từ khóa "${_searchPostPageModel.search.text}"',
-                  style:
-                      TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
-                ),
+                _searchPostPageModel.search.text.isEmpty
+                    ? Container()
+                    : Text(
+                        'Những bài viết liên quan đến từ khóa "${_searchPostPageModel.search.text}"',
+                        style: TextStyle(
+                            fontSize: 16.sp, fontWeight: FontWeight.w500),
+                      ),
                 SizedBox(
                   height: 0.01.sh,
                 ),
                 SizedBox(
-                  height: 0.75.sh,
+                  height: 0.7.sh,
                   width: 1.sw,
                   child: SearchResultPart(
                       searchPostPageModel: _searchPostPageModel,
@@ -72,34 +74,36 @@ class _SearchPostPageState extends State<SearchPostPage>
                   top: 0.02.sh, left: 0.02.sh, right: 0.02.sh, bottom: 0.04.sh),
               height: 0.1.sh,
               width: 1.sw,
+              alignment: Alignment.center,
               decoration: const BoxDecoration(
                 gradient: LinearGradient(colors: <Color>[
                   Color(0xFF56CCF2),
                   Color(0xFF2F80ED),
                 ]),
               ),
-              child: Row(
-                children: [
-                  GestureDetector(
-                      onTap: (() => Navigator.pop(context)),
-                      child: Icon(
-                        Icons.arrow_back_ios,
-                        color: Colors.white,
-                        size: 22.sp,
-                      )),
+              child:
+                  // Row(
+                  //   children: [
+                  // GestureDetector(
+                  //     onTap: (() => Navigator.pop(context)),
+                  //     child: Icon(
+                  //       Icons.arrow_back_ios,
+                  //       color: Colors.white,
+                  //       size: 22.sp,
+                  //     )),
                   Container(
-                    width: 0.8.sw,
-                    alignment: Alignment.center,
-                    child: Text(
-                      "Tìm Kiếm Bài Viết",
-                      style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white),
-                    ),
-                  ),
-                ],
+                width: 0.8.sw,
+                alignment: Alignment.center,
+                child: Text(
+                  "Tìm Kiếm Bài Viết",
+                  style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white),
+                ),
               ),
+              //   ],
+              // ),
             ),
             Positioned(
               top: 0.07.sh,

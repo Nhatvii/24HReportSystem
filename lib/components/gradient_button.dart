@@ -6,7 +6,6 @@ class GradientButton extends StatelessWidget {
   final List<Color> colors;
   final double radius;
   final Widget child;
-  // final TextStyle style;
   const GradientButton({
     Key? key,
     required this.height,
@@ -14,7 +13,6 @@ class GradientButton extends StatelessWidget {
     required this.colors,
     required this.radius,
     required this.child,
-    // required this.style,
   }) : super(key: key);
 
   @override

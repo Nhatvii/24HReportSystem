@@ -36,10 +36,13 @@ class RoundedTextIcon extends StatelessWidget {
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(radius),
                 borderSide: BorderSide(color: Colors.grey.shade300)),
-            prefixIcon: Icon(
-              icon,
-              size: 25.sp,
-              color: Colors.blue,
+            prefixIcon: Padding(
+              padding: EdgeInsets.only(left: 0.01.sh),
+              child: Icon(
+                icon,
+                size: 25.sp,
+                color: Colors.blue,
+              ),
             ),
           ),
           onFieldSubmitted: (search) {

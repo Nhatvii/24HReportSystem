@@ -23,7 +23,7 @@ class AccountApi {
     );
     if (response.statusCode == 200) {
       var jsonData = jsonDecode(response.body);
-      if (jsonData['error'] == null && jsonData['role']['roleId'] == 1) {
+      if (jsonData['error'] == null && (jsonData['role']['roleId'] == 1)) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString('accountId', jsonData['accountId']);
         if (jsonData['email'] != null) {
@@ -31,7 +31,9 @@ class AccountApi {
         } else {
           prefs.setString('phone', jsonData['phoneNumber']);
         }
-        prefs.setString('username', jsonData['accountInfo']['username']);
+        prefs.setString('fullname', jsonData['accountInfo']['fullname']);
+      } else {
+        jsonData = null;
       }
       return jsonData;
     }
@@ -53,7 +55,7 @@ class AccountApi {
         } else {
           prefs.setString('phone', jsonData['phoneNumber']);
         }
-        prefs.setString('username', jsonData['accountInfo']['username']);
+        prefs.setString('fullname', jsonData['accountInfo']['fullname']);
       }
       return jsonData;
     } else {
@@ -64,34 +66,17 @@ class AccountApi {
   // Sign Up API
   Future signUp(String pass, String phone, String name) async {
     var url = Uri.parse('${constants.localhost}/Account/Register');
-    // Map<String, dynamic> tmp;
-    // if (email.isEmpty) {
-    //   tmp = {
-    //     "password": pass,
-    //     "roleId": 1,
-    //     "phoneNumber": phone,
-    //     "username": name,
-    //   };
-    // } else {
-    //   tmp = {
-    //     "email": email,
-    //     "password": pass,
-    //     "roleId": 1,
-    //     "username": name,
-    //   };
-    // }
     var response = await http.post(
       url,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(
-          // tmp
           {
             "password": pass,
             "roleId": 1,
             "phoneNumber": phone,
-            "username": name,
+            "fullname": name,
           }),
     );
     if (response.statusCode == 200) {
@@ -104,7 +89,7 @@ class AccountApi {
         } else {
           prefs.setString('phone', jsonData['phoneNumber']);
         }
-        prefs.setString('username', jsonData['accountInfo']['username']);
+        prefs.setString('fullname', jsonData['accountInfo']['fullname']);
       }
       return jsonData;
     }
@@ -154,7 +139,7 @@ class AccountApi {
         "accountID": accountId,
         "email": email,
         "phoneNumber": phone,
-        "username": name,
+        "fullname": name,
         "address": address.isEmpty ? null : address,
         "identityCard": identityCard.isEmpty ? null : identityCard,
       }),
@@ -162,7 +147,7 @@ class AccountApi {
     if (response.statusCode == 200) {
       var jsonData = jsonDecode(response.body);
       prefs.setString('email', email);
-      prefs.setString('username', name);
+      prefs.setString('fullname', name);
       return jsonData;
     } else {
       throw Exception('Unable to Update User Info');
@@ -180,6 +165,27 @@ class AccountApi {
       body: jsonEncode({
         "accountID": accountId,
         "isAuthen": true,
+      }),
+    );
+    if (response.statusCode == 200) {
+      var jsonData = jsonDecode(response.body);
+      return jsonData;
+    } else {
+      throw Exception('Unable to Update account Authen');
+    }
+  }
+
+  // Update Token Device
+  Future updateStatusAndToken(String accountId, String tokenId) async {
+    var url = Uri.parse('${constants.localhost}/Account');
+    var response = await http.put(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        "accountID": accountId,
+        "tokenId": tokenId,
       }),
     );
     if (response.statusCode == 200) {

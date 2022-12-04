@@ -48,7 +48,7 @@ class PostTitleDescription extends StatelessWidget {
                   children: [
                     SizedBox(
                         height: 0.055.sh,
-                        width: 0.55.sw,
+                        width: 0.54.sw,
                         child: Text(
                           post.title,
                           overflow: TextOverflow.ellipsis,
@@ -58,7 +58,7 @@ class PostTitleDescription extends StatelessWidget {
                         )),
                     SizedBox(
                       height: 0.09.sh,
-                      width: 0.55.sw,
+                      width: 0.54.sw,
                       child: Text(
                         post.subTitle,
                         overflow: TextOverflow.ellipsis,

@@ -23,17 +23,16 @@ class NavigationDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print(homePageModel.accountId);
-    // print(homePageModel.name);
-
+    // print(homePageModel.userPrefs.getAccountId());
+    // print(homePageModel.userPrefs.getEmail());
     return Drawer(
       child: SingleChildScrollView(
         child: Column(
           children: [
-            homePageModel.accountId != null
+            homePageModel.userPrefs.getAccountId() != null
                 ? loginHeader(context)
                 : notLoginHeader(context),
-            homePageModel.accountId != null
+            homePageModel.userPrefs.getAccountId() != null
                 ? loginDrawer(context)
                 : notLoginDrawer(context),
           ],
@@ -58,12 +57,8 @@ class NavigationDrawer extends StatelessWidget {
           color: Colors.white,
         ),
       ),
-      accountEmail: Text(
-        'user@gmail.com',
-        style: TextStyle(
-          fontSize: 14.sp,
-          color: Colors.white,
-        ),
+      accountEmail: const Text(
+        '',
       ),
       decoration: const BoxDecoration(
         gradient: LinearGradient(begin: Alignment.centerLeft, colors: <Color>[
@@ -80,18 +75,18 @@ class NavigationDrawer extends StatelessWidget {
         height: 0.008.sh,
         width: 0.016.sw,
         radius: 35.r,
-        text: homePageModel.name ?? '',
+        text: homePageModel.userPrefs.getName()!,
         fontSize: 22.sp,
       ),
       accountName: Text(
-        homePageModel.name!,
+        homePageModel.userPrefs.getName()!,
         style: TextStyle(
           fontSize: 16.sp,
           color: Colors.white,
         ),
       ),
       accountEmail: Text(
-        homePageModel.email ?? '',
+        homePageModel.userPrefs.getEmail() ?? '',
         style: TextStyle(
           fontSize: 14.sp,
           color: Colors.white,
@@ -137,10 +132,6 @@ class NavigationDrawer extends StatelessWidget {
                 style: TextStyle(fontSize: 14.sp),
               ),
               function: () => navigateToReportSendHistoryPage()),
-          Divider(
-            color: Colors.grey.shade300,
-            thickness: 1,
-          ),
           SizedBox(
             height: 0.015.sh,
           ),

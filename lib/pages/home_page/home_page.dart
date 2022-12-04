@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:capstone_project/components/rounded_text_icon.dart';
+import 'package:capstone_project/components/alert_dialog.dart';
 import 'package:capstone_project/entities/post.dart';
 import 'package:capstone_project/models/home_page_model.dart';
 import 'package:capstone_project/pages/detail_page/post_detail_page.dart';
@@ -10,11 +10,11 @@ import 'package:capstone_project/pages/home_page/new_post_part.dart';
 import 'package:capstone_project/pages/home_page/popular_post_part.dart';
 import 'package:capstone_project/pages/login_page/login_page.dart';
 import 'package:capstone_project/pages/report_send_history_page/report_send_history_page.dart';
-import 'package:capstone_project/pages/search_post_page/search_post_page.dart';
 import 'package:capstone_project/pages/see_more_page/see_more_new_post_page/see_more_new_post.dart';
 import 'package:capstone_project/pages/see_more_page/see_more_popular_post_page/see_more_popular_post.dart';
 import 'package:capstone_project/pages/user_profile_page/user_profile_page.dart';
 import 'package:capstone_project/presenters/home_page_presenter.dart';
+import 'package:capstone_project/splash.dart';
 import 'package:capstone_project/views/home_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -60,7 +60,7 @@ class _HomePageState extends State<HomePage> implements HomePageView {
                   height: 1.sh,
                   width: 1.sw,
                   padding: EdgeInsets.only(
-                    top: 0.155.sh,
+                    top: 0.16.sh,
                     left: 0.02.sh,
                     right: 0.02.sh,
                     bottom: 0.002.sh,
@@ -140,7 +140,7 @@ class _HomePageState extends State<HomePage> implements HomePageView {
             Positioned(
               top: 0,
               child: Container(
-                height: 0.14.sh,
+                height: 0.15.sh,
                 width: 1.sw,
                 padding: EdgeInsets.only(
                   top: 0.025.sh,
@@ -173,19 +173,29 @@ class _HomePageState extends State<HomePage> implements HomePageView {
                             size: 25.sp,
                           ),
                         ),
-                        RoundedTextIcon(
-                          height: 0.045.sh,
-                          width: 0.8.sw,
-                          radius: 15.r,
-                          icon: Icons.search,
-                          controller: _homePageModel.search,
-                          search: _homePageModel.search.text,
-                          function: navigateToSearchPage,
+                        SizedBox(
+                            height: 0.06.sh,
+                            width: 0.12.sw,
+                            child: Image.asset(
+                              'assets/images/logo_image2.png',
+                              fit: BoxFit.fill,
+                            )),
+                        GestureDetector(
+                          onTap: () {
+                            _homePagePresenter.onClickToSosPage();
+                          },
+                          child: SizedBox(
+                              height: 0.04.sh,
+                              width: 0.075.sw,
+                              child: Image.asset(
+                                'assets/images/sos.png',
+                                fit: BoxFit.contain,
+                              )),
                         ),
                       ],
                     ),
                     SizedBox(
-                      height: 0.015.sh,
+                      height: 0.01.sh,
                     ),
                     ListCategory(
                         homePageModel: _homePageModel,
@@ -280,11 +290,37 @@ class _HomePageState extends State<HomePage> implements HomePageView {
   }
 
   @override
-  void navigateToSearchPage(String search) {
-    _homePageModel.search.clear();
+  void navigateToUserSosRequestPage() {
     Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: ((context) => SearchPostPage(searchText: search))));
+        context, MaterialPageRoute(builder: ((context) => Splash())));
+  }
+
+  @override
+  void showLoginDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialogCustom(
+              title: Text(
+                'Thông Báo',
+                style: TextStyle(fontSize: 13.sp),
+              ),
+              content: Text('Đăng nhập để thực hiện tính năng',
+                  style: TextStyle(fontSize: 13.sp)),
+              confirmFunction: TextButton(
+                child: Text("Đăng Nhập", style: TextStyle(fontSize: 12.sp)),
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: ((context) => const LoginPage())));
+                },
+              ),
+              cancelFunction: TextButton(
+                child: Text("Hủy", style: TextStyle(fontSize: 12.sp)),
+                onPressed: () => Navigator.pop(context),
+              ));
+        });
   }
 }

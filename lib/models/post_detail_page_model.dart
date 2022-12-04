@@ -4,9 +4,9 @@ import 'package:capstone_project/api/Post/post_api.dart';
 import 'package:capstone_project/constants/constants.dart';
 import 'package:capstone_project/entities/comment.dart';
 import 'package:capstone_project/entities/post.dart';
+import 'package:capstone_project/helper/user_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 enum Share { facebook, twitter }
 
@@ -27,13 +27,11 @@ class PostDetailPageModel {
   int cancelIndex = 0;
   Constants constants = Constants();
   String? response;
-  String? accountId;
-  String? email;
-  String? name;
   final FlutterShareMe flutterShareMe = FlutterShareMe();
   PostApi postApi = PostApi();
   CommentApi commentApi = CommentApi();
   EmotionApi emotionApi = EmotionApi();
+  UserPreferences userPrefs = UserPreferences();
 
   PostDetailPageModel(String postID, int categoryID) {
     emotionApi.updateViewCount(postID);
@@ -45,7 +43,6 @@ class PostDetailPageModel {
     editComment = TextEditingController();
     listEditComment = [];
     listComment = [];
-    getInstance();
   }
 
   Future<void> init(String postID, int categoryID) async {
@@ -61,24 +58,50 @@ class PostDetailPageModel {
         commentApi.getListComment(postID).then((value) => listComment = value);
   }
 
-  Future<SharedPreferences> getInstance() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    accountId = prefs.getString('accountId');
-    email = prefs.getString('email');
-    name = prefs.getString('username');
-    return prefs;
-  }
-
   checkEmotionStatus(String postId) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    accountId = prefs.getString('accountId');
-    if (accountId != null) {
+    List result;
+    if (userPrefs.getAccountId() != null) {
       final checkEmotion = await emotionApi.checkEmotion(postId);
       Future.value(checkEmotion).then((dynamic value) => {
-            for (var i in value)
+            if (value.isNotEmpty)
               {
-                isLike = i['emotionStatus'] ?? false,
-                isSave = i['isSave'] ?? false,
+                print(value),
+                result = value as List,
+                if (result.length == 1)
+                  {
+                    value[0]['emotionStatus'] == 'Like' ||
+                            value[0]['emotionStatus'] == 'Unlike'
+                        ? isLike =
+                            value[0]['emotionStatus'] == 'Like' ? true : false
+                        : isSave =
+                            value[0]['emotionStatus'] == 'Save' ? true : false,
+                  }
+                else
+                  {
+                    value[0]['emotionStatus'] == 'Like' ||
+                            value[0]['emotionStatus'] == 'Unlike'
+                        ? {
+                            isLike = value[0]['emotionStatus'] == 'Like'
+                                ? true
+                                : false,
+                            isSave = value[1]['emotionStatus'] == 'Save'
+                                ? true
+                                : false,
+                          }
+                        : {
+                            isSave = value[0]['emotionStatus'] == 'Save'
+                                ? true
+                                : false,
+                            isLike = value[1]['emotionStatus'] == 'Like'
+                                ? true
+                                : false,
+                          }
+                  }
+              }
+            else
+              {
+                isLike = false,
+                isSave = false,
               }
           });
     } else {

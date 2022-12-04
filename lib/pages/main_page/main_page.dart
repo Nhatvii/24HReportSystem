@@ -42,8 +42,8 @@ class _MainPageState extends State<MainPage> implements MainPageView {
         textColor: Theme.of(context).primaryColor,
         tabs: [
           TabData(iconData: Icons.home, title: "Trang Chủ"),
+          TabData(iconData: Icons.search, title: "Tìm Kiếm"),
           TabData(iconData: Icons.add_card, title: "Gửi Tình Huống"),
-          TabData(iconData: Icons.emergency, title: "SOS"),
           TabData(iconData: Icons.bookmark, title: "Đã Lưu"),
         ],
         onTabChangedListener: (position) {

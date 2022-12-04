@@ -27,7 +27,7 @@ class ListCategoryNewPost extends StatelessWidget {
                   onTap: () {
                     seeMoreNewPostPagePresenter.onTapTagCategory(
                         seeMoreNewPostPageModel
-                            .listCategory[index].rootCategoryId,
+                            .listCategory[index].categoryId,
                         index);
                   },
                   child: TagCate(

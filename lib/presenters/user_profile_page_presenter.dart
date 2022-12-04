@@ -42,7 +42,7 @@ class UserProfilePagePresenter {
                             .then((value) {
                       _userProfilePageModel.email.text = value.email;
                       _userProfilePageModel.name.text =
-                          value.accountInfo.username;
+                          value.accountInfo.fullname;
                       _userProfilePageModel.phone.text = value.phoneNumber;
                       _userProfilePageModel.address.text =
                           value.accountInfo.address;
@@ -75,7 +75,7 @@ class UserProfilePagePresenter {
     _userProfilePageModel.fetchAccountUser =
         _userProfilePageModel.accountApi.getAccountInfo().then((value) {
       _userProfilePageModel.email.text = value.email;
-      _userProfilePageModel.name.text = value.accountInfo.username;
+      _userProfilePageModel.name.text = value.accountInfo.fullname;
       _userProfilePageModel.phone.text = value.phoneNumber;
       _userProfilePageModel.address.text = value.accountInfo.address;
       _userProfilePageModel.identityCard.text = value.accountInfo.identityCard;
