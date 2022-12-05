@@ -227,7 +227,7 @@ namespace ReportSystemData.Service
             reportTmp.CreateTime = DateTime.Now;
             reportTmp.IsAnonymous = model.IsAnonymous;
             reportTmp.Status = ReportConstants.STATUS_REPORT_REPORT;
-            reportTmp.CategoryId = 0;
+            reportTmp.CategoryId = null;
             await CreateAsyn(reportTmp);
             return new SuccessResponse((int)HttpStatusCode.OK, "Tạo thành công");
         }
@@ -241,7 +241,7 @@ namespace ReportSystemData.Service
                 reportTmp.Status = ReportConstants.STATUS_REPORT_NEW;
                 reportTmp.IsAnonymous = report.IsAnonymous;
                 reportTmp.UserId = report.UserID;
-                reportTmp.CategoryId = -1;
+                reportTmp.CategoryId = null;
                 await CreateAsyn(reportTmp);
                 await _reportDetailService.CreateReportDetail(reportTmp.ReportId, report.Image, report.Video, report.Record);
                 return new SuccessResponse((int)HttpStatusCode.OK, "Tạo thành công");
@@ -260,7 +260,7 @@ namespace ReportSystemData.Service
                 reportTmp.IsAnonymous = report.IsAnonymous;
                 reportTmp.StaffId = report.StaffID;
                 reportTmp.ReportTitle = report.ReportTitle;
-                if (report.CategoryId.HasValue && report.CategoryId > 0)
+                if (report.CategoryId.HasValue)
                 {
                     reportTmp.CategoryId = (int)report.CategoryId;
                 }
@@ -363,7 +363,7 @@ namespace ReportSystemData.Service
                     report.Status = ReportConstants.STATUS_REPORT_APPROVE;
                     if (report.CategoryId != 0)
                     {
-                        var rootCate = _categoryService.GetCategoryByID(report.CategoryId);
+                        var rootCate = _categoryService.GetCategoryByID((int)report.CategoryId);
                         var acc = _accountService.GetMinWorkLoad((int)rootCate.RootCategoryId);
                         if(acc == null)
                         {

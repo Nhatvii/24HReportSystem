@@ -468,6 +468,10 @@ namespace ReportSystemData.Service
                 {
                     account.IsAuthen = (bool)model.IsAuthen;
                 }
+                if(model.Password != null)
+                {
+                    account.Password = ParseSHA256(model.Password);
+                }
                 Update(account);
                 var check = _accountInfoService.UpdateAccountInfo(model);
                 if (check)

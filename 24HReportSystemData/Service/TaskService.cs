@@ -25,7 +25,7 @@ namespace ReportSystemData.Service
         Task CreateTask(CreateTaskViewModel task);
         SuccessResponse DeleteTask(string id);
         SuccessResponse ChangeTaskStatus(UpdateTaskStatusViewModel model);
-        SuccessResponse TaskReviewFilter(double percent);
+        SuccessResponse TaskReviewFilter(string boardID, double percent);
         List<Task> GetListTaskHistory(string taskID);
     }
     public partial class TaskService : BaseService<Task>, ITaskService
@@ -263,10 +263,10 @@ namespace ReportSystemData.Service
             }
             throw new ErrorResponse("Task không tồn tại!!!", (int)HttpStatusCode.NotFound);
         }
-        public SuccessResponse TaskReviewFilter(double percent)
+        public SuccessResponse TaskReviewFilter(string boardID, double percent)
         {
             Random random = new Random();
-            var listTask = Get().Where(p => p.Status.Equals("Review")).ToList();
+            var listTask = Get().Where(p => p.BoardId.Equals(boardID) && p.Status.Equals("Review")).ToList();
             List<Task> listTaskReview = new List<Task>();
             foreach (var item in listTask)
             {

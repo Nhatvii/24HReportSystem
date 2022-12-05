@@ -208,6 +208,7 @@ namespace _24HReportSystemData.Service
                 resNotify.NotifyId = notiCreate.Message;
                 resNotify.UserName = _accountInfoService.GetAccountInfoByID(acc.AccountId).Fullname;
                 resNotify.UserTokenId = acc.TokenId;
+                resNotify.UserPhoneNumber = acc.PhoneNumber;
                 try
                 {
                     var tmp = _notifyHubService.Clients.Client(officer.TokenId).SendPrivateMessage(officer.TokenId, resNotify);
@@ -232,7 +233,9 @@ namespace _24HReportSystemData.Service
                     Longitude = noti.Office.Longitude,
                     OfficerId = officer.AccountId,
                     OfficerName = officer.AccountInfo.Fullname,
-                    OfficerPhoneNumber = officer.PhoneNumber
+                    OfficerPhoneNumber = officer.PhoneNumber,
+                    Distance = tmpDistance,
+                    Duration = tmpDuration
                 };
                 return SosRes;
             }

@@ -20,7 +20,7 @@ namespace _24HReportSystemData.Models
         public string Location { get; set; }
         public DateTime TimeFraud { get; set; }
         public string Description { get; set; }
-        public int CategoryId { get; set; }
+        public int? CategoryId { get; set; }
         public DateTime CreateTime { get; set; }
         public bool? IsAnonymous { get; set; }
         public string StaffId { get; set; }

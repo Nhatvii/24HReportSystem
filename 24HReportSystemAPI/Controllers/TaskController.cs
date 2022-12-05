@@ -55,9 +55,9 @@ namespace ReportSystemAPI.Controllers
         [HttpPut]
         [Produces("application/json")]
         [Route("TaskReviewFilter")]
-        public ActionResult TaskReviewFilter(double percent)
+        public ActionResult TaskReviewFilter(string boardID, double percent)
         {
-            return Ok(_repository.TaskReviewFilter(percent));
+            return Ok(_repository.TaskReviewFilter(boardID, percent));
         }
         [HttpGet]
         [Produces("application/json")]

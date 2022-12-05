@@ -17,5 +17,7 @@ namespace _24HReportSystemData.ViewModel.Office
         public string OfficerId { get; set; }
         public string OfficerName { get; set; }
         public string OfficerPhoneNumber { get; set; }
+        public int Distance { get; set; }
+        public int Duration { get; set; }
     }
 }
