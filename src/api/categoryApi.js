@@ -2,24 +2,23 @@ import axiosClient from "./axiosClient";
 
 class CategoryApi {
   getAllRoot = (params) => {
-    const url = "/RootCategory";
+    const url = "/Category";
     return axiosClient.get(url, params);
   };
   getByIdRoot = (params) => {
-    const url = "/RootCategory/" + params.rootCategoryId;
+    const url = "/Category/" + params.rootCategoryId;
     return axiosClient.get(url);
   };
   addRoot = (params) => {
-    const url = "/RootCategory?rootType=" + params.rootType;
-    return axiosClient.post(url);
+    const url = "/Category";
+    return axiosClient.post(url, params);
   };
   updateRoot = (params) => {
-    const url =
-      "/RootCategory?id=" + params.id + "&rootType=" + params.rootType;
-    return axiosClient.put(url);
+    const url = "/Category";
+    return axiosClient.put(url, params);
   };
   deleteRoot = (params) => {
-    const url = "/RootCategory?id=" + params.id;
+    const url = "/Category?id=" + params.id;
     return axiosClient.delete(url);
   };
   getAllSub = (params) => {
@@ -31,7 +30,6 @@ class CategoryApi {
     return axiosClient.get(url);
   };
   addSub = (params) => {
-    console.log(params);
     const url = "/Category";
     return axiosClient.post(url, params);
   };

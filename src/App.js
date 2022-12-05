@@ -1,56 +1,54 @@
-import React, { Fragment, useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
+//router
+import IndexRouters from "./router/index";
+//scss
+import "./assets/scss/hope-ui.scss";
+import "./assets/scss/dark.scss";
+import "./assets/scss/rtl.scss";
+import "./assets/scss/custom.scss";
+import "./assets/scss/customizer.scss";
+// import { connect } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
-import { connect } from "react-redux";
-import { fetchToken, onMessageListener } from "./firebase";
-import Routes from "./containers/__Routes";
-import ScrollTopButton from "./components/ScrollTopButton";
+import { useEffect, useState } from "react";
+// import { HubConnectionBuilder } from "@microsoft/signalr";
+import reportApi from "./api/reportApi";
+import moment from "moment";
 import taskApi from "./api/TaskApi";
-
-const App = (props) => {
-  const { error, success } = props;
-  if (error) toast.error(error);
-  if (success) toast.success(success);
-  const user_info = JSON.parse(localStorage.getItem("user_info"));
+import { getToken } from "firebase/messaging";
+import { fetchToken, onMessageListener } from "./firebase";
+import { Toast } from "react-bootstrap";
+import userApi from "./api/UserApi";
+function App() {
   const [notification, setNotification] = useState({ title: "", body: "" });
   const [isTokenFound, setTokenFound] = useState(false);
-  const [getFcmToken, setFcmToken] = useState("");
-  fetchToken(setTokenFound, setFcmToken);
-  onMessageListener()
-    .then(async (payload) => {
-      console.log(payload);
-      //
-      if (payload.data.key1 === "CREATE_NEW_TASK") {
-        const param = { id: payload.data.key2 };
-        const response = await taskApi.getById(param);
-        if (
-          response !== null &&
-          user_info.role.roleId === 3 &&
-          user_info.accountId === response.editorId
-        ) {
-          setNotification({
-            title: payload.notification.title,
-            body: payload.notification.body,
-          });
-          toast.success(payload.notification.body);
-        }
-      }
-      //
-    })
-    .catch((error) => console.log(error));
-  return (
-    <Fragment>
-      {props.loading && <h1>loading...</h1>}
-      <Routes />
-      <ToastContainer position="top-right" autoClose={10000} />
-      <ScrollTopButton />
-    </Fragment>
-  );
-};
-const MapStateToProps = (state) => {
-  return {
-    error: state.meta.error,
-    success: state.meta.success,
-  };
-};
+  const [notificationList, setNotificationList] = useState([]);
+  const user_info = JSON.parse(localStorage.getItem("user_info"));
 
-export default connect(MapStateToProps)(App);
+  if (user_info !== null) {
+    fetchToken(setTokenFound);
+    onMessageListener()
+      .then((payload) => {
+        toast.success(payload.data.body);
+        setNotification({
+          title: payload.data.title,
+          body: payload.data.body,
+        });
+        notificationList.push({
+          title: payload.data.body,
+          timestamp: moment(),
+        });
+        localStorage.setItem("user_notify", JSON.stringify(notificationList));
+      })
+      .catch((err) => console.log("Failed: ", err));
+  }
+
+  return (
+    <div className="App">
+      <ToastContainer position="top-right" autoClose={10000} />
+      <IndexRouters />
+    </div>
+  );
+}
+
+export default App;

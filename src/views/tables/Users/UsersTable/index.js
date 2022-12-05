@@ -1,0 +1,916 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Chip } from "@mui/material";
+import MaterialTable from "material-table";
+import React, { useEffect, useState } from "react";
+import { Button, Col, Container, Modal, Row } from "react-bootstrap";
+import { toast } from "react-toastify";
+import userApi from "../../../../api/UserApi";
+import UserApi from "../../../../api/UserApi";
+import Select from "react-select";
+import categoryApi from "../../../../api/categoryApi";
+import registerApi from "../../../../api/registerApi";
+import officeApi from "../../../../api/officeApi";
+const roleList = [
+  {
+    value: 1,
+    label: "User",
+  },
+  {
+    value: 2,
+    label: "Staff",
+  },
+  {
+    value: 3,
+    label: "Editor",
+  },
+  {
+    value: 4,
+    label: "Editor Manager",
+  },
+  {
+    value: 5,
+    label: "Admin",
+  },
+  {
+    value: 6,
+    label: "Officer",
+  },
+  {
+    value: 7,
+    label: "Officer Manager",
+  },
+];
+const UsersTable = () => {
+  const [users, setUsers] = useState([]);
+  const [officeList, setOfficeList] = useState([]);
+  const [selectedUser, setSelectedUser] = useState();
+  const [show, setShow] = useState(false);
+  const [show2, setShow2] = useState(false);
+  const [showSpecialise, setShowSpecialise] = useState(false);
+  const [showOfficeList, setShowOfficeList] = useState(false);
+  const [temp, setTemp] = useState(0);
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [role, setRole] = useState("");
+  const [password, setPassword] = useState("");
+  const [fullname, setFullname] = useState("");
+  const [address, setAddress] = useState("");
+  const [idcard, setIdcard] = useState("");
+  const [specialize, setSpecialize] = useState("");
+  const [office, setOffice] = useState("");
+  const [categoryList, setCategoryList] = useState([]);
+  const loadOffices = async () => {
+    try {
+      const params = {};
+      const response = await officeApi.getAll(params);
+      response
+        .filter((e) => e.isDelete === false)
+        .map((item) =>
+          officeList.push({ value: item.officeId, label: item.officeName })
+        );
+      officeList.push();
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+  const loadUsers = async () => {
+    try {
+      const params = {};
+      const response = await UserApi.getAll(params);
+      setUsers(response);
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+  const fetchCategoryList = async () => {
+    try {
+      const params = {};
+      const response = await categoryApi
+        .getAllRoot(params)
+        .then((list) => list.filter((e) => e.rootCategory === null));
+      response.map((category) =>
+        categoryList.push({
+          value: category.categoryId,
+          label: category.type,
+        })
+      );
+    } catch (e) {
+      toast.error(e.message);
+    }
+  };
+  const handleShowModel2 = () => {
+    setShow2(true);
+    setEmail();
+    setPassword();
+    setPhone();
+    setRole();
+    setFullname();
+    setAddress();
+    setIdcard();
+    setSpecialize();
+    setOffice();
+    try {
+      loadUsers();
+    } catch (e) {
+      toast.error(e.message);
+    }
+  };
+  const handleShowModel = (user_data) => {
+    setSelectedUser(user_data);
+    setPassword(user_data.password);
+    setFullname(user_data.accountInfo.fullname);
+    setAddress(user_data.accountInfo.address);
+    setIdcard(user_data.accountInfo.identityCard);
+    setShow(true);
+    try {
+      loadUsers();
+    } catch (e) {
+      toast.error(e.message);
+    }
+  };
+  const handleUpdate = async () => {
+    try {
+      const params = {
+        accountID: selectedUser.accountId,
+        password: password,
+        fullname: fullname,
+        address: address,
+        identityCard: idcard,
+        specialize: specialize.value,
+        isAuthen: true,
+      };
+      const response = await userApi.update(params);
+      if (!JSON.stringify(response).includes("error")) {
+        setShow(false);
+        setSelectedUser();
+        setPassword();
+        setFullname();
+        setAddress();
+        setIdcard();
+        toast.success(response.message);
+      }
+    } catch (e) {
+      toast.error(e.message);
+    }
+  };
+  const create_user = async () => {
+    try {
+      const params = {
+        email: email,
+        password: password,
+        roleId: role.value,
+        phoneNumber: phone,
+        fullname: fullname,
+        address: address,
+        identityCard: idcard,
+        officeId: office ? office.value : null,
+      };
+      const params1 = {
+        email: email,
+        password: password,
+        roleId: role.value,
+        phoneNumber: phone,
+        fullname: fullname,
+        address: address,
+        identityCard: idcard,
+      };
+
+      const response = await registerApi.createUser(
+        office !== undefined ? params : params1
+      );
+      if (!JSON.stringify(response).includes("error")) {
+        const params2 = {
+          accountID: response.accountId,
+          isAuthen: true,
+          specialize: specialize ? specialize.value : null,
+        };
+        const params3 = {
+          accountID: response.accountId,
+          isAuthen: true,
+        };
+
+        const response2 = await userApi.update(
+          specialize !== undefined ? params2 : params3
+        );
+        if (!JSON.stringify(response2).includes("error")) {
+          setShow2(false);
+          setEmail();
+          setPassword();
+          setPhone();
+          setRole();
+          setFullname();
+          setAddress();
+          setIdcard();
+          setSpecialize();
+          setShowSpecialise(false);
+          setOffice();
+          setShowOfficeList(false);
+          toast.success("Tạo thành công.");
+        }
+      }
+    } catch (e) {
+      toast.error(e.message);
+    }
+  };
+  const handleClose = () => {
+    setShow(false);
+    setSelectedUser();
+    setPassword();
+    setFullname();
+    setAddress();
+    setIdcard();
+    setSpecialize();
+    setOffice();
+  };
+  const handleClose2 = () => {
+    setShow2(false);
+    setEmail();
+    setPassword();
+    setPhone();
+    setRole();
+    setFullname();
+    setAddress();
+    setIdcard();
+    setSpecialize();
+    setOffice();
+    setShowSpecialise(false);
+    setShowOfficeList(false);
+  };
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+  const handlePhoneChange = (e) => {
+    setPhone(e.target.value);
+  };
+  const handleRoleChange = (e) => {
+    setRole(e);
+    if (e.value === 3) {
+      setShowSpecialise(true);
+      setShowOfficeList(false);
+    }
+    if (e.value === 6 || e.value === 7) {
+      setShowOfficeList(true);
+      setShowSpecialise(false);
+    }
+    if (e.value !== 3 && e.value === 6 && e.value === 7) {
+      setSpecialize();
+      setShowSpecialise(false);
+      setShowOfficeList(false);
+    }
+  };
+  const handleFullnameChange = (e) => {
+    setFullname(e.target.value);
+  };
+  const handleAddressChange = (e) => {
+    setAddress(e.target.value);
+  };
+  const handleIdcardChange = (e) => {
+    setIdcard(e.target.value);
+  };
+  const handleSpecializeChange = (e) => {
+    setSpecialize(e);
+  };
+  const handleOfficeChange = (e) => {
+    setOffice(e);
+  };
+  useEffect(() => {
+    setInterval(() => {
+      setTemp((prevTemp) => prevTemp + 1);
+    }, 5000);
+  }, []);
+  useEffect(() => {
+    loadUsers();
+    if (categoryList.length === 0) {
+      fetchCategoryList();
+    }
+    if (officeList.length === 0) {
+      loadOffices();
+    }
+  }, [temp]);
+
+  const columns = [
+    {
+      title: "Thứ tự",
+      field: "accountId",
+      width: "1%",
+      render: (rowData) => {
+        return <div>{rowData.tableData.id + 1}</div>;
+      },
+    },
+    { title: "Email", field: "email", width: "10%" },
+    { title: "Số điện thoại", field: "phoneNumber", width: "10%" },
+    {
+      title: "Vai trò",
+      field: "role",
+      width: "10%",
+      render: (item) => {
+        switch (item.role.roleName) {
+          case "User":
+            return (
+              <div>
+                <Chip
+                  key={item.role.roleId}
+                  label="Người dùng"
+                  color="primary"
+                />
+              </div>
+            );
+          case "Staff":
+            return (
+              <div>
+                <Chip
+                  key={item.role.roleId}
+                  label="Nhân viên"
+                  color="secondary"
+                />
+              </div>
+            );
+          case "Editor":
+            return (
+              <div>
+                <Chip
+                  key={item.role.roleId}
+                  label="Biên tập viên"
+                  color="error"
+                />
+              </div>
+            );
+          case "Editor Manager":
+            return (
+              <div>
+                <Chip
+                  key={item.role.roleId}
+                  label="Quản lý biên tập viên"
+                  color="info"
+                />
+              </div>
+            );
+          case "Admin":
+            return (
+              <div>
+                <Chip
+                  key={item.role.roleId}
+                  label="Quản trị viên"
+                  color="warning"
+                />
+              </div>
+            );
+          case "Officer Manager":
+            return (
+              <div>
+                <Chip
+                  key={item.role.roleId}
+                  label="Quản lý sĩ quan"
+                  color="success"
+                />
+              </div>
+            );
+          case "Officer":
+            return (
+              <div>
+                <Chip key={item.role.roleId} label="Sĩ quan" color="warning" />
+              </div>
+            );
+          default:
+            return (
+              <td className="py-2">
+                <span className="badge badge-light">Not found</span>
+              </td>
+            );
+        }
+      },
+    },
+    {
+      title: "Trạng thái",
+      field: "isActive",
+      width: "10%",
+      render: (item) => {
+        switch (item.isActive) {
+          case true:
+            return (
+              <div>
+                <Chip
+                  key={item.role.roleId}
+                  label="Đang hoạt động"
+                  color="primary"
+                />
+              </div>
+            );
+          case false:
+            return (
+              <div>
+                <Chip
+                  key={item.role.roleId}
+                  label="Không hoạt động"
+                  color="warning"
+                />
+              </div>
+            );
+          default:
+            return (
+              <td className="py-2">
+                <span className="badge badge-light">ERROR</span>
+              </td>
+            );
+        }
+      },
+    },
+  ];
+  return (
+    <div style={{ maxWidth: "100%" }}>
+      {/* Cập nhật */}
+      <Modal
+        scrollable={true}
+        show={show}
+        onHide={handleClose}
+        centered
+        size="md"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Chi tiết người dùng</Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{ color: "black" }}>
+          <div className="mm-example-row">
+            <Container fluid>
+              {selectedUser && (
+                <>
+                  <Row className="mb-3">
+                    <Col md="12">
+                      <b style={{ color: "black", fontSize: "20px" }}>
+                        Thông tin chung
+                      </b>
+                    </Col>
+                  </Row>
+                  <Row className="mb-3">
+                    <Col md="3">
+                      <b style={{ color: "black" }}>
+                        Email:<span className="text-danger">*</span>
+                      </b>
+                    </Col>
+                    <Col md="9" className="ml-auto">
+                      <input
+                        type="email"
+                        className="form-control"
+                        name="email"
+                        placeholder="Email"
+                        value={selectedUser.email}
+                        disabled
+                      />
+                    </Col>
+                  </Row>
+                  {/* <Row className="mb-3">
+                    <Col md="3">
+                      <b style={{ color: "black" }}>Mật khẩu:</b>
+                    </Col>
+                    <Col md="9" className="ml-auto">
+                      <input
+                        type="password"
+                        className="form-control"
+                        name="password"
+                        placeholder="Mật khẩu"
+                        value={password}
+                        onChange={(e) => handlePasswordChange(e)}
+                      />
+                    </Col>
+                  </Row> */}
+                  <Row className="mb-3">
+                    <Col md="3">
+                      <b style={{ color: "black" }}>
+                        Số điện thoại:<span className="text-danger">*</span>
+                      </b>
+                    </Col>
+                    <Col md="9" className="ml-auto">
+                      <input
+                        type="number"
+                        className="form-control"
+                        name="phone"
+                        placeholder="Số điện thoại"
+                        value={
+                          selectedUser.phoneNumber
+                            ? selectedUser.phoneNumber
+                            : ""
+                        }
+                        disabled
+                      />
+                    </Col>
+                  </Row>
+                  <Row className="mb-3">
+                    <Col md="3">
+                      <b style={{ color: "black" }}>
+                        Vai trò:<span className="text-danger">*</span>
+                      </b>
+                    </Col>
+                    <Col md="9" className="ml-auto">
+                      <input
+                        type="text"
+                        className="form-control"
+                        name="role"
+                        value={selectedUser.role.roleName}
+                        disabled
+                      />
+                    </Col>
+                  </Row>
+                  <Row className="mb-3">
+                    <Col md="12">
+                      <b style={{ color: "black", fontSize: "20px" }}>
+                        Thông tin chi tiết
+                      </b>
+                    </Col>
+                  </Row>
+                  <Row className="mb-3">
+                    <Col md="3">
+                      <b style={{ color: "black" }}>
+                        Tên người dùng:<span className="text-danger">*</span>
+                      </b>
+                    </Col>
+                    <Col md="9" className="ml-auto">
+                      <input
+                        type="text"
+                        className="form-control"
+                        name="fullname"
+                        value={fullname}
+                        onChange={(e) => handleFullnameChange(e)}
+                      />
+                    </Col>
+                  </Row>
+                  <Row className="mb-3">
+                    <Col md="3">
+                      <b style={{ color: "black" }}>Địa chỉ:</b>
+                    </Col>
+                    <Col md="9" className="ml-auto">
+                      <input
+                        type="text"
+                        className="form-control"
+                        name="address"
+                        value={address ? address : ""}
+                        onChange={(e) => handleAddressChange(e)}
+                      />
+                    </Col>
+                  </Row>
+                  <Row className="mb-3">
+                    <Col md="3">
+                      <b style={{ color: "black" }}>CCCD:</b>
+                    </Col>
+                    <Col md="9" className="ml-auto">
+                      <input
+                        type="text"
+                        className="form-control"
+                        name="CCCD"
+                        value={idcard ? idcard : ""}
+                        onChange={(e) => handleIdcardChange(e)}
+                      />
+                    </Col>
+                  </Row>
+                  {selectedUser.role.roleId === 3 && (
+                    <Row className="mb-3">
+                      <Col md="3">
+                        <b style={{ color: "black" }}>
+                          Chuyên môn<span className="text-danger">*</span>
+                        </b>
+                      </Col>
+                      <Col md="9" className="ml-auto">
+                        <Select
+                          styles={{
+                            // Fixes the overlapping problem of the component
+                            menu: (provided) => ({ ...provided, zIndex: 9999 }),
+                          }}
+                          className="mw-100"
+                          name="categoryId"
+                          // isDisabled={categoryList.length === 0}
+                          options={categoryList}
+                          placeholder="Chọn chuyên môn"
+                          value={specialize}
+                          defaultValue={{
+                            label: selectedUser.specializeNavigation
+                              ? selectedUser.specializeNavigation.type
+                              : "Không có",
+                            value: selectedUser.specializeNavigation
+                              ? selectedUser.specializeNavigation.categoryId
+                              : "",
+                          }}
+                          onChange={(option) => handleSpecializeChange(option)}
+                        />
+                      </Col>
+                    </Row>
+                  )}
+                  {(selectedUser.role.roleId === 6 ||
+                    selectedUser.role.roleId === 7) && (
+                    <Row className="mb-3">
+                      <Col md="3">
+                        <b style={{ color: "black" }}>
+                          Cơ quan<span className="text-danger">*</span>
+                        </b>
+                      </Col>
+                      <Col md="9" className="ml-auto">
+                        <Select
+                          styles={{
+                            // Fixes the overlapping problem of the component
+                            menu: (provided) => ({
+                              ...provided,
+                              zIndex: 9999,
+                            }),
+                          }}
+                          className="mw-100"
+                          name="categoryId"
+                          // isDisabled={categoryList.length === 0}
+                          options={officeList}
+                          placeholder="Chọn cơ quan"
+                          isDisabled={true}
+                          value={office}
+                          defaultValue={{
+                            label: selectedUser.officeId
+                              ? officeList.filter(
+                                  (e) => e.value === selectedUser.officeId
+                                )[0].label
+                              : "Không có",
+                            value: selectedUser.officeId
+                              ? selectedUser.officeId
+                              : "",
+                          }}
+                          onChange={(option) => handleOfficeChange(option)}
+                        />
+                      </Col>
+                    </Row>
+                  )}
+                </>
+              )}
+            </Container>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Đóng
+          </Button>
+          <Button variant="primary" onClick={() => handleUpdate()}>
+            Cập nhật
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      {/* Tạo người dùng */}
+      <Modal
+        scrollable={true}
+        show={show2}
+        onHide={handleClose2}
+        centered
+        size="md"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Tạo người dùng</Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{ color: "black" }}>
+          <div className="mm-example-row">
+            <Container fluid>
+              <>
+                <Row className="mb-3">
+                  <Col md="12">
+                    <b style={{ color: "black", fontSize: "20px" }}>
+                      Thông tin chung
+                    </b>
+                  </Col>
+                </Row>
+                <Row className="mb-3">
+                  <Col md="3">
+                    <b style={{ color: "black" }}>
+                      Email:<span className="text-danger">*</span>
+                    </b>
+                  </Col>
+                  <Col md="9" className="ml-auto">
+                    <input
+                      type="email"
+                      className="form-control"
+                      name="email"
+                      placeholder="Email"
+                      value={email}
+                      onChange={(e) => handleEmailChange(e)}
+                    />
+                  </Col>
+                </Row>
+                <Row className="mb-3">
+                  <Col md="3">
+                    <b style={{ color: "black" }}>
+                      Mật khẩu:<span className="text-danger">*</span>
+                    </b>
+                  </Col>
+                  <Col md="9" className="ml-auto">
+                    <input
+                      type="password"
+                      className="form-control"
+                      name="password"
+                      placeholder="Mật khẩu"
+                      value={password}
+                      onChange={(e) => handlePasswordChange(e)}
+                    />
+                  </Col>
+                </Row>
+                <Row className="mb-3">
+                  <Col md="3">
+                    <b style={{ color: "black" }}>
+                      Số điện thoại:<span className="text-danger">*</span>
+                    </b>
+                  </Col>
+                  <Col md="9" className="ml-auto">
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="phone"
+                      placeholder="Số điện thoại"
+                      value={phone}
+                      onChange={(e) => handlePhoneChange(e)}
+                    />
+                  </Col>
+                </Row>
+                <Row className="mb-3">
+                  <Col md="3">
+                    <b style={{ color: "black" }}>
+                      Vai trò:<span className="text-danger">*</span>
+                    </b>
+                  </Col>
+                  <Col md="9" className="ml-auto">
+                    <Select
+                      styles={{
+                        // Fixes the overlapping problem of the component
+                        menu: (provided) => ({ ...provided, zIndex: 9999 }),
+                      }}
+                      className="mw-100"
+                      name="role"
+                      type="text"
+                      // isDisabled={categoryList.length === 0}
+                      options={roleList}
+                      value={role}
+                      placeholder="Chọn vai trò"
+                      onChange={(e) => handleRoleChange(e)}
+                    />
+                  </Col>
+                </Row>
+                <Row className="mb-3">
+                  <Col md="12">
+                    <b style={{ color: "black", fontSize: "20px" }}>
+                      Thông tin chi tiết
+                    </b>
+                  </Col>
+                </Row>
+                <Row className="mb-3">
+                  <Col md="3">
+                    <b style={{ color: "black" }}>
+                      Tên người dùng:<span className="text-danger">*</span>
+                    </b>
+                  </Col>
+                  <Col md="9" className="ml-auto">
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="fullname"
+                      placeholder="Tên người dùng"
+                      value={fullname}
+                      onChange={(e) => handleFullnameChange(e)}
+                    />
+                  </Col>
+                </Row>
+                <Row className="mb-3">
+                  <Col md="3">
+                    <b style={{ color: "black" }}>Địa chỉ:</b>
+                  </Col>
+                  <Col md="9" className="ml-auto">
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="address"
+                      placeholder="Địa chỉ"
+                      value={address ? address : ""}
+                      onChange={(e) => handleAddressChange(e)}
+                    />
+                  </Col>
+                </Row>
+                <Row className="mb-3">
+                  <Col md="3">
+                    <b style={{ color: "black" }}>CCCD:</b>
+                  </Col>
+                  <Col md="9" className="ml-auto">
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="CCCD"
+                      placeholder="Số định danh"
+                      value={idcard}
+                      onChange={(e) => handleIdcardChange(e)}
+                    />
+                  </Col>
+                </Row>
+                {showSpecialise === true && (
+                  <Row className="mb-3">
+                    <Col md="3">
+                      <b style={{ color: "black" }}>
+                        Chuyên môn<span className="text-danger">*</span>
+                      </b>
+                    </Col>
+                    <Col md="9" className="ml-auto">
+                      <Select
+                        styles={{
+                          // Fixes the overlapping problem of the component
+                          menu: (provided) => ({ ...provided, zIndex: 9999 }),
+                        }}
+                        className="mw-100"
+                        name="categoryId"
+                        // isDisabled={categoryList.length === 0}
+                        options={categoryList}
+                        placeholder="Chọn chuyên môn"
+                        value={specialize}
+                        onChange={(option) => handleSpecializeChange(option)}
+                      />
+                    </Col>
+                  </Row>
+                )}
+                {showOfficeList === true && (
+                  <Row className="mb-3">
+                    <Col md="3">
+                      <b style={{ color: "black" }}>
+                        Cơ quan<span className="text-danger">*</span>
+                      </b>
+                    </Col>
+                    <Col md="9" className="ml-auto">
+                      <Select
+                        styles={{
+                          // Fixes the overlapping problem of the component
+                          menu: (provided) => ({ ...provided, zIndex: 9999 }),
+                        }}
+                        className="mw-100"
+                        name="officeId"
+                        // isDisabled={categoryList.length === 0}
+                        options={officeList}
+                        placeholder="Chọn cơ quan"
+                        value={office}
+                        onChange={(option) => handleOfficeChange(option)}
+                      />
+                    </Col>
+                  </Row>
+                )}
+              </>
+            </Container>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          {console.log(fullname)}
+          <Button variant="secondary" onClick={handleClose2}>
+            Đóng
+          </Button>
+          <Button
+            variant="primary"
+            disabled={
+              !(
+                email !== undefined &&
+                password !== undefined &&
+                phone !== undefined &&
+                fullname !== undefined &&
+                role !== undefined
+              )
+            }
+            onClick={() => create_user()}
+          >
+            Tạo người dùng
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <MaterialTable
+        columns={columns}
+        data={users}
+        title="Danh sách người dùng"
+        onRowClick={(event, rowData) => {
+          handleShowModel(rowData);
+        }}
+        actions={[
+          {
+            icon: "add",
+            tooltip: "Tạo người dùng",
+            isFreeAction: true,
+            onClick: () => handleShowModel2(),
+          },
+          {
+            icon: "edit",
+            tooltip: "Sửa chi tiết người dùng",
+            onClick: (event, rowData) => handleShowModel(rowData),
+          },
+        ]}
+        options={{
+          pageSize: 10,
+          actionsColumnIndex: -1,
+          exportButton: true,
+          headerStyle: {
+            backgroundColor: "#1669f0",
+            color: "#FFF",
+          },
+          rowStyle: (rowData) => ({
+            // Check if read or not
+            backgroundColor:
+              rowData.tableData.id % 2 !== 0 ? "lightgray" : "white",
+          }),
+        }}
+      />
+    </div>
+  );
+};
+
+export default UsersTable;

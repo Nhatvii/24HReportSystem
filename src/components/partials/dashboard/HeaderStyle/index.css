@@ -1,0 +1,19 @@
+.notification {
+    position: relative;
+    display: inline-block;
+}
+
+.notification:hover {
+    cursor: pointer;
+}
+
+.notification .badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    padding: 5px 5px;
+    border-radius: 50%;
+    background: red;
+    color: white;
+    font-size: 8px;
+}

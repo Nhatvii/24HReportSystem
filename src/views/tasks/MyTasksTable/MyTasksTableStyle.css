@@ -1,0 +1,38 @@
+.done-task:hover {
+    cursor: pointer;
+    transition: 0.9s;
+    transform: rotateZ(360deg);
+}
+.hover:hover{
+    cursor: pointer;
+    font-weight: bold;
+}
+a {
+    cursor: pointer;
+}
+
+.pagination {
+    display: block;
+}
+
+.pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+.pagination a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.pagination a:hover:not(.active) {
+    background-color: #ddd;
+}
+.limit {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+       
+}

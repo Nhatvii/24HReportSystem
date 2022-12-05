@@ -7,15 +7,7 @@ class UpdateReportApi {
   };
   updateCategory = (params) => {
     const url = "/Report/CategoryUpdate";
-    return axiosClient.put(
-      url +
-        "?id=" +
-        params.id +
-        "&categoryID=" +
-        params.categoryId +
-        "&staffID=" +
-        params.staffId
-    );
+    return axiosClient.put(url, params);
   };
 }
 const updateReportApi = new UpdateReportApi();

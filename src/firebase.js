@@ -1,16 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getToken, getMessaging, onMessage } from "firebase/messaging";
-import {
-  GoogleAuthProvider,
-  getAuth,
-  signInWithPopup,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  sendPasswordResetEmail,
-  signOut,
-} from "firebase/auth";
-import { toast } from "react-toastify";
-import loginApi from "./api/loginApi";
+import userApi from "./api/UserApi";
 // const user_info = JSON.parse(localStorage.getItem("user_info"));
 var firebaseConfig = {
   apiKey: "AIzaSyAgaeSeRcOqy7jZdEujk1LF-IXmRzkZV1Y",
@@ -22,106 +12,57 @@ var firebaseConfig = {
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
-//login
-const auth = getAuth(firebaseApp);
-const googleProvider = new GoogleAuthProvider();
-const signInWithGoogle = async () => {
-  try {
-    const res = await signInWithPopup(auth, googleProvider);
-    const user = res.user;
-    console.log(user);
-    if (user) {
-      const params = { email: user.email };
-      const response = await loginApi.loginWithGoogle(params);
-      if (!JSON.stringify(response).includes("error")) {
-        localStorage.setItem("user_info", JSON.stringify(response));
-        if (response.role.roleId === 1) {
-          window.location.href = "/";
-        }
-      }
-    }
-    // const q = query(collection(db, "users"), where("uid", "==", user.uid));
-    // const docs = await getDocs(q);
-    // if (docs.docs.length === 0) {
-    //   await addDoc(collection(db, "users"), {
-    //     uid: user.uid,
-    //     name: user.displayName,
-    //     authProvider: "google",
-    //     email: user.email,
-    //   });
-    // }
-  } catch (err) {
-    console.error(err);
-    toast.error(err.message);
-  }
-};
-const logInWithEmailAndPassword = async (email, password) => {
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-  } catch (err) {
-    console.error(err);
-    toast.error(err.message);
-  }
-};
-const registerWithEmailAndPassword = async (name, email, password) => {
-  try {
-    const res = await createUserWithEmailAndPassword(auth, email, password);
-    const user = res.user;
-    // await addDoc(collection(db, "users"), {
-    //   uid: user.uid,
-    //   name,
-    //   authProvider: "local",
-    //   email,
-    // });
-  } catch (err) {
-    console.error(err);
-    alert(err.message);
-  }
-};
-const sendPasswordReset = async (email) => {
-  console.log(email);
-  try {
-    await sendPasswordResetEmail(auth, email);
-    toast.info("Password reset link sent!");
-  } catch (err) {
-    console.error(err);
-    toast.error(err.message);
-  }
-};
-const logout = () => {
-  signOut(auth);
-};
-//notifications
 const messaging = getMessaging(firebaseApp);
-export const fetchToken = async (setTokenFound, setFcmToken) => {
+const user_info = JSON.parse(localStorage.getItem("user_info"));
+const updateToken = async (token) => {
+  try {
+    const params = {
+      accountID: user_info.accountId,
+      tokenId: token,
+    };
+    await userApi.update(params);
+  } catch (e) {
+    console.log(e.message);
+  }
+};
+export const fetchToken = async (setTokenFound) => {
   return getToken(messaging, {
     vapidKey:
       "BO6NLoPKyB3M4jF414YmtQ95HwM-o2cvkaovfMAY78O4uKxykm3PQ_l1dnSd722kMFqUyPNPydD951Jxx8OMkaI",
   })
     .then((currentToken) => {
-      subscribeTokenToTopic(
-        currentToken,
-        "abc"
-        // user_info.role.roleName + "/" + user_info.email
-      );
       if (currentToken) {
         setTokenFound(true);
+        updateToken(currentToken);
         console.log(currentToken);
-        setFcmToken(currentToken);
+        if (user_info.role.roleId === 2) {
+          subscribeTokenToTopic(currentToken, "staff");
+        }
+        if (user_info.role.roleId === 3) {
+          subscribeTokenToTopic(currentToken, "editor");
+        }
+        if (user_info.role.roleId === 4) {
+          subscribeTokenToTopic(currentToken, "editor_manager");
+        }
+        // Track the token -> client mapping, by sending to backend server
+        // show on the UI that permission is secured
       } else {
-        console.log("No token found");
+        console.log(
+          "No registration token available. Request permission to generate one."
+        );
         setTokenFound(false);
-        setFcmToken("");
+        // shows on the UI that permission is required
       }
     })
-    .catch((error) => {
-      console.log("Error" + error);
+    .catch((err) => {
+      console.log("An error occurred while retrieving token. ", err);
+      // catch error while creating client token
     });
 };
 export const onMessageListener = () =>
   new Promise((resolve) => {
     onMessage(messaging, (payload) => {
-      console.log(payload);
+      console.log("Payload:" + payload);
       resolve(payload);
     });
   });
@@ -143,11 +84,3 @@ function subscribeTokenToTopic(token, topic) {
     });
   return true;
 }
-export {
-  auth,
-  signInWithGoogle,
-  logInWithEmailAndPassword,
-  registerWithEmailAndPassword,
-  sendPasswordReset,
-  logout,
-};

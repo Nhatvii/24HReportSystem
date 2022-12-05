@@ -1,16 +1,5 @@
-import { Home, ViewReport, FAQ } from "./UserViews";
-import { Login, Page404, Page500, Register } from "./Pages";
-import { Dashboard, Users, Posts } from "./AdminViews";
+import Dashboard from "./Dashboard";
 
-export {
-  Login,
-  Page404,
-  Page500,
-  Register,
-  Home,
-  ViewReport,
-  FAQ,
-  Dashboard,
-  Users,
-  Posts,
-};
+import Users from "./Users";
+import Posts from "./Posts/MyPosts";
+export { Dashboard, Users, Posts };
