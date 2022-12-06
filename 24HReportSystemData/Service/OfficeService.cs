@@ -22,7 +22,7 @@ using System.Threading.Tasks;
 
 namespace _24HReportSystemData.Service
 {
-    public partial interface IOfficeService: IBaseService<OfficeInfo>
+    public partial interface IOfficeService : IBaseService<OfficeInfo>
     {
         List<OfficeInfo> GetAllOffice(OfficeParameters officeParameters);
         OfficeInfo GetOfficeByID(string officeID);
@@ -52,7 +52,7 @@ namespace _24HReportSystemData.Service
         public List<OfficeInfo> GetAllOffice(OfficeParameters officeParameters)
         {
             var office = Get().ToList();
-            if(officeParameters.OfficeName != null)
+            if (officeParameters.OfficeName != null)
             {
                 office = office.Where(p => p.OfficeName.Contains(officeParameters.OfficeName)).ToList();
             }
@@ -69,7 +69,7 @@ namespace _24HReportSystemData.Service
         public OfficeInfo GetOfficeByID(string officeID)
         {
             var office = Get().Where(p => p.OfficeId.Equals(officeID)).FirstOrDefault();
-            if(office != null)
+            if (office != null)
             {
                 return office;
             }
@@ -87,9 +87,9 @@ namespace _24HReportSystemData.Service
         public SuccessResponse UpdateOffice(UpdateOfficeViewModel model)
         {
             var office = GetOfficeByID(model.OfficeId);
-            if(office != null)
+            if (office != null)
             {
-                if(model.OfficeName != null)
+                if (model.OfficeName != null)
                 {
                     office.OfficeName = model.OfficeName;
                 }
@@ -139,7 +139,8 @@ namespace _24HReportSystemData.Service
                     item.ActiveOfficer = getListOfficeActiveNum;
                     Update(item);
                 }
-                else {
+                else
+                {
                     item.ActiveOfficer = 0;
                     Update(item);
                 }
@@ -160,6 +161,7 @@ namespace _24HReportSystemData.Service
             var tmpDistance = 10000;
             var tmpDuration = 2000;
             var tmpOffice = "";
+            var listTmpOffice = new Dictionary<string, int>();
             foreach (var item in listOffice)
             {
                 var des = "" + item.Latitude + "," + item.Longitude + "";
@@ -171,20 +173,48 @@ namespace _24HReportSystemData.Service
                     tmpDistance = obj.rows[0].elements[0].distance.value;
                     tmpDuration = obj.rows[0].elements[0].duration.value;
                     tmpOffice = item.OfficeId;
+
+                    listTmpOffice.Add(item.OfficeId, tmpDistance);
                 }
                 Thread.Sleep(1 * 1000);
             }
+            listTmpOffice = listTmpOffice.OrderBy(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
 
             if (!String.IsNullOrEmpty(tmpOffice))
             {
 
                 var oriLat = "" + model.Latitude + "";
                 var oriLng = "" + model.Longitude + "";
-                var officer =  await _accountService.GetAccountNotify(tmpOffice);
+                var officerList =  _accountService.GetListAccountOfficerNotify(tmpOffice);
+                var listTmpOfficer = new Dictionary<string, int>();
+                var officer = new Account();
+                if (officerList.Count() > 1)
+                {
+                    foreach (var item in officerList)
+                    {
+                        var des = "" + item.Latitude + "," + item.Longitude + "";
+                        var test = await GetNearestPosition(ori, des, "bike");
+                        dynamic obj = JsonConvert.DeserializeObject(test);
+                        var dis = (int)obj.rows[0].elements[0].distance.value;
+                        listTmpOfficer.Add(item.AccountId, dis);
+                    }
+                    listTmpOfficer = listTmpOfficer.OrderBy(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
+                    officer = _accountService.GetAccountByID(listTmpOfficer.ElementAt(0).Key);
+                }
+                else
+                {
+                    officer =  _accountService.GetAccountByID(listTmpOfficer.ElementAt(0).Key);
+                }
                 if (officer == null)
                 {
                     throw new ErrorResponse("Không tìm thấy người hỗ trợ!!!", (int)HttpStatusCode.NotFound);
                 }
+                var updateAcc = new UpdateAccountViewModel()
+                {
+                    AccountID = officer.AccountId,
+                    IsActive = false
+                };
+                _accountService.UpdateAccount(updateAcc);
                 // create table notify
                 var modelNotify = new CreateNotifyViewModel()
                 {
@@ -253,7 +283,8 @@ namespace _24HReportSystemData.Service
                 var client = new WebClient();
                 var content = await client.DownloadStringTaskAsync(url);
                 return content;
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new ErrorResponse(ex.Message, (int)HttpStatusCode.Conflict);
             }

@@ -39,7 +39,7 @@ namespace ReportSystemData.Service
         int CheckAccountIsActiveNotify(string officeID);
         Task<Account> GetAccountNotify(string officeID);
         SuccessResponse UpdateAccountLocation(UpdateLocationAccountViewModel model);
-
+        List<Account> GetListAccountOfficerNotify(string officeID);
     }
     public partial class AccountService : BaseService<Account>, IAccountService
     {
@@ -127,6 +127,15 @@ namespace ReportSystemData.Service
                     Update(account);
                     return account;
                 }
+            }
+            return null;
+        }
+        public List<Account> GetListAccountOfficerNotify(string officeID)
+        {
+            var listAccount = Get().Where(p => p.OfficeId.Equals(officeID) && p.TokenId != null && p.IsActive == true).ToList();
+            if(listAccount != null)
+            {
+                return listAccount;
             }
             return null;
         }
