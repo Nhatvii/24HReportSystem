@@ -98,5 +98,12 @@ namespace _24HReportSystemAPI.Controllers
         {
             return Ok(_repository.UpdateAccountLocation(model));
         }
+        [HttpPut]
+        [Produces("application/json")]
+        [Route("ChangePassword")]
+        public ActionResult<Account> ChangePassword(ChangePasswordViewModel model)
+        {
+            return Ok(_repository.ChangePassword(model));
+        }
     }
 }

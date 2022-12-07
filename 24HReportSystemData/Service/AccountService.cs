@@ -40,6 +40,7 @@ namespace ReportSystemData.Service
         Task<Account> GetAccountNotify(string officeID);
         SuccessResponse UpdateAccountLocation(UpdateLocationAccountViewModel model);
         List<Account> GetListAccountOfficerNotify(string officeID);
+        SuccessResponse ChangePassword(ChangePasswordViewModel model);
     }
     public partial class AccountService : BaseService<Account>, IAccountService
     {
@@ -133,7 +134,7 @@ namespace ReportSystemData.Service
         public List<Account> GetListAccountOfficerNotify(string officeID)
         {
             var listAccount = Get().Where(p => p.OfficeId.Equals(officeID) && p.TokenId != null && p.IsActive == true).ToList();
-            if(listAccount != null)
+            if (listAccount != null)
             {
                 return listAccount;
             }
@@ -142,15 +143,16 @@ namespace ReportSystemData.Service
         public SuccessResponse ChangePassword(ChangePasswordViewModel model)
         {
             var acc = GetAccountByID(model.AccountID);
-            if(acc != null)
+            if (acc != null)
             {
-                if(acc.Password.Equals(model.Password))
+                var tmp = acc.Password.Equals(QuickHash(model.Password));
+                if (tmp)
                 {
-                    throw new ErrorResponse("Xin vui lòng không nhập mật khẩu đã dùng trước đó!!!", (int)HttpStatusCode.NotFound);
+                    acc.Password = QuickHash(model.NewPassword);
+                    Update(acc);
+                    return new SuccessResponse((int)HttpStatusCode.OK, "Cập nhật thành công");
                 }
-                acc.Password = model.Password;
-                Update(acc);
-                return new SuccessResponse((int)HttpStatusCode.OK, "Cập nhật thành công");
+                throw new ErrorResponse("Sai mật khẩu!!!", (int)HttpStatusCode.NotFound);
             }
             throw new ErrorResponse("Không tìm thấy tài khoản!!!", (int)HttpStatusCode.NotFound);
         }
@@ -172,7 +174,7 @@ namespace ReportSystemData.Service
             }
             if (isEmail && !isPhoneNumber)
             {
-                var account = Get().Where(acc => acc.Email.Equals(login.Account) && acc.Password.Equals(ParseSHA256(login.Password)))
+                var account = Get().Where(acc => acc.Email.Equals(login.Account) && acc.Password.Equals(QuickHash(login.Password)))
                     .Include(role => role.Role).Include(info => info.AccountInfo).FirstOrDefault();
                 if (account != null)
                 {
@@ -182,7 +184,7 @@ namespace ReportSystemData.Service
             }
             if (!isEmail && isPhoneNumber)
             {
-                var account = Get().Where(acc => acc.PhoneNumber.Equals(login.Account) && acc.Password.Equals(ParseSHA256(login.Password)))
+                var account = Get().Where(acc => acc.PhoneNumber.Equals(login.Account) && acc.Password.Equals(QuickHash(login.Password)))
                     .Include(role => role.Role).Include(info => info.AccountInfo).FirstOrDefault();
                 if (account != null)
                 {
@@ -381,7 +383,7 @@ namespace ReportSystemData.Service
         public SuccessResponse UpdateAccountLocation(UpdateLocationAccountViewModel model)
         {
             var acc = GetAccountByID(model.AccountID);
-            if(acc == null)
+            if (acc == null)
             {
                 throw new ErrorResponse("Không tìm thấy Email!!!", (int)HttpStatusCode.NotFound);
             }
@@ -476,10 +478,6 @@ namespace ReportSystemData.Service
                 if (model.IsAuthen != null)
                 {
                     account.IsAuthen = (bool)model.IsAuthen;
-                }
-                if(model.Password != null)
-                {
-                    account.Password = ParseSHA256(model.Password);
                 }
                 Update(account);
                 var check = _accountInfoService.UpdateAccountInfo(model);

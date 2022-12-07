@@ -662,16 +662,16 @@ namespace _24HReportSystemData.Models
                     .HasMaxLength(50)
                     .HasColumnName("Editor_ID");
 
+                entity.Property(e => e.HistoryTaskId)
+                    .HasMaxLength(50)
+                    .HasColumnName("History_Task_ID");
+
                 entity.Property(e => e.IsDelete).HasColumnName("Is_Delete");
 
                 entity.Property(e => e.Status)
                     .IsRequired()
                     .HasMaxLength(20)
                     .IsUnicode(false);
-
-                entity.Property(e => e.SubTaskId)
-                    .HasMaxLength(50)
-                    .HasColumnName("Sub_Task_ID");
 
                 entity.HasOne(d => d.Board)
                     .WithMany(p => p.Tasks)
@@ -685,9 +685,9 @@ namespace _24HReportSystemData.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Task_Account");
 
-                entity.HasOne(d => d.SubTask)
-                    .WithMany(p => p.InverseSubTask)
-                    .HasForeignKey(d => d.SubTaskId)
+                entity.HasOne(d => d.HistoryTask)
+                    .WithMany(p => p.InverseHistoryTask)
+                    .HasForeignKey(d => d.HistoryTaskId)
                     .HasConstraintName("FK_Task_Task");
             });
 

@@ -122,7 +122,7 @@ namespace ReportSystemData.Service
                 }
                 else
                 {
-                    taskTmp.SubTaskId = task.SubTaskId;
+                    taskTmp.HistoryTaskId = task.SubTaskId;
                 }
             }
             //var tasks = new Task()
@@ -154,7 +154,7 @@ namespace ReportSystemData.Service
         {
             var listTask = new List<Task>();
             var task = GetTaskByID(taskID);
-            if(task.SubTaskId == null)
+            if(task.HistoryTaskId == null)
             {
                 throw new ErrorResponse("Task không tồn tại SubTask", (int)HttpStatusCode.NoContent);
             }
@@ -165,8 +165,8 @@ namespace ReportSystemData.Service
                 var taskTmp = task;
                 do
                 {
-                    var newtask = GetTaskByID(taskTmp.SubTaskId);
-                    if(newtask.SubTaskId != null)
+                    var newtask = GetTaskByID(taskTmp.HistoryTaskId);
+                    if(newtask.HistoryTaskId != null)
                     {
                         listTask.Add(newtask);
                         taskTmp = newtask;

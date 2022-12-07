@@ -13,5 +13,8 @@ namespace _24HReportSystemData.ViewModel.Account
         public string AccountID { get; set; }
         [Required]
         public string Password { get; set; }
+        [Required]
+        public string NewPassword { get; set; }
+
     }
 }

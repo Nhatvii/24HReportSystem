@@ -10,7 +10,7 @@ namespace _24HReportSystemData.Models
     {
         public Task()
         {
-            InverseSubTask = new HashSet<Task>();
+            InverseHistoryTask = new HashSet<Task>();
             Posts = new HashSet<Post>();
             ReportTasks = new HashSet<ReportTask>();
         }
@@ -23,15 +23,15 @@ namespace _24HReportSystemData.Models
         public bool IsDelete { get; set; }
         public string BoardId { get; set; }
         public string Description { get; set; }
-        public string SubTaskId { get; set; }
+        public string HistoryTaskId { get; set; }
 
         [JsonIgnore]
         public virtual Board Board { get; set; }
         [JsonIgnore]
         public virtual Account Editor { get; set; }
-        public virtual Task SubTask { get; set; }
+        public virtual Task HistoryTask { get; set; }
         [JsonIgnore]
-        public virtual ICollection<Task> InverseSubTask { get; set; }
+        public virtual ICollection<Task> InverseHistoryTask { get; set; }
         public virtual ICollection<Post> Posts { get; set; }
         public virtual ICollection<ReportTask> ReportTasks { get; set; }
     }
