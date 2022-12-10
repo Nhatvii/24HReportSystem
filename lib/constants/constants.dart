@@ -7,7 +7,8 @@ class Constants {
       // 'https://24hreportsystemapi.azurewebsites.net/api';
       'http://24hcanhbao.com/api';
   // 'https://24hreportsystemapi.conveyor.cloud/api';
-  final String shareUrl = 'https://report24h.herokuapp.com/postDetail';
+  final String shareUrl = 'https://24hcanhbao.com/post-detail';
+  // 'https://report24h.herokuapp.com/postDetail';
 
   // Signal R
   final String signalRUrl = 

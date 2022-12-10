@@ -1,6 +1,7 @@
 import 'package:capstone_project/api/Account/account_api.dart';
 import 'package:capstone_project/constants/constants.dart';
 import 'package:capstone_project/entities/account.dart';
+import 'package:capstone_project/helper/user_preferences.dart';
 import 'package:flutter/material.dart';
 
 class UserProfilePageModel {
@@ -9,11 +10,16 @@ class UserProfilePageModel {
   late TextEditingController address;
   late TextEditingController phone;
   late TextEditingController identityCard;
+  late TextEditingController oldPassword;
+  late TextEditingController newPassword;
   late Future<Account> fetchAccountUser;
   Constants constants = Constants();
   AccountApi accountApi = AccountApi();
   bool isEdit = false;
+  bool showOldPass = true;
+  bool showNewPass = true;
   String? msg;
+  UserPreferences userPrefs = UserPreferences();
 
   UserProfilePageModel() {
     email = TextEditingController();
@@ -21,14 +27,9 @@ class UserProfilePageModel {
     address = TextEditingController();
     phone = TextEditingController();
     identityCard = TextEditingController();
+    oldPassword = TextEditingController();
+    newPassword = TextEditingController();
     fetchAccountUser = accountApi.getAccountInfo();
-    // accountApi.getAccountInfo().then((value) => {
-    //       email.text = value.email,
-    //       name.text = value.accountInfo.username,
-    //       phone.text = value.phoneNumber,
-    //       address.text = value.accountInfo.address,
-    //       identityCard.text = value.accountInfo.identityCard,
-    //     });
   }
 
   Future<void> init() async {

@@ -1,7 +1,7 @@
 import 'package:capstone_project/components/avatar_name.dart';
 import 'package:capstone_project/entities/account.dart';
 import 'package:capstone_project/models/user_profile_page_model.dart';
-import 'package:capstone_project/pages/user_profile_page/edit_form_part.dart';
+import 'package:capstone_project/pages/user_profile_page/change_password.part.dart';
 import 'package:capstone_project/pages/user_profile_page/view_form_part.dart';
 import 'package:capstone_project/presenters/user_profile_page_presenter.dart';
 import 'package:capstone_project/views/user_profile_page_view.dart';
@@ -44,7 +44,7 @@ class _UserProfilePageState extends State<UserProfilePage>
                 )),
           ),
           title: Text(
-            'Thông Tin Cá Nhân',
+            'Hồ Sơ Cá Nhân',
             style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700),
           ),
           centerTitle: true,
@@ -111,9 +111,9 @@ class _UserProfilePageState extends State<UserProfilePage>
                             color: Colors.grey.shade300,
                             thickness: 1,
                           ),
-                          SizedBox(
-                            height: 0.02.sh,
-                          ),
+                          // SizedBox(
+                          //   height: 0.02.sh,
+                          // ),
                           // _userProfilePageModel.isEdit
                           //     ? EditFormPart(
                           //         userProfilePageModel: _userProfilePageModel,
@@ -126,6 +126,17 @@ class _UserProfilePageState extends State<UserProfilePage>
                             isEditFunction: onClickEditInfo,
                             confirmFunction: onEditUserInfo,
                             cancelEditFunction: onCancelEdit,
+                          ),
+                          SizedBox(
+                            height: 0.02.sh,
+                          ),
+                          Divider(
+                            color: Colors.grey.shade300,
+                            thickness: 1,
+                          ),
+                          ChangePasswordPart(
+                            userProfilePageModel: _userProfilePageModel,
+                            userProfilePagePresenter: _userProfilePagePresenter,
                           ),
                         ],
                       );

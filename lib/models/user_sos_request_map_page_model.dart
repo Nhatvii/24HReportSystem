@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:capstone_project/api/Account/account_api.dart';
 import 'package:capstone_project/api/Map/map_api.dart';
@@ -39,10 +38,10 @@ class UserSosRequestPageMapModel {
   AccountApi accountApi = AccountApi();
   NotifyApi notifyApi = NotifyApi();
   List<Text> listType = const [
-    Text('Khác'),
     Text('Trộm Cắp'),
     Text('An Ninh'),
     Text('Tai Nạn'),
+    Text('Khác'),
   ];
 
   UserSosRequestPageMapModel() {

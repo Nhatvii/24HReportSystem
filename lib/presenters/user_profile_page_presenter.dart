@@ -84,4 +84,48 @@ class UserProfilePagePresenter {
     _userProfilePageModel.isEdit = false;
     _userProfilePageView.refreshData(_userProfilePageModel);
   }
+
+  void onChangeNewPassword() async {
+    if (_userProfilePageModel.oldPassword.text.trim().isEmpty ||
+        _userProfilePageModel.newPassword.text.trim().isEmpty) {
+      _userProfilePageModel.msg = 'Vui lòng điền mật khẩu';
+      _userProfilePageView.showToast(_userProfilePageModel.msg!);
+      _userProfilePageView.refreshData(_userProfilePageModel);
+    } else if (_userProfilePageModel.newPassword.text.trim().length < 6) {
+      _userProfilePageModel.msg = "Mật khẩu phải có ít nhất 6 kí tự";
+      _userProfilePageView.showToast(_userProfilePageModel.msg!);
+      _userProfilePageView.refreshData(_userProfilePageModel);
+    } else {
+      _userProfilePageModel.accountApi
+          .updateNewPassword(
+              _userProfilePageModel.userPrefs.getAccountId()!,
+              _userProfilePageModel.oldPassword.text,
+              _userProfilePageModel.newPassword.text)
+          .then((value) => {
+                if (value['error'] == null)
+                  {
+                    _userProfilePageModel.oldPassword.clear(),
+                    _userProfilePageModel.newPassword.clear(),
+                    _userProfilePageView.showToast('Cập nhật thành công'),
+                    _userProfilePageView.refreshData(_userProfilePageModel),
+                  }
+                else
+                  {
+                    _userProfilePageModel.msg = 'Sai mật khẩu cũ',
+                    _userProfilePageView.showToast(_userProfilePageModel.msg!),
+                    _userProfilePageView.refreshData(_userProfilePageModel),
+                  }
+              });
+    }
+  }
+
+  void showPass(int check) {
+    if (check == 1) {
+      _userProfilePageModel.showOldPass = !_userProfilePageModel.showOldPass;
+      _userProfilePageView.refreshData(_userProfilePageModel);
+    } else {
+      _userProfilePageModel.showNewPass = !_userProfilePageModel.showNewPass;
+      _userProfilePageView.refreshData(_userProfilePageModel);
+    }
+  }
 }

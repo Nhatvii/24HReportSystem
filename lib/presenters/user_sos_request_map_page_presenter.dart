@@ -36,8 +36,6 @@ class UserSosRequestPageMapPresenter {
     await _userSosRequestPageModel.accountApi.updateStatusAndToken(
         _userSosRequestPageModel.userPrefs.getAccountId()!,
         _userSosRequestPageModel.hubConnection!.connectionId!);
-    print(
-        'ConnectionID: ${_userSosRequestPageModel.hubConnection!.connectionId}');
     _userSosRequestPageModel.hubConnection!
         .on('SendPrivateMessageToUser', handleClientFunction);
     _userSosRequestPageModel.hubConnection!
@@ -45,17 +43,13 @@ class UserSosRequestPageMapPresenter {
   }
 
   void handleClientFunction(List<Object?>? parameters) async {
-    print(parameters);
     _userSosRequestPageView.navigateToHomePage();
   }
 
   void handleOfficerLocationFunction(List<Object?>? parameters) async {
-    print(parameters);
     var result = parameters as List;
     _userSosRequestPageModel.officerlatLng = LatLng(
         double.parse(result[1].toString()), double.parse(result[2].toString()));
-    print(_userSosRequestPageModel.officerlatLng.latitude);
-    print(_userSosRequestPageModel.officerlatLng.longitude);
     changeOfficerSymbol(_userSosRequestPageModel.officerlatLng,
         'assets/images/bike_marker.png', 0.3);
   }
@@ -67,44 +61,38 @@ class UserSosRequestPageMapPresenter {
   }
 
   onMapCreated(MapboxMapController controller) {
-    print('MapCreated');
     _userSosRequestPageModel.mapController = controller;
   }
 
-  onMapClick(Point point, LatLng latLng) {
-    print('$point +++++ $latLng');
-    // addSymbol(latLng, 'assets/images/marker.png', 2);
-    // changeOfficerSymbol(latLng, 'assets/images/officer.png', 0.3);
-  }
+  onMapClick(Point point, LatLng latLng) {}
 
-  void addSymbol(LatLng latlng, String image, double size) async {
-    if (_userSosRequestPageModel.currentPlaceSymbol == null) {
-      _userSosRequestPageModel.currentPlaceSymbol =
-          await _userSosRequestPageModel.mapController!.addSymbol(
-        SymbolOptions(
-          geometry: latlng,
-          iconImage: image,
-          iconSize: size,
-        ),
-      );
-    } else {
-      print(_userSosRequestPageModel.mapController!.symbols);
-      // _userSosRequestPageModel.mapController!.clearSymbols();
-      // await _userSosRequestPageModel.mapController!
-      //     .removeSymbol(_userSosRequestPageModel.currentPlaceSymbol!)
-      //     .then((value) async {
-      //   _userSosRequestPageModel.currentPlaceSymbol =
-      //       await _userSosRequestPageModel.mapController!.addSymbol(
-      //     SymbolOptions(
-      //       geometry: latlng,
-      //       iconImage: image,
-      //       iconSize: size,
-      //       iconColor: '#A0D2FF',
-      //     ),
-      //   );
-      // });
-    }
-  }
+  // void addSymbol(LatLng latlng, String image, double size) async {
+  //   if (_userSosRequestPageModel.currentPlaceSymbol == null) {
+  //     _userSosRequestPageModel.currentPlaceSymbol =
+  //         await _userSosRequestPageModel.mapController!.addSymbol(
+  //       SymbolOptions(
+  //         geometry: latlng,
+  //         iconImage: image,
+  //         iconSize: size,
+  //       ),
+  //     );
+  //   } else {
+  // _userSosRequestPageModel.mapController!.clearSymbols();
+  // await _userSosRequestPageModel.mapController!
+  //     .removeSymbol(_userSosRequestPageModel.currentPlaceSymbol!)
+  //     .then((value) async {
+  //   _userSosRequestPageModel.currentPlaceSymbol =
+  //       await _userSosRequestPageModel.mapController!.addSymbol(
+  //     SymbolOptions(
+  //       geometry: latlng,
+  //       iconImage: image,
+  //       iconSize: size,
+  //       iconColor: '#A0D2FF',
+  //     ),
+  //   );
+  // });
+  // }
+  // }
 
   changeOfficerSymbol(LatLng latlng, String image, double size) async {
     await _userSosRequestPageModel.mapController!.updateSymbol(
@@ -133,18 +121,18 @@ class UserSosRequestPageMapPresenter {
   }
 
   void sendRequest() {
-    print('object');
     _userSosRequestPageModel.isSearchingOfficer = true;
     _userSosRequestPageView.refreshData(_userSosRequestPageModel);
     _userSosRequestPageModel.notifyApi
         .sendSOSRequest(
             _userSosRequestPageModel.userPrefs.getAccountId()!,
             _userSosRequestPageModel.userlatLng,
-            _userSosRequestPageModel.typeSos.text)
+            _userSosRequestPageModel.typeSos.text == 'Chọn lý do'
+                ? 'Khác'
+                : _userSosRequestPageModel.typeSos.text)
         .then((value) => {
               if (value['error'] == null)
                 {
-                  print(value),
                   _userSosRequestPageModel.notifyID = value['notifyId'],
                   _userSosRequestPageModel.officeAddress = value['district'],
                   _userSosRequestPageModel.officerName = value['officerName'],
@@ -160,7 +148,9 @@ class UserSosRequestPageMapPresenter {
                 }
               else
                 {
-                  print(value['error']['message']),
+                  _userSosRequestPageModel.isSearchingOfficer = false,
+                  _userSosRequestPageView.showToastMessage("Gửi yêu cầu lỗi"),
+                  _userSosRequestPageView.refreshData(_userSosRequestPageModel),
                 }
             });
   }
@@ -170,7 +160,6 @@ class UserSosRequestPageMapPresenter {
         .cancelSosRequest(
             _userSosRequestPageModel.notifyID, 'Không còn nhu cầu hỗ trợ')
         .then((value) => {
-              print(value),
               Navigator.pop(context),
               _userSosRequestPageModel.statusRequest = 'Chờ Xác Nhận',
               _userSosRequestPageView.refreshData(_userSosRequestPageModel),

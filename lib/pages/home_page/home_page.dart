@@ -190,6 +190,7 @@ class _HomePageState extends State<HomePage> implements HomePageView {
                               child: Image.asset(
                                 'assets/images/sos.png',
                                 fit: BoxFit.contain,
+                                color: Colors.red,
                               )),
                         ),
                       ],

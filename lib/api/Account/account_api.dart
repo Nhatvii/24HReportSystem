@@ -71,13 +71,12 @@ class AccountApi {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(
-          {
-            "password": pass,
-            "roleId": 1,
-            "phoneNumber": phone,
-            "fullname": name,
-          }),
+      body: jsonEncode({
+        "password": pass,
+        "roleId": 1,
+        "phoneNumber": phone,
+        "fullname": name,
+      }),
     );
     if (response.statusCode == 200) {
       var jsonData = jsonDecode(response.body);
@@ -193,6 +192,29 @@ class AccountApi {
       return jsonData;
     } else {
       throw Exception('Unable to Update account Authen');
+    }
+  }
+
+  // Update new password
+  Future updateNewPassword(
+      String accountId, String oldPass, String newPass) async {
+    var url = Uri.parse('${constants.localhost}/Account/ChangePassword');
+    var response = await http.put(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        "accountID": accountId,
+        "password": oldPass,
+        "newPassword": newPass,
+      }),
+    );
+    if (response.statusCode == 200) {
+      var jsonData = jsonDecode(response.body);
+      return jsonData;
+    } else {
+      throw Exception('Unable to Update new password');
     }
   }
 }

@@ -20,9 +20,22 @@ class ViewFormPart extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Container(
+            width: 1.sw,
+            alignment: Alignment.center,
+            color: Colors.grey.shade100,
+            margin: EdgeInsets.only(bottom: 0.01.sh),
+            padding: EdgeInsets.symmetric(vertical: 0.01.sh),
+            child: Text(
+              'Thông tin cá nhân',
+              style: TextStyle(
+                fontSize: 15.sp,
+                fontWeight: FontWeight.w500,
+              ),
+            )),
         titleAndContent('Email', userProfilePageModel.email,
             userProfilePageModel.isEdit, false),
-        titleAndContent('Họ và Tên', userProfilePageModel.name,
+        titleAndContent('Họ Tên', userProfilePageModel.name,
             userProfilePageModel.isEdit, true),
         titleAndContent('Địa Chỉ', userProfilePageModel.address,
             userProfilePageModel.isEdit, false),
@@ -31,7 +44,7 @@ class ViewFormPart extends StatelessWidget {
         titleAndContent('CCCD/CMND', userProfilePageModel.identityCard,
             userProfilePageModel.isEdit, false),
         SizedBox(
-          height: 0.04.sh,
+          height: 0.02.sh,
         ),
         userProfilePageModel.isEdit
             ? Row(
@@ -101,9 +114,6 @@ class ViewFormPart extends StatelessWidget {
                   ),
                 ),
               ),
-        SizedBox(
-          height: 0.1.sh,
-        ),
       ],
     );
   }
@@ -120,12 +130,12 @@ Widget titleAndContent(String title, TextEditingController controller,
         Text(
           title,
           style: TextStyle(
-            fontSize: 14.sp,
+            fontSize: 13.sp,
             fontWeight: FontWeight.w600,
           ),
         ),
         SizedBox(
-          height: 0.008.sh,
+          height: 0.005.sh,
         ),
         TextField(
           controller: controller,
@@ -149,9 +159,9 @@ Widget titleAndContent(String title, TextEditingController controller,
             ),
           ),
           style: TextStyle(
-              fontSize: 16.sp,
+              fontSize: 15.sp,
               fontWeight: FontWeight.w500,
-              color: const Color(0xFF474040)),
+              color: Colors.grey.shade600),
         ),
       ],
     ),

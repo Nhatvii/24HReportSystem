@@ -323,15 +323,4 @@ class SendReportPagePresenter {
     _sendReportPageModel.location.text = location['description'];
     _sendReportPageView.refreshData(_sendReportPageModel);
   }
-
-  // openMapPage(BuildContext context) async {
-  //   Navigator.push(
-  //       context,
-  //       MaterialPageRoute(
-  //         builder: (context) => const MapLocationPage(),
-  //       )).then((value) {
-  //     _sendReportPageModel.location.text = value;
-  //     _sendReportPageView.refreshData(_sendReportPageModel);
-  //   });
-  // }
 }

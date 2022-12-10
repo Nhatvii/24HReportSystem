@@ -5,6 +5,7 @@ import 'package:capstone_project/pages/user_sos_request_page_map/sos_request_pag
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Splash extends StatefulWidget {
   const Splash({Key? key}) : super(key: key);
@@ -27,9 +28,10 @@ class _SplashState extends State<Splash> {
     if (!serviceEnabled) {
       return Future.error('Location services are disabled.');
     }
-
+    await prominentDisclosure();
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
+      // await prominentDisclosure();
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         return Future.error('Location permissions are denied');
@@ -42,7 +44,6 @@ class _SplashState extends State<Splash> {
     }
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.best);
-    print(position);
     LatLng currentPosition = LatLng(position.latitude, position.longitude);
 
     sharedPreferences.setDouble('latitude', currentPosition.latitude);
@@ -50,6 +51,30 @@ class _SplashState extends State<Splash> {
 
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (_) => const UserSosRequestPage()));
+  }
+
+  prominentDisclosure() async {
+    await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              'Thông Báo',
+              style: TextStyle(fontSize: 14.sp),
+            ),
+            content: Text(
+                "24H Report System thu thập dữ liệu vị trí để bật 'SOS Helper' ngay cả khi đóng ứng dụng hoặc không sử dụng.",
+                style: TextStyle(fontSize: 13.sp)),
+            actions: [
+              TextButton(
+                child: Text("Ok", style: TextStyle(fontSize: 12.sp)),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        });
   }
 
   @override

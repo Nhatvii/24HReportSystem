@@ -123,7 +123,7 @@ class _SendReportPageState extends State<SendReportPage>
                 ),
                 Text(_sendReportPageModel.uploadProgress.toString()),
                 Text(
-                    'Number of file: ${_sendReportPageModel.numberOfFile.toString()}'),
+                    'Số lượng file đã tải lên: ${_sendReportPageModel.numberOfFile.toString()}'),
                 SizedBox(
                   height: 0.01.sh,
                 ),

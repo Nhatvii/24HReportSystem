@@ -2,7 +2,6 @@ import 'package:capstone_project/entities/post.dart';
 import 'package:capstone_project/models/post_detail_page_model.dart';
 import 'package:capstone_project/views/post_detail_page_view.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class PostDetailPagePresenter {
   late PostDetailPageModel _postDetailPageModel;

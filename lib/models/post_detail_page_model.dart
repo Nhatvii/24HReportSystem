@@ -65,7 +65,6 @@ class PostDetailPageModel {
       Future.value(checkEmotion).then((dynamic value) => {
             if (value.isNotEmpty)
               {
-                print(value),
                 result = value as List,
                 if (result.length == 1)
                   {

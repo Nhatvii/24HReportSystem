@@ -116,7 +116,6 @@ class SignUpPagePresenter {
                 .signUp(_signUpPageModel.password.text,
                     _signUpPageModel.phone.text, _signUpPageModel.name.text)
                 .then((value) => {
-                      print(value),
                       if (value['error'] == null)
                         {
                           _signUpPageModel.accountApi

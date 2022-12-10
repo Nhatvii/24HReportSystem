@@ -8,4 +8,6 @@ abstract class UserSosRequestPageMapView {
   void showCancelReasonPanel();
 
   void navigateToHomePage();
+
+  void showToastMessage(String msg);
 }

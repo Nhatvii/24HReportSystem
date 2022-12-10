@@ -1,7 +1,6 @@
 import 'package:capstone_project/components/alert_dialog.dart';
 import 'package:capstone_project/components/round_button_icon.dart';
 import 'package:capstone_project/models/user_sos_request_map_page_model.dart';
-import 'package:capstone_project/pages/main_page/main_page.dart';
 import 'package:capstone_project/pages/user_sos_request_page_map/receive_response_panel.dart';
 import 'package:capstone_project/pages/user_sos_request_page_map/send_request_panel.dart';
 import 'package:capstone_project/presenters/user_sos_request_map_page_presenter.dart';
@@ -9,7 +8,7 @@ import 'package:capstone_project/views/user_sos_request_map_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
 class UserSosRequestPage extends StatefulWidget {
@@ -144,5 +143,13 @@ class _UserSosRequestPageState extends State<UserSosRequestPage>
                 onPressed: () => Navigator.pop(context),
               ));
         });
+  }
+
+  @override
+  void showToastMessage(String msg) {
+    Fluttertoast.showToast(
+      msg: msg,
+      gravity: ToastGravity.BOTTOM,
+    );
   }
 }
