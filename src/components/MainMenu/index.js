@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import FontAwesome from "../uiStyle/FontAwesome";
-import tempIcon from "../../doc/img/icon/temp.png";
+// import tempIcon from "../../doc/img/icon/temp.png";
 import { Link, NavLink } from "react-router-dom";
 import SearchModal from "../SearchModal";
 import SidebarMenu from "../SidebarMenu";
@@ -47,11 +47,11 @@ const menus = [
     linkText: "Gửi báo cáo",
     link: "/send-report",
   },
-  // {
-  //   id: 6,
-  //   linkText: "FAQ",
-  //   link: "/faq",
-  // },
+  {
+    id: 6,
+    linkText: "Lịch sử báo cáo",
+    link: "/view-report",
+  },
   // {
   //   id: 7,
   //   linkText: "Liên hệ",
@@ -73,6 +73,7 @@ async function logout() {
     toast.error(e.message);
   }
 }
+
 const MainMenu = ({ className, dark }) => {
   const [rootcategories, setRootCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
@@ -80,37 +81,52 @@ const MainMenu = ({ className, dark }) => {
   const [sideShow, setSideShow] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [arr, setArr] = useState([]);
+  // const [weather, setWeather] = useState(null);
   const user_info = JSON.parse(localStorage.getItem("user_info"));
-
+  // useEffect(() => {
+  //   fetch(
+  //     "https://openweathermap.org/data/2.5/weather?id=1566083&appid=439d4b804bc8187953eb36d2a8c26a02"
+  //   )
+  //     .then((res) => res.json())
+  //     .then(
+  //       (result) => {
+  //         setWeather(result);
+  //       },
+  //       // Note: it's important to handle errors here
+  //       // instead of a catch() block so that we don't swallow
+  //       // exceptions from actual bugs in components.
+  //       (error) => {
+  //         toast.error(error.message);
+  //       }
+  //     );
+  // }, []);
   const toggle = () => {
     setDropdownOpen(!dropdownOpen);
   };
   const redirectPath = (path) => {
     window.location.href = "/user/" + path;
   };
-  const fetchCategoryList = async () => {
-    try {
-      const params = {};
-      const response = await categoryApi.getAllRoot(params);
-      setRootCategories(response);
-    } catch (e) {
-      toast.error(e.message);
-    }
+  const redirectHome = () => {
+    window.location.href = "/";
   };
+
   const fetchSubCategoryList = async () => {
     try {
       const params = {};
       const response = await categoryApi.getAllSub(params);
-      setSubCategories(response);
+      setSubCategories(response.filter((e) => e.rootCategory !== null));
+      setRootCategories(
+        response.filter((e) => e.rootCategory === null && e.categoryId !== 0)
+      );
     } catch (e) {
       toast.error(e.message);
     }
   };
   useEffect(() => {
-    fetchCategoryList();
+    // fetchCategoryList();
     fetchSubCategoryList();
     setArr(menus);
-  }, [arr]);
+  }, [subCategories]);
   useEffect(() => {
     const isFound = arr.some((element) => {
       if (element.id === 4) {
@@ -118,7 +134,15 @@ const MainMenu = ({ className, dark }) => {
       }
       return false;
     });
-    if (!isFound) {
+    if (!user_info) {
+      // eslint-disable-next-line
+      arr.some((element) => {
+        if (element.id === 6) {
+          arr.pop();
+        }
+      });
+    }
+    if (!isFound && rootcategories.length > 0) {
       arr.push({
         id: 4,
         linkText: "Danh mục",
@@ -129,21 +153,19 @@ const MainMenu = ({ className, dark }) => {
           child: true,
           link: "/search",
           searchByCategory: true,
-          rootCategoryId: root.rootCategoryId,
+          rootCategoryId: root.categoryId,
           linkText: root.type,
-          third_menu: subCategories
-            .filter(
-              (sub) =>
-                sub.rootCategoryNavigation.rootCategoryId ===
-                root.rootCategoryId
-            )
-            .map((sub, subId) => ({
-              id: (40 + rootId) * 10 + subId,
-              link: "/search",
-              searchByCategory: true,
-              categoryId: sub.categoryId,
-              linkText: sub.subCategory,
-            })),
+          third_menu:
+            subCategories.length > 0 &&
+            subCategories
+              .filter((sub) => sub.rootCategory.categoryId === root.categoryId)
+              .map((sub, subId) => ({
+                id: (40 + rootId) * 10 + subId,
+                link: "/search",
+                searchByCategory: true,
+                categoryId: sub.categoryId,
+                linkText: sub.type,
+              })),
         })),
       });
     } else {
@@ -154,24 +176,26 @@ const MainMenu = ({ className, dark }) => {
           linkText: "Danh mục",
           child: true,
           icon: "angle-down",
-          submenu: rootcategories.map((root, rootId) => ({
-            id: 40 + rootId,
-            child: true,
-            linkText: root.type,
-            third_menu: subCategories
-              .filter(
-                (sub) =>
-                  sub.rootCategoryNavigation.rootCategoryId ===
-                  root.rootCategoryId
-              )
-              .map((sub, subId) => ({
-                id: (40 + rootId) * 10 + subId,
-                link: "/search",
-                searchByCategory: true,
-                categoryId: sub.categoryId,
-                linkText: sub.subCategory,
-              })),
-          })),
+          submenu:
+            rootcategories.length > 0 &&
+            rootcategories.map((root, rootId) => ({
+              id: 40 + rootId,
+              child: true,
+              linkText: root.type,
+              third_menu:
+                subCategories.length > 0 &&
+                subCategories
+                  .filter(
+                    (sub) => sub.rootCategory.categoryId === root.categoryId
+                  )
+                  .map((sub, subId) => ({
+                    id: (40 + rootId) * 10 + subId,
+                    link: "/search",
+                    searchByCategory: true,
+                    categoryId: sub.categoryId,
+                    linkText: sub.type,
+                  })),
+            })),
         });
     }
   }, [subCategories]);
@@ -191,11 +215,12 @@ const MainMenu = ({ className, dark }) => {
                   width={50}
                   height={50}
                   className="collapse navbar-collapse navbar-responsive-collapse mr-2"
+                  onClick={() => redirectHome()}
                 />
                 <div className="site-nav-inner">
                   <button
                     className="navbar-toggler"
-                    onClick={() => setSideShow(true)}
+                    onClick={() => setSideShow(!sideShow)}
                   >
                     <FontAwesome name="bars" />
                   </button>
@@ -314,73 +339,98 @@ const MainMenu = ({ className, dark }) => {
               </nav>
               <div className="col-lg-4 align-self-center">
                 <div className="menu_right">
-                  <div className="users_area">
+                  <div
+                    className="users_area"
+                    style={{
+                      color: "#0098d1",
+                      marginLeft: "1rem",
+                      textDecoration: "none",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => setSearchShow(!searchShow)}
+                  >
                     <ul className="inline">
-                      <li
-                        className="search_btn"
-                        onClick={() => setSearchShow(!searchShow)}
+                      <i
+                        className=""
+                        style={{ display: "block", textAlign: "center" }}
                       >
                         <FontAwesome name="search" />
-                      </li>
-
-                      {user_info && (
-                        <li>
-                          {/*  Avatar*/}
-                          <Dropdown nav isOpen={dropdownOpen} toggle={toggle}>
-                            <DropdownToggle nav>
-                              <img
-                                src="https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg"
-                                className="rounded-circle"
-                                alt="avatar"
-                                height={30}
-                                width={30}
-                              />
-                            </DropdownToggle>
-                            <DropdownMenu right>
-                              <DropdownItem
-                                header
-                                tag="div"
-                                className="text-center"
-                              >
-                                <strong>Cài đặt</strong>
-                              </DropdownItem>
-                              <DropdownItem
-                                onClick={() => redirectPath("profile")}
-                              >
-                                <i className="fa fa-user"></i>Hồ sơ
-                              </DropdownItem>
-                              <DropdownItem>
-                                <i className="fa fa-wrench"></i>Cài đặt
-                              </DropdownItem>
-                              <DropdownItem divider />
-                              <DropdownItem onClick={logout}>
-                                <i className="fa fa-lock"></i>Đăng xuất
-                              </DropdownItem>
-                            </DropdownMenu>
-                          </Dropdown>
-                        </li>
-                      )}
+                      </i>
+                      <span className="icon_text">Tìm kiếm</span>
                     </ul>
                   </div>
-                  {!user_info && (
-                    <div className="lang d-none d-xl-block">
-                      <Link className="single_social social_vimeo" to="/login">
-                        <span className="follow_icon">
-                          <FontAwesome name="key" />
-                        </span>
-                        <span className="icon_text h4">Đăng nhập</span>
-                      </Link>
-                    </div>
+                  {user_info && (
+                    <ul
+                      style={{ listStyleType: "none", padding: 0, margin: 0 }}
+                    >
+                      <li>
+                        {/*  Avatar*/}
+                        <Dropdown nav isOpen={dropdownOpen} toggle={toggle}>
+                          <DropdownToggle nav>
+                            <img
+                              src="https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg"
+                              className="rounded-circle"
+                              alt="avatar"
+                              height={30}
+                              width={30}
+                            />
+                          </DropdownToggle>
+                          <DropdownMenu right>
+                            <DropdownItem
+                              header
+                              tag="div"
+                              className="text-center"
+                            >
+                              <strong>Cá nhân</strong>
+                              <div>Điểm: {user_info.totalScore}</div>
+                            </DropdownItem>
+                            <DropdownItem
+                              onClick={() => redirectPath("profile")}
+                            >
+                              <i className="fa fa-user"></i>Hồ sơ
+                            </DropdownItem>
+                            {/* <DropdownItem>
+                              <i className="fa fa-wrench"></i>Cài đặt
+                            </DropdownItem> */}
+                            <DropdownItem divider />
+                            <DropdownItem onClick={logout}>
+                              <i className="fa fa-lock"></i>Đăng xuất
+                            </DropdownItem>
+                          </DropdownMenu>
+                        </Dropdown>
+                      </li>
+                    </ul>
                   )}
-                  <div className="temp d-none d-lg-block">
+                  {!user_info && (
+                    <Link
+                      className=""
+                      style={{
+                        color: "#0098d1",
+                        marginLeft: "1rem",
+                        textDecoration: "none",
+                      }}
+                      to="/login"
+                    >
+                      <i
+                        className="follow_icon"
+                        style={{ display: "block", textAlign: "center" }}
+                      >
+                        <FontAwesome name="user" />
+                      </i>
+                      <span className="icon_text">Đăng nhập</span>
+                    </Link>
+                  )}
+                  {/* <div className="temp d-none d-lg-block">
                     <div className="temp_wap">
                       <div className="temp_icon">
                         <img src={tempIcon} alt="temp icon" />
                       </div>
-                      <h3 className="temp_count">32</h3>
-                      <p>Hồ Chí Minh</p>
+                      <h3 className="temp_count">
+                        {weather !== null && weather.main.temp}
+                      </h3>
+                      <p>{weather !== null && weather.name}</p>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

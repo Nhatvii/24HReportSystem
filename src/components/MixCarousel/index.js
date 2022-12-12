@@ -5,56 +5,6 @@ import Swiper from "react-id-swiper";
 import ModalVideo from "react-modal-video";
 import moment from "moment";
 
-const mixArray = [
-  {
-    category: { subCategory: "Chiếm đoạt tài sản" },
-    date: "March 26, 2020",
-    title: "Lừa đảo sinh viên nghèo",
-    image: "https://picsum.photos/700/500",
-    viewCount: 45,
-  },
-  {
-    category: { subCategory: "Lừa đảo" },
-    date: "March 26, 2020",
-    title: "Bị lừa khi tìm bạn gái trên Tinder",
-    image:
-      "https://d3jyiu4jpn0ihr.cloudfront.net/wp-content/uploads/sites/6/20190918160006/ve-may-bay-di-sai-gon1.jpg",
-    viewCount: 43,
-  },
-  {
-    category: { subCategory: "Mạng xã hội" },
-    date: "March 26, 2020",
-    title: "Lừa đảo sinh viên nghèo",
-    image:
-      "https://suckhoedoisong.qltns.mediacdn.vn/thumb_w/1200/Images/phamquynh/2021/07/12/sai-gon-mua-thuong-1626066367.jpg",
-    viewCount: 74,
-  },
-  {
-    category: { subCategory: "Vay tín dụng đen" },
-    date: "March 26, 2020",
-    title: "Bị lừa khi tìm bạn gái trên Tinder",
-    image:
-      "https://vnn-imgs-f.vgcloud.vn/2021/11/05/21/thanh-nien-bo-lai-doi-dep-giua-cau-sai-gon-roi-lao-xuong-song-mat-tich-3.jpg",
-    viewCount: 54,
-  },
-  {
-    category: { subCategory: "Mạng xã hội" },
-    date: "March 26, 2020",
-    title: "Lừa đảo sinh viên nghèo",
-    image:
-      "https://suckhoedoisong.qltns.mediacdn.vn/thumb_w/1200/Images/phamquynh/2021/07/12/sai-gon-mua-thuong-1626066367.jpg",
-    viewCount: 46,
-  },
-  {
-    category: { subCategory: "Vay tín dụng đen" },
-    date: "March 26, 2020",
-    title: "Bị lừa khi tìm bạn gái trên Tinder",
-    image:
-      "https://vnn-imgs-f.vgcloud.vn/2021/11/05/21/thanh-nien-bo-lai-doi-dep-giua-cau-sai-gon-roi-lao-xuong-song-mat-tich-3.jpg",
-    viewCount: 53,
-  },
-];
-
 const MixCarousel = ({ className, dark, data }) => {
   const [swiper, setSwiper] = useState(null);
   const [vModal, setvModal] = useState(false);
@@ -131,12 +81,12 @@ const MixCarousel = ({ className, dark, data }) => {
                             to={{
                               pathname: "/search",
                               state: {
-                                title: "Danh mục: " + item.category.subCategory,
+                                title: "Danh mục: " + item.category.type,
                                 CategoryID: item.category.categoryId,
                               },
                             }}
                           >
-                            {item.category.subCategory}
+                            {item.category.type}
                           </Link>
                           <Link to={`/post-detail/${item.postId}`}>
                             {moment(item.publicTime).format("DD.MM.YYYY")}

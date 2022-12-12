@@ -1,9 +1,31 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
-import "./style.css";
+import styled from "styled-components";
 const defaultProps = {
   initialPage: 1,
 };
-
+const PaginationStyle = styled.div`
+  a {
+    cursor: pointer;
+  }
+  .pagination {
+    display: block;
+  }
+  .pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+  }
+  .pagination a.active {
+    background-color: #4caf50;
+    color: white;
+  }
+  .pagination a:hover:not(.active) {
+    background-color: #ddd;
+  }
+`;
 class Pagination extends React.Component {
   constructor(props) {
     super(props);
@@ -18,6 +40,7 @@ class Pagination extends React.Component {
     this.setPage(this.props.initialPage);
   }
   setPage(page, items) {
+    // eslint-disable-next-line
     var items = items || this.props.items;
     var pager = this.state.pager;
     if (page < 1 || page > pager.totalPages) {
@@ -87,41 +110,44 @@ class Pagination extends React.Component {
       return null;
     }
     return (
-      <ul className="pagination">
-        <li className={pager.currentPage === 1 ? "disabled" : ""}>
-          <a onClick={() => this.setPage(1)}>
-            <i className="fa fa-solid fa-angles-left" />
-          </a>
-        </li>
-        <li className={pager.currentPage === 1 ? "disabled" : ""}>
-          <a onClick={() => this.setPage(pager.currentPage - 1)}>
-            <i className="fa fa-solid fa-angle-left" />
-          </a>
-        </li>
-        {pager.pages.map((page, index) => (
-          <a
-            key={index}
-            onClick={() => this.setPage(page)}
-            className={pager.currentPage === page ? "active" : ""}
+      <PaginationStyle>
+        <ul className="pagination">
+          <li className={pager.currentPage === 1 ? "disabled" : ""}>
+            <a href="# " onClick={() => this.setPage(1)}>
+              <i className="fa fa-solid fa-angles-left" />
+            </a>
+          </li>
+          <li className={pager.currentPage === 1 ? "disabled" : ""}>
+            <a href="# " onClick={() => this.setPage(pager.currentPage - 1)}>
+              <i className="fa fa-solid fa-angle-left" />
+            </a>
+          </li>
+          {pager.pages.map((page, index) => (
+            <a
+              href="# "
+              key={index}
+              onClick={() => this.setPage(page)}
+              className={pager.currentPage === page ? "active" : ""}
+            >
+              {page}
+            </a>
+          ))}
+          <li
+            className={pager.currentPage === pager.totalPages ? "disabled" : ""}
           >
-            {page}
-          </a>
-        ))}
-        <li
-          className={pager.currentPage === pager.totalPages ? "disabled" : ""}
-        >
-          <a onClick={() => this.setPage(pager.currentPage + 1)}>
-            <i className="fa fa-solid fa-angle-right" />
-          </a>
-        </li>
-        <li
-          className={pager.currentPage === pager.totalPages ? "disabled" : ""}
-        >
-          <a onClick={() => this.setPage(pager.totalPages)}>
-            <i className="fa fa-solid fa-angles-right" />
-          </a>
-        </li>
-      </ul>
+            <a href="# " onClick={() => this.setPage(pager.currentPage + 1)}>
+              <i className="fa fa-solid fa-angle-right" />
+            </a>
+          </li>
+          <li
+            className={pager.currentPage === pager.totalPages ? "disabled" : ""}
+          >
+            <a href="# " onClick={() => this.setPage(pager.totalPages)}>
+              <i className="fa fa-solid fa-angles-right" />
+            </a>
+          </li>
+        </ul>
+      </PaginationStyle>
     );
   }
 }

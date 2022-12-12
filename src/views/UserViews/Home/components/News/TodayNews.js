@@ -62,7 +62,7 @@ export default function TodayNews(props) {
                       class="text-gray font-weight-bold"
                       href={`/postDetail/${post.postId}`}
                     >
-                      {post.editor.accountInfo.username}{" "}
+                      {post.editor.accountInfo.fullname}{" "}
                     </a>
                   </span>
                   <span class="news-date">

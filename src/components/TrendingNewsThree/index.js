@@ -41,7 +41,9 @@ const TrendingNewsThree = () => {
       <div className="row">
         <div className="col-12">
           <div className="heading">
-            <h2 className="widget-title">Tin nổi bật</h2>
+            <h2 className="widget-title">
+              <b>Tin nổi bật</b>
+            </h2>
           </div>
         </div>
       </div>

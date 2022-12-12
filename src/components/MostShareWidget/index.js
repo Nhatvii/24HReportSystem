@@ -49,12 +49,12 @@ const MostShareWidget = ({ title, dark, data }) => {
                           to={{
                             pathname: "/search",
                             state: {
-                              title: "Danh mục: " + item.category.subCategory,
+                              title: "Danh mục: " + item.category.type,
                               CategoryID: item.category.categoryId,
                             },
                           }}
                         >
-                          {item.category.subCategory}
+                          {item.category.type}
                         </Link>
                         <Link to={`/post-detail/${item.postId}`}>
                           {moment(item.publicTime).format("DD.MM.YYYY")}
@@ -99,7 +99,7 @@ const MostShareWidget = ({ title, dark, data }) => {
         >
           <Button
             style={{
-              color: "#1ab7ea !important",
+              color: "#21ccff !important",
               fontSize: "1rem",
               fontWeight: "bold",
             }}

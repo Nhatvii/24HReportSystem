@@ -62,7 +62,7 @@ export function OtherPosts() {
                         <span class="news-author">
                           viết bởi{" "}
                           <a class="font-weight-bold" href="#">
-                            {post.editor.accountInfo.username}{" "}
+                            {post.editor.accountInfo.fullname}{" "}
                           </a>
                         </span>
                         <span class="news-date">

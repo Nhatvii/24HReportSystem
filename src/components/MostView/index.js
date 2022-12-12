@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useState } from "react";
 import { Link } from "react-router-dom";
 import FontAwesome from "../uiStyle/FontAwesome";
 import Swiper from "react-id-swiper";
@@ -8,7 +8,7 @@ import { Button } from "react-bootstrap";
 const MostView = ({ no_margin, title, data }) => {
   // const { data } = props;
   const [swiper, setSwiper] = useState(null);
-  const [mostViewPosts, setMostViewPosts] = useState([]);
+  const mostViewPosts = [];
 
   const goNext = () => {
     if (swiper !== null) {
@@ -57,12 +57,12 @@ const MostView = ({ no_margin, title, data }) => {
                         to={{
                           pathname: "/search",
                           state: {
-                            title: "Danh mục: " + item.category.subCategory,
+                            title: "Danh mục: " + item.category.type,
                             CategoryID: item.category.categoryId,
                           },
                         }}
                       >
-                        {item.category.subCategory}
+                        {item.category.type}
                       </Link>
                       <Link to={`/post-detail/${item.postId}`}>
                         {moment(item.publicTime).format("DD-MMMM-YYYY")}
@@ -104,7 +104,7 @@ const MostView = ({ no_margin, title, data }) => {
         >
           <Button
             style={{
-              color: "#1ab7ea !important",
+              color: "#21ccff !important",
               fontSize: "1rem",
               fontWeight: "bold",
             }}

@@ -1,14 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 // import { Link } from "react-router-dom";
 import FooterCopyright from "../FooterCopyright";
 // import FontAwesome from "../uiStyle/FontAwesome";
 
 const FooterArea = ({ className }) => {
-  const [email, setEmail] = useState("");
-  const submitHandler = (e) => {
-    e.preventDefault();
-    setEmail("");
-  };
   return (
     <div className={`footer footer_area1 ${className ? className : ""}`}>
       <div className="container">
@@ -16,11 +11,11 @@ const FooterArea = ({ className }) => {
           <div className="row">
             <div className="col-md-6 align-self-center">
               <div>
-                <h1 style={{ color: "white" }}>Report 24h</h1>
+                <h1 style={{ color: "white" }}>24h Cảnh báo</h1>
               </div>
               <div>
                 <h6 style={{ color: "white" }}>
-                  Trang web được góp từ chuyên môn của <b>Công an Quận 1</b>
+                  Trang web được góp ý từ chuyên môn của <b>Công an Quận 1</b>
                 </h6>
               </div>
               {/* <div className="social2">

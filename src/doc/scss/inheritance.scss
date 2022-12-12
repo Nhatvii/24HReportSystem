@@ -114,7 +114,8 @@
     content: "";
     height: 50%;
     width: 100%;
-    background: #7cc6ff;
+    background: linear-gradient(8deg,#21ccff,
+      #0253d7);
     left: 0;
     bottom: 0;
     z-index: -1;
@@ -173,7 +174,8 @@
     content: "";
     height: 60%;
     width: 100%;
-    background: #7cc6ff;
+    background: linear-gradient(166deg, #21ccff,
+      #0253d7);
     left: 0;
     top: 0;
     z-index: -1;

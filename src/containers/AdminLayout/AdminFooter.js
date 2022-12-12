@@ -15,7 +15,7 @@ class AdminFooter extends Component {
     return (
       <React.Fragment>
         <span>
-          <a href="#">Copyright</a> &copy; 2022 .
+          <a href="# ">Copyright</a> &copy; 2022 .
         </span>
         <span className="ml-auto">
           Powered by <a href="https://coreui.io/react">24h Report</a>

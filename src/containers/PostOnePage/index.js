@@ -8,11 +8,11 @@ import MostShareWidget from "../../components/MostShareWidget";
 import FollowUs from "../../components/FollowUs";
 import { Markup } from "interweave";
 // images
-import OurBlogSection from "../../components/OurBlogSection";
+import SuggestionPost from "../../components/SuggestionPost";
 import postDetailApi from "../../api/postDetailApi";
 import moment from "moment";
 import { Comments } from "../../views/UserViews/Post/components/Comments";
-
+import "./style.css";
 const PostOnePage = (props) => {
   const [postDetail, setPostDetail] = useState([]);
   const fetchPostDetail = async () => {
@@ -25,7 +25,6 @@ const PostOnePage = (props) => {
     }
   };
   useEffect(() => {
-    console.log(props);
     fetchPostDetail();
   }, [props]);
   return (
@@ -40,9 +39,7 @@ const PostOnePage = (props) => {
                 <div className="row">
                   <div className="col-6 align-self-center">
                     <div className="page_category">
-                      <h4>
-                        {postDetail.category && postDetail.category.subCategory}
-                      </h4>
+                      <h4>{postDetail.category && postDetail.category.type}</h4>
                     </div>
                   </div>
                   <div className="col-6 text-right">
@@ -58,7 +55,9 @@ const PostOnePage = (props) => {
                         </li>
                         <li>
                           <FontAwesome name="share" />
-                          {postDetail.shareCount}
+                          {postDetail.shareCount === null
+                            ? 0
+                            : postDetail.shareCount}
                         </li>
                       </ul>
                     </div>
@@ -73,17 +72,33 @@ const PostOnePage = (props) => {
                   </p>
                 </div>
                 <div className="space-40" />
-                <img
-                  src={postDetail.image}
-                  alt="thumb"
-                  style={{
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                    width: "100%",
-                    display: "inline-block",
-                  }}
-                  class="img-responsive"
-                />
+                {postDetail.video === "null" ||
+                postDetail.video === "string" ? (
+                  <img
+                    src={postDetail.image}
+                    alt="thumb"
+                    style={{
+                      marginLeft: "auto",
+                      marginRight: "auto",
+                      width: "100%",
+                      display: "inline-block",
+                    }}
+                    class="img-responsive"
+                  />
+                ) : (
+                  <div class="h_iframe">
+                    <img class="ratio" alt="img " src={postDetail.image} />
+                    <iframe
+                      title={postDetail.title}
+                      frameborder="0"
+                      height="465px"
+                      width="470px"
+                      scrolling="no"
+                      src={postDetail.video}
+                      allowfullscreen
+                    ></iframe>
+                  </div>
+                )}
                 <div className="space-20" />
                 <div className="row">
                   <div className="col-lg-6 align-self-center">
@@ -100,13 +115,13 @@ const PostOnePage = (props) => {
                       </div>
                       <Link to="/">
                         {postDetail.editor &&
-                          postDetail.editor.accountInfo.username}
+                          postDetail.editor.accountInfo.fullname}
                       </Link>
                       <ul>
                         <li className="capitalize">
                           <Link to="/">
                             {moment(postDetail.createTime).format(
-                              "dddd, Do MM YYYY"
+                              "dddd, Do/MM/YYYY"
                             )}
                           </Link>
                         </li>
@@ -114,34 +129,8 @@ const PostOnePage = (props) => {
                           {postDetail.updateTime &&
                             "cập nhật lần cuối" +
                               moment(postDetail.updateTime).format(
-                                "dddd, Do MM YYYY"
+                                "dddd, Do/MM/YYYY"
                               )}
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div className="col-lg-6 align-self-center">
-                    <div className="author_social inline text-right">
-                      <ul>
-                        <li>
-                          <Link to="/">
-                            <FontAwesome name="instagram" />
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="/">
-                            <FontAwesome name="facebook-f" />
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="/">
-                            <FontAwesome name="youtube" />
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="/">
-                            <FontAwesome name="instagram" />
-                          </Link>
                         </li>
                       </ul>
                     </div>
@@ -173,7 +162,7 @@ const PostOnePage = (props) => {
         )}
       </div>
       <div className="space-60" />
-      <OurBlogSection
+      <SuggestionPost
         data={JSON.parse(localStorage.getItem("carousel-post"))}
       />
       <div className="space-100" />

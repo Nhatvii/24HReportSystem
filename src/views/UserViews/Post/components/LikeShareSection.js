@@ -60,7 +60,7 @@ const PostOption = styled.div`
     border-radius: 5px;
   }
   p {
-    padding-top: 0.5rem;
+    padding-top: 1rem;
     margin-left: 10px;
     font-size: small;
   }
@@ -69,7 +69,7 @@ export function LikeShareSection(props) {
   const user_info = localStorage.getItem("user_info");
   const [_isLiked, _setIsLiked] = useState(false);
   const [_numberOfLikes, _setNumberOfLikes] = useState(null);
-  const [url, setUrl] = useState(window.location.href);
+  const url = window.location.href;
   //Add view count of users to post
   const UpdateViewCount = async () => {
     try {
@@ -77,8 +77,13 @@ export function LikeShareSection(props) {
         postId: props.postId,
         userId: JSON.parse(user_info).accountId,
       };
-      const response = await postApi.updateViewCount(params);
-      console.log(response);
+      const response = await emotionApi.createPostView(params);
+      if (!JSON.stringify(response).includes("error")) {
+        const params2 = {
+          postId: props.postId,
+        };
+        await postApi.updateViewCount(params2);
+      }
     } catch (e) {
       toast.error(e.message);
     }
@@ -92,8 +97,10 @@ export function LikeShareSection(props) {
       const response = await emotionApi.getEmotion(params);
       if (response.length === 0) {
         _setIsLiked(false);
-      } else {
-        _setIsLiked(response[0].emotionStatus);
+      } else if (response[0].emotionStatus === "Unlike") {
+        _setIsLiked(false);
+      } else if (response[0].emotionStatus === "Like") {
+        _setIsLiked(true);
       }
     } catch (e) {
       toast.error(e.message);
@@ -101,9 +108,8 @@ export function LikeShareSection(props) {
   };
   const LoadNumberOfLike = async () => {
     try {
-      const params = { postId: props.postId, emotionStatus: true };
+      const params = { postId: props.postId, emotionStatus: "Like" };
       const response = await emotionApi.getNumberOfLike(params);
-      console.log(response);
       if (response.length !== 0) {
         _setNumberOfLikes(response.length);
       }
@@ -119,8 +125,7 @@ export function LikeShareSection(props) {
         postId: props.postId,
         userId: JSON.parse(user_info).accountId,
       };
-      const response = await emotionApi.sendEmotion(params);
-      console.log(response);
+      await emotionApi.sendEmotion(params);
       // if (response.statusCode === 200) {
       //   LoadEmotion();
       // }
@@ -137,7 +142,6 @@ export function LikeShareSection(props) {
   }, []);
   useEffect(() => {
     const timerId = setInterval(() => {}, 3000);
-
     return () => clearInterval(timerId);
   });
   return (

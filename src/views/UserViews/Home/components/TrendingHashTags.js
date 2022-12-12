@@ -38,11 +38,11 @@ const TrendingHashTag = () => {
               pathname: "/view-all",
               state: {
                 categoryID: category.categoryId,
-                title: "Tin liên quan đến #" + category.subCategory,
+                title: "Tin liên quan đến #" + category.type,
               },
             }}
           >
-            #{category.subCategory}
+            #{category.type}
           </Link>
         ))}
     </Row>

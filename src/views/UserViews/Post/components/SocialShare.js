@@ -47,6 +47,10 @@ export default class SocialShare extends Component {
         toast.error(e.message);
       }
     }
+    function handleUpdateShareCount(currentUrl, id) {
+      navigator.clipboard.writeText(currentUrl);
+      updateShareCount(id);
+    }
     const ShareList = Passers(
       share(<P url={this.props.url} className="network__share-button" />)
     )({ className: "network" })("span");
@@ -83,18 +87,12 @@ export default class SocialShare extends Component {
         {/* Copylink */}
         <CopyLink
           className="pt-1 pl-1 pr-1 pb-1"
-          onClick={() => (
-            navigator.clipboard.writeText(currentUrl),
-            updateShareCount(this.props.id)
-          )}
+          onClick={() => handleUpdateShareCount(currentUrl, this.props.id)}
         >
           <span
             class="fa fa-stack fa-lg align-middle"
             style={{ verticalAlign: "top" }}
-            onClick={() => (
-              navigator.clipboard.writeText(currentUrl),
-              updateShareCount(this.props.id)
-            )}
+            onClick={() => handleUpdateShareCount(currentUrl, this.props.id)}
           >
             <i
               class="fa fa-solid fa-circle fa-stack-2x"
@@ -107,10 +105,7 @@ export default class SocialShare extends Component {
           </span>{" "}
           <span
             className="align-middle"
-            onClick={() => (
-              navigator.clipboard.writeText(currentUrl),
-              updateShareCount(this.props.id)
-            )}
+            onClick={() => handleUpdateShareCount(currentUrl, this.props.id)}
           >
             Sao chép liên kết
           </span>

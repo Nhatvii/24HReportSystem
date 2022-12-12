@@ -18,6 +18,7 @@ import {
 } from "reactstrap";
 import userApi from "../../../api/UserApi";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 export const Profile = () => {
   //Check user
   const user_info = JSON.parse(localStorage.getItem("user_info"));
@@ -33,15 +34,14 @@ export const Profile = () => {
   //Validate the input
   const validate = (values) => {
     const errors = {};
-    if (!values.username) {
-      errors.username = "Cần nhập tên người dùng";
-    } else if (!/^.{5,35}$/i.test(values.username)) {
-      errors.username = "Tên ít nhất là 5 kí tự và dài nhất là 35 kí tự.";
+    if (!values.fullname) {
+      errors.fullname = "Cần nhập tên người dùng";
+    } else if (!/^.{5,35}$/i.test(values.fullname)) {
+      errors.fullname = "Tên ít nhất là 5 kí tự và dài nhất là 35 kí tự.";
     }
-    if (!values.password) {
-      errors.password = "Cần nhập mật khẩu";
-    }
-
+    // if (!values.password) {
+    //   errors.password = "Cần nhập mật khẩu";
+    // }
     if (!values.email) {
       errors.email = "Cần nhập email";
     } else if (
@@ -78,11 +78,12 @@ export const Profile = () => {
         accountID: user_info.accountId,
         email: values.email,
         phoneNumber: values.phone,
-        username: values.username,
+        fullname: values.fullname,
         address: values.address ? values.address : "",
         identityCard: values.idcard ? values.idcard : null,
         password: values.password,
       });
+      console.log(json);
       const response = await userApi.update(json);
       if (response.statusCode === 200) {
         const params = { userId: user_info.accountId };
@@ -100,13 +101,14 @@ export const Profile = () => {
       setIsLoading(false);
     } catch (e) {
       toast.error(e.message);
+      setMessage(e.message);
     }
   }
   //
   const formik = useFormik({
     initialValues: {
       email: user_info.email,
-      username: user_info.accountInfo.username,
+      fullname: user_info.accountInfo.fullname,
       phoneNumber: user_info.phoneNumber ? user_info.phoneNumber : "",
       address: user_info.accountInfo.address
         ? user_info.accountInfo.address
@@ -121,8 +123,6 @@ export const Profile = () => {
       update_user(values);
     },
   });
-  const [show, setShow] = useState(false);
-
   const renderPassword = () => {
     setViewPassword(!viewPassword);
   };
@@ -141,8 +141,8 @@ export const Profile = () => {
     <>
       <div className="pt-5 pb-5 pl-5 pr-5 fifth_bg">
         <Row>
-          <Col md="3" className="mr-5 ml-5">
-            <Card className="card-user">
+          <Col md="4">
+            <Card>
               <div className="card-image mx-auto pt-2">
                 <img
                   alt="..."
@@ -155,17 +155,21 @@ export const Profile = () => {
                 ></img>
               </div>
               <CardBody>
-                <div className="author">
-                  <a href="#pablo" onClick={(e) => e.preventDefault()}>
+                <div className="align-middle">
+                  <p href="#pablo" onClick={(e) => e.preventDefault()}>
                     <h5 className="title text-center">
-                      {user_info.accountInfo.username}
+                      {user_info.accountInfo.fullname}
                     </h5>
-                  </a>
+                  </p>
                   <p className="description text-center">{user_info.email}</p>
                 </div>
               </CardBody>
               <hr />
-              <div className="mr-auto ml-auto pb-3 pt-1">Danh sách báo cáo</div>
+              <div className="mr-auto ml-auto pb-3 pt-1">
+                <Link to="/view-report" className="see_all mb20">
+                  Danh sách báo cáo
+                </Link>
+              </div>
             </Card>
           </Col>
           <Col md="8" className="">
@@ -195,16 +199,16 @@ export const Profile = () => {
                           </b>
                         </label>
                         <Input
-                          id="username"
-                          defaultValue={user_info.accountInfo.username}
+                          id="fullname"
+                          defaultValue={user_info.accountInfo.fullname}
                           placeholder="Tên người dùng"
                           type="text"
-                          value={formik.values.username}
+                          value={formik.values.fullname}
                           onChange={formik.handleChange}
                         />
                       </FormGroup>
                       <p className="text-warning field_validate_label">
-                        {formik.errors.username ? formik.errors.username : null}
+                        {formik.errors.fullname ? formik.errors.fullname : null}
                       </p>
                     </Col>
 

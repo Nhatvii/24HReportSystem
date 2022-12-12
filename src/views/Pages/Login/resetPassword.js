@@ -1,9 +1,11 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from "react";
-import { Button, Col, Row } from "reactstrap";
+import { Button } from "reactstrap";
 import "./styles.scss";
 import { sendPasswordReset } from "../../../firebase";
 import { useFormik } from "formik";
-
+import ImgAsset from "../../../assets/img/index.js";
 const ResetPassword = () => {
   // const { history } = props;
   const [message, setMessage] = useState("");
@@ -36,7 +38,50 @@ const ResetPassword = () => {
   return (
     <div className="form-center">
       <form className="formFields" onSubmit={formik.handleSubmit}>
-        <h2>Quên mật khẩu?</h2>
+        <div className="modalLogin_modalLogin">
+          <div className="Popup">
+            <img className="bgbox" alt="img" src={ImgAsset.modalLogin_bgbox} />
+            <img
+              className="IMAGE1"
+              alt="img"
+              src={ImgAsset.modalLogin_IMAGE1}
+            />
+            <img className="IMAGE2" alt="img" src={ImgAsset.logo} />
+            <div className="ic_close">
+              <a href="/login">
+                <img className="Mask" alt="img" src={ImgAsset.return} />
+              </a>
+            </div>
+            <div className="Rectangle_1">
+              <input
+                id="email"
+                name="email"
+                type="text"
+                className="formFieldInput"
+                placeholder="Số điện thoại"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+              />
+            </div>
+            <Button type="submit" color="primary" className="">
+              <span className="ngnhp_3">Xác nhận</span>
+            </Button>
+            <Button type="submit" color="primary" className="">
+              <div className="Rectangle_8" />
+            </Button>
+            <span className="ngnhp">Quên mật khẩu?</span>
+            <span className="EmailSinthoi">
+              Nhập số điện thoại{"  "}
+              <span
+                className="text-warning field_validate_label"
+                style={{ fontSize: 11 }}
+              >
+                {formik.errors.account ? formik.errors.account : null}
+              </span>
+            </span>
+          </div>
+        </div>
+        {/* <h2>Quên mật khẩu?</h2>
         <div className="formField">
           <label className="formFieldLabel" for="account">
             Email
@@ -63,17 +108,8 @@ const ResetPassword = () => {
               <b>Đăng nhập ngay</b>
             </Button>
           </Col>
-        </Row>
+        </Row> */}
       </form>
-      <br />
-      <p>
-        <a href="/">
-          <b>
-            <icon className="fa fa-angle-left" />
-            &nbsp;Trang chủ
-          </b>
-        </a>
-      </p>
     </div>
   );
 };

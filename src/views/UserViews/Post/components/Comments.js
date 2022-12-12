@@ -45,10 +45,10 @@ export const Comments = (props) => {
     setOpenDeleteModal(!openDeleteModal);
     setIsLoading(false);
   };
-  const toggle2 = () => {
-    setIsUpdating(!isUpdating);
-    setIsLoading(false);
-  };
+  // const toggle2 = () => {
+  //   setIsUpdating(!isUpdating);
+  //   setIsLoading(false);
+  // };
   const randomColor = (name) => {
     let filteredColor = avatarColor.filter((e) => e.name !== name);
     setAvatarColor([
@@ -73,7 +73,7 @@ export const Comments = (props) => {
     try {
       const response = await commentApi.getByPostId(props.postId);
       setComments(response);
-      response.map((comment) => randomColor(comment.user.accountInfo.username));
+      response.map((comment) => randomColor(comment.user.accountInfo.fullname));
       _setNumberOfComments(response.length); //
     } catch (err) {
       console.log("Error", err);
@@ -102,6 +102,15 @@ export const Comments = (props) => {
     } catch (e) {
       toast.error(e.message);
     }
+  };
+  const handleDeleteComment = (commentId) => {
+    setSelectedId(commentId);
+    setOpenDeleteModal(true);
+  };
+  const handleUpdateComment = (commentId, commentTitle) => {
+    setIsUpdating(true);
+    setSelectedId(commentId);
+    setUpdatedComment(commentTitle);
   };
   //xóa comment
   const deleteComment = async (commentId) => {
@@ -152,8 +161,8 @@ export const Comments = (props) => {
     if (props.postId) fetchPostDetail();
     if (props.postId) fetchComments();
     JSON.parse(user_info) !== null &&
-      (JSON.parse(user_info).accountInfo.username !== null
-        ? randomColor(JSON.parse(user_info).accountInfo.username)
+      (JSON.parse(user_info).accountInfo.fullname !== null
+        ? randomColor(JSON.parse(user_info).accountInfo.fullname)
         : randomColor(JSON.parse(user_info).accountId));
   }, []);
   const [temp, setTemp] = useState(0);
@@ -180,20 +189,20 @@ export const Comments = (props) => {
           <AddComment>
             <LetteredAvatar
               name={
-                JSON.parse(user_info).accountInfo.username !== null
-                  ? JSON.parse(user_info).accountInfo.username.substring(
-                      JSON.parse(user_info).accountInfo.username.lastIndexOf(
+                JSON.parse(user_info).accountInfo.fullname !== null
+                  ? JSON.parse(user_info).accountInfo.fullname.substring(
+                      JSON.parse(user_info).accountInfo.fullname.lastIndexOf(
                         " "
                       ),
-                      JSON.parse(user_info).accountInfo.username.lastIndexOf(
+                      JSON.parse(user_info).accountInfo.fullname.lastIndexOf(
                         " "
                       ) + 2
                     )
-                  : JSON.parse(user_info).accountInfo.username.substring(
-                      JSON.parse(user_info).accountInfo.username.lastIndexOf(
+                  : JSON.parse(user_info).accountInfo.fullname.substring(
+                      JSON.parse(user_info).accountInfo.fullname.lastIndexOf(
                         " "
                       ),
-                      JSON.parse(user_info).accountInfo.username.lastIndexOf(
+                      JSON.parse(user_info).accountInfo.fullname.lastIndexOf(
                         " "
                       ) + 2
                     )
@@ -206,8 +215,8 @@ export const Comments = (props) => {
                 avatarColor.filter(
                   (e) =>
                     e.name ===
-                    (JSON.parse(user_info).accountInfo.username !== null
-                      ? JSON.parse(user_info).accountInfo.username
+                    (JSON.parse(user_info).accountInfo.fullname !== null
+                      ? JSON.parse(user_info).accountInfo.fullname
                       : JSON.parse(user_info).accountId)
                 ).color
               }
@@ -272,6 +281,7 @@ export const Comments = (props) => {
         <>
           <div className="d-flex justify-content-center">
             <img
+              alt="art"
               src="https://static.vecteezy.com/system/resources/previews/004/968/489/non_2x/you-are-not-logged-in-concept-illustration-flat-design-eps10-modern-graphic-element-for-landing-page-empty-state-ui-infographic-icon-etc-vector.jpg"
               width={100}
               height={100}
@@ -297,6 +307,7 @@ export const Comments = (props) => {
           <>
             <div className="d-flex justify-content-center">
               <img
+                alt="art"
                 src="https://cdn.dribbble.com/users/1003944/screenshots/10032634/media/a3165ce3eed01d0913652902582fe39f.gif"
                 width={100}
                 height={100}
@@ -313,10 +324,10 @@ export const Comments = (props) => {
             <CommentSection>
               <LetteredAvatar
                 name={
-                  comment.user.accountInfo.username !== null
-                    ? comment.user.accountInfo.username.substring(
-                        comment.user.accountInfo.username.lastIndexOf(" "),
-                        comment.user.accountInfo.username.lastIndexOf(" ") + 2
+                  comment.user.accountInfo.fullname !== null
+                    ? comment.user.accountInfo.fullname.substring(
+                        comment.user.accountInfo.fullname.lastIndexOf(" "),
+                        comment.user.accountInfo.fullname.lastIndexOf(" ") + 2
                       )
                     : comment.user.accountId.substring(
                         comment.user.accountId.lastIndexOf(" "),
@@ -331,8 +342,8 @@ export const Comments = (props) => {
                   avatarColor.filter(
                     (e) =>
                       e.name ===
-                      (comment.user.accountInfo.username !== null
-                        ? comment.user.accountInfo.username
+                      (comment.user.accountInfo.fullname !== null
+                        ? comment.user.accountInfo.fullname
                         : comment.user.accountId)
                   ).color
                 }
@@ -340,8 +351,8 @@ export const Comments = (props) => {
               <div className="ml-2">
                 <div className="comment-actions">
                   <div className="user-name">
-                    {comment.user.accountInfo.username !== null
-                      ? comment.user.accountInfo.username
+                    {comment.user.accountInfo.fullname !== null
+                      ? comment.user.accountInfo.fullname
                       : comment.user.accountId}
                   </div>{" "}
                   <div className="date">
@@ -371,10 +382,9 @@ export const Comments = (props) => {
                             className="delete"
                             data-toggle="modal"
                             data-target="#confirmDelete"
-                            onClick={() => (
-                              setSelectedId(comment.commentId),
-                              setOpenDeleteModal(true)
-                            )}
+                            onClick={() =>
+                              handleDeleteComment(comment.commentId)
+                            }
                           >
                             Xóa
                           </div>
@@ -382,11 +392,12 @@ export const Comments = (props) => {
                             className="modify"
                             data-toggle="modal"
                             data-target="#updateComment"
-                            onClick={() => (
-                              setIsUpdating(true),
-                              setSelectedId(comment.commentId),
-                              setUpdatedComment(comment.commentTitle)
-                            )}
+                            onClick={() =>
+                              handleUpdateComment(
+                                comment.commentId,
+                                comment.commentTitle
+                              )
+                            }
                           >
                             Chỉnh sửa
                           </div>

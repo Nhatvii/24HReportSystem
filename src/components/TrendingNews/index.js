@@ -2,7 +2,6 @@ import React, { Fragment } from "react";
 import Heading from "../uiStyle/Heading";
 import TrendingNewsSlider from "../TrendingNewsSlider";
 import { Link } from "react-router-dom";
-import FontAwesome from "../uiStyle/FontAwesome";
 import moment from "moment";
 import { Button } from "react-bootstrap";
 
@@ -39,12 +38,12 @@ const TrendingNews = (props) => {
                       to={{
                         pathname: "/search",
                         state: {
-                          title: "Danh mục: " + item.category.subCategory,
+                          title: "Danh mục: " + item.category.type,
                           CategoryID: item.category.categoryId,
                         },
                       }}
                     >
-                      {item.category.subCategory}
+                      {item.category.type}
                     </Link>
                     <Link to={`/post-detail/${item.postId}`}>
                       {moment(item.publicTime).format("DD.MM.YYYY")}
@@ -83,12 +82,12 @@ const TrendingNews = (props) => {
                       to={{
                         pathname: "/search",
                         state: {
-                          title: "Danh mục: " + item.category.subCategory,
+                          title: "Danh mục: " + item.category.type,
                           CategoryID: item.category.categoryId,
                         },
                       }}
                     >
-                      {item.category.subCategory}
+                      {item.category.type}
                     </Link>
                     <Link to={`/post-detail/${item.postId}`}>
                       {moment(item.publicTime).format("DD.MM.YYYY")}
@@ -119,7 +118,7 @@ const TrendingNews = (props) => {
           >
             <Button
               style={{
-                color: "#1ab7ea !important",
+                color: "#21ccff !important",
                 fontSize: "1rem",
                 fontWeight: "bold",
                 marginTop: "1rem",

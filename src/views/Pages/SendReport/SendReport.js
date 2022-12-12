@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactQuill from "react-quill";
 import {
   Card,
@@ -19,15 +19,42 @@ import useLocationForm from "./useLocationForm";
 import Select from "react-select";
 import reportApi from "../../../api/reportApi";
 import { DatetimePickerTrigger } from "rc-datetime-picker";
-import * as moment from "moment";
-import { ImgUpload, UploadContainer } from "../../AdminViews/Posts/CreatePost";
+import moment from "moment";
 import categoryApi from "../../../api/categoryApi";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import storage from "../../../firebase/firebaseConfig";
 import { toast } from "react-toastify";
 //testing
 import { v4 as uuid } from "uuid";
+import styled from "styled-components";
+import sendNotifyAPI from "../../../api/SendNotificationAPI";
+import ReCAPTCHA from "react-google-recaptcha";
 
+export const ImgUpload = styled.div`
+  flex-direction: row;
+  text-align: center;
+  margin: 10px;
+  background-image: ${(props) =>
+    props.preview === "5moreVideo"
+      ? "url(https://img.freepik.com/premium-vector/video-media-film-production-line-art-vector-icon-multimedia-movie-directing_654297-125.jpg?w=2000)"
+      : props.preview === "5moreImg"
+      ? "url(http://cdn.onlinewebfonts.com/svg/img_562621.png)"
+      : props.preview
+      ? `url(${props.preview})`
+      : "url(https://www.ncenet.com/wp-content/uploads/2020/04/No-image-found.jpg)"};
+  min-height: 200px;
+  min-width: 200px;
+  border-radius: 5px;
+  background-repeat: repeat;
+  background-size: cover;
+  background-position: 50% 50%;
+  margin-right: 5px;
+  margin-left: 1.5rem;
+`;
+export const UploadContainer = styled.div`
+  display: flex;
+  padding: 10px;
+`;
 const SendReport = () => {
   const user_info = JSON.parse(localStorage.getItem("user_info"));
   // if (user_info === null) {
@@ -48,7 +75,10 @@ const SendReport = () => {
   const [imgUrl, setImgUrl] = useState([]);
   const [videoUrl, setVideoUrl] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
+  // eslint-disable-next-line
+  const [token, setToken] = useState("");
   const [selected, setSelected] = useState();
+  const captchaRef = useRef(null);
   const { state, onCitySelect, onDistrictSelect, onWardSelect } =
     useLocationForm(false);
 
@@ -60,7 +90,9 @@ const SendReport = () => {
     selectedDistrict,
     selectedWard,
   } = state;
-
+  const handleToken = (e) => {
+    setToken(e);
+  };
   // Text box
   const modules = {
     toolbar: [
@@ -86,10 +118,11 @@ const SendReport = () => {
     try {
       const params = {};
       const response = await categoryApi.getAllSub(params);
-      categoryList.push({ value: 1, label: "Khác" });
-      response.map((item) =>
-        categoryList.push({ value: item.categoryId, label: item.subCategory })
-      );
+      response
+        .filter((e) => e.rootCategory !== null || e.categoryId === 0)
+        .map((item) =>
+          categoryList.push({ value: item.categoryId, label: item.type })
+        );
     } catch (e) {
       toast.error(e.message);
     }
@@ -102,84 +135,112 @@ const SendReport = () => {
   const handleEditor = (editor) => {
     setText(editor);
   };
-  const handle_submit = async () => {
+  const sendNotify = async () => {
     try {
       const params = {
-        userID:
-          user_info !== null
-            ? user_info.role.roleId !== 1
-              ? user_info.accountId
-              : isAnonymous
-              ? null
-              : user_info !== null
-              ? user_info.accountId
-              : null
-            : null,
-        staffID:
-          user_info !== null
-            ? user_info.role.roleId !== 1
-              ? user_info.accountId
-              : null
-            : null,
-        categoryId:
-          user_info !== null
-            ? user_info.role.roleId !== 1
-              ? selected.value
-              : null
-            : null,
-        location:
-          address +
-          (state.selectedCity !== null
-            ? ", " +
-              state.selectedCity.label +
-              (state.selectedDistrict !== null
-                ? ", " +
-                  state.selectedDistrict.label +
-                  (state.selectedWard !== null
-                    ? ", " + state.selectedWard.label
-                    : "")
-                : "")
-            : ""),
-        timeFraud: time.format("YYYY-MM-DD HH:mm:ss"),
-        description: text,
-        video:
-          videoUrl.length !== 0 ? videoUrl.map((url) => url.url) : ["null"],
-        image: imgUrl.length !== 0 ? imgUrl.map((url) => url.url) : ["null"],
-        isAnonymous:
-          user_info !== null
-            ? user_info.role.roleId !== 1
-              ? false
-              : isAnonymous
-            : true,
+        data: {
+          title: "Thông báo",
+          body: "Bạn có 1 báo cáo mới.",
+        },
+        to: "/topics/staff",
       };
-      console.log(params);
-      const response = await reportApi.send(params);
-      if (response.statusCode === 200) {
+      const response = await sendNotifyAPI.sendNotify(params);
+      if (!JSON.stringify(response).includes("error")) {
         if (user_info !== null) {
           if (user_info.role.roleId === 1) {
             window.location.href = "/view-report";
           } else {
-            toast.success("Tạo báo cáo thành công");
+            window.location.href = "/view-report";
           }
         } else {
-          toast.success("Tạo báo cáo thành công");
           window.location.href = "/";
         }
-        setCategoryList([]);
-        setSelected("");
-        setVideo([]);
-        setImg([]);
-        setImgUrl([]);
-        setVideoUrl([]);
-        setImgNumber(0);
-        setVideonumber(0);
-        setSelectedFile([]);
-        setText("");
-      } else {
-        toast.error("Gửi thất bại");
       }
     } catch (e) {
       toast.error(e.message);
+    }
+  };
+  const handle_submit = async () => {
+    if (token.length > 0) {
+      try {
+        const params = {
+          userID:
+            user_info !== null
+              ? user_info.role.roleId !== 1
+                ? user_info.accountId
+                : isAnonymous
+                ? null
+                : user_info !== null
+                ? user_info.accountId
+                : null
+              : null,
+          staffID:
+            user_info !== null
+              ? user_info.role.roleId !== 1
+                ? user_info.accountId
+                : null
+              : null,
+          categoryId:
+            user_info !== null
+              ? user_info.role.roleId !== 1
+                ? selected.value
+                : null
+              : null,
+          location:
+            address +
+            (state.selectedCity !== null
+              ? ", " +
+                state.selectedCity.label +
+                (state.selectedDistrict !== null
+                  ? ", " +
+                    state.selectedDistrict.label +
+                    (state.selectedWard !== null
+                      ? ", " + state.selectedWard.label
+                      : "")
+                  : "")
+              : ""),
+          timeFraud: time.format("YYYY-MM-DD HH:mm:ss"),
+          description: text,
+          video:
+            videoUrl.length !== 0 ? videoUrl.map((url) => url.url) : ["null"],
+          image: imgUrl.length !== 0 ? imgUrl.map((url) => url.url) : ["null"],
+          isAnonymous:
+            user_info !== null
+              ? user_info.role.roleId !== 1
+                ? false
+                : isAnonymous
+              : true,
+        };
+        const response = await reportApi.send(params);
+        if (response.statusCode === 200) {
+          if (user_info !== null) {
+            if (user_info.role.roleId === 1) {
+              toast.success("Tạo báo cáo thành công");
+              sendNotify();
+            } else {
+              toast.success("Tạo báo cáo thành công");
+              sendNotify();
+            }
+          } else {
+            toast.success("Tạo báo cáo thành công");
+            sendNotify();
+          }
+          setCategoryList([]);
+          setSelected("");
+          setVideo([]);
+          setImg([]);
+          setImgUrl([]);
+          setVideoUrl([]);
+          setImgNumber(0);
+          setVideonumber(0);
+          setSelectedFile([]);
+          setText("");
+        } else {
+          toast.error("Gửi thất bại");
+        }
+      } catch (e) {
+        toast.error(e.message);
+      }
     }
   };
   const handleMoment = (moment) => {
@@ -242,10 +303,8 @@ const SendReport = () => {
     }
   };
   useEffect(() => {
-    console.log(state);
-  });
-  useEffect(() => {
     if (img.length > imgNumber) {
+      // eslint-disable-next-line
       Array.from(img).map((img) => {
         const storageRef = ref(storage, `/img/${uuid()}`);
         const uploadTask = uploadBytesResumable(storageRef, img);
@@ -267,6 +326,7 @@ const SendReport = () => {
       });
     }
     if (video.length > videoNumber) {
+      // eslint-disable-next-line
       Array.from(video).map((video) => {
         const storageRef = ref(storage, `/video/${uuid()}`);
         const uploadTask = uploadBytesResumable(storageRef, video);
@@ -296,6 +356,7 @@ const SendReport = () => {
       setPreview([]);
       return;
     }
+    // eslint-disable-next-line
     Array.from(selectedFile).map((file) => {
       const objectUrl = URL.createObjectURL(file);
       preview.push({
@@ -306,7 +367,7 @@ const SendReport = () => {
   }, [selectedFile]);
   return (
     <div className="fifth_bg">
-      <Card className=" ml-5 mr-5 mb-4 pb-2">
+      <Card className="ml-5 mr-5 mb-4 pb-2">
         <CardHeader
           className="bg-primary"
           style={{
@@ -314,7 +375,7 @@ const SendReport = () => {
               "linear-gradient(to right, rgb(86, 204, 242), rgb(47, 128, 237))",
           }}
         >
-          <h5 style={{ color: "#fff" }}>Gửi báo cáo </h5>
+          <h5 style={{ color: "#fff" }}>Gửi báo cáo</h5>
         </CardHeader>
         <CardBody>
           <FormGroup row>
@@ -397,27 +458,6 @@ const SendReport = () => {
               </FormText>
             </Col>
           </FormGroup>
-          {user_info !== null && user_info.role.roleId !== 1 && (
-            <FormGroup row>
-              <Col md="1">
-                <Label className="font-weight-bold">
-                  Chọn phân loại:<span className="text-danger">*</span>
-                </Label>
-              </Col>
-              <Col md="10">
-                <div className="row pl-3">
-                  <Select
-                    name="category"
-                    isDisabled={categoryList.length === null}
-                    options={categoryList}
-                    onChange={(option) => setSelected(option)}
-                    placeholder="Chọn phân loại"
-                    defaultValue={selected}
-                  />
-                </div>
-              </Col>
-            </FormGroup>
-          )}
           {/* File Upload */}
           <FormGroup row>
             <Col md="1">
@@ -552,7 +592,7 @@ const SendReport = () => {
               <Label check>
                 <i style={{ color: "red" }}>* </i>
                 Tôi hoàn toàn chịu trách nhiệm về thông tin báo báo theo{" "}
-                <a href="#" style={{ color: "#2F80ED" }}>
+                <a href="# " style={{ color: "#2F80ED" }}>
                   điều khoản sử dụng
                 </a>
               </Label>
@@ -568,13 +608,19 @@ const SendReport = () => {
               <Label check>
                 <i style={{ color: "red" }}>* </i>
                 Tôi hoàn toàn chịu trách nhiệm về thông tin báo báo theo{" "}
-                <a href="#" style={{ color: "#2F80ED" }}>
+                <a href="# " style={{ color: "#2F80ED" }}>
                   điều khoản sử dụng
                 </a>
               </Label>
             </FormGroup>
           )}
-          {isChecked || (user_info !== null && user_info.role.roleId !== 1) ? (
+          <ReCAPTCHA
+            sitekey={"6LfI60wjAAAAALwxQShekr40D0TfqzUAtUEslHeG"}
+            ref={captchaRef}
+            onChange={(e) => handleToken(e)}
+          />
+          {token &&
+          (isChecked || (user_info !== null && user_info.role.roleId !== 1)) ? (
             <FormGroup inline>
               <Button
                 style={{

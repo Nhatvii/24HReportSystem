@@ -1,26 +1,17 @@
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  Col,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-  Row,
-} from "reactstrap";
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import ImgAsset from "../../../assets/img/index.js";
 import { toast } from "react-toastify";
 import { useFormik } from "formik";
 import registerApi from "../../../api/registerApi";
 import loginApi from "../../../api/loginApi";
 import userApi from "../../../api/UserApi";
-import { Toast, ToastContainer } from "react-bootstrap";
 import { firebase, auth } from "../../../firebase/firebase";
 import OtpInput from "react-otp-input";
 import { setTimeout } from "core-js";
 import "../Login/styles.scss";
 //
 const Register = (props) => {
-  const { history } = props;
   const [isLoading, setIsLoading] = useState(false);
   const [values, setValues] = useState([]);
   const [email, setEmail] = useState("");
@@ -31,11 +22,9 @@ const Register = (props) => {
   //OTP
   const [otp, setOtp] = useState("");
   const handleChange = (otp) => setOtp(otp);
-  const [show, setShow] = useState(false);
   const [result, setResult] = useState("");
   const [modal, setModal] = useState(false);
   const [resetTime, setResetTime] = useState();
-
   const toggle = () => {
     setModal(!modal);
   };
@@ -59,7 +48,7 @@ const Register = (props) => {
       errors.repeatPassword = "Mật khẩu không khớp";
     }
     if (!values.account) {
-      errors.account = "Cần nhập email / số điện thoại";
+      errors.account = "Cần nhập số điện thoại";
     } else if (isNaN(values.account) === true) {
       if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.account)) {
         errors.account = "Không đúng định dạng email ";
@@ -75,7 +64,6 @@ const Register = (props) => {
     }
     return errors;
   };
-
   //Đăng kí
   async function register_user(values) {
     setIsLoading(true);
@@ -173,17 +161,18 @@ const Register = (props) => {
       ) {
         toast.error(response.error.message);
       } else {
-        setEmail(values.email);
+        setEmail(values.account);
         setPassword(values.password);
-        setShow(true);
         if (phone !== "") {
           toast.success("Xin xác nhận số điện thoại");
+          console.log(values.account);
           auth
             .signInWithPhoneNumber(
-              "+84" + values.phone.substring(1, values.phone),
+              "+84" + values.account.substring(1, values.phone),
               window.recaptchaVerifier
             )
             .then((result) => {
+              console.log("first");
               setResetTime(30);
               setResult(result);
               setModal(!modal);
@@ -193,30 +182,11 @@ const Register = (props) => {
               toast.error(err);
             });
         } else {
-          //Gửi mail
           register_user(values);
         }
       }
     },
   });
-  // const SkipValidation = async () => {
-  //   const params = { email: email, isAuthen: true };
-  //   const response = userApi.update(params);
-  //   if (!JSON.stringify(response).includes("error")) {
-  //     const params = {
-  //       account: email,
-  //       password: password,
-  //     };
-  //     const loginResponse = loginApi.getAll(params);
-  //     console.log(loginResponse);
-  //     if (!JSON.stringify(response).includes("error")) {
-  //       //lấy dữ liệu đăng Nhập
-  //       localStorage.setItem("user_info", JSON.stringify(loginResponse));
-  //       setIsLoading(false);
-  //       window.location.href = "/home";
-  //     }
-  //   }
-  // };
   const ValidateOtp = async () => {
     if (otp === null) return;
     result
@@ -265,6 +235,7 @@ const Register = (props) => {
   return (
     <>
       <div className="form-center">
+        <div id="recaptcha-container"></div>
         <Modal
           isOpen={modal}
           toggle={() => toggle()}
@@ -309,131 +280,158 @@ const Register = (props) => {
               Xác thực sau
             </Button> */}
             {isLoading ? (
-              <Button color="info">Đang đăng nhập</Button>
+              <Button color="primary">Đang đăng nhập</Button>
             ) : (
-              <Button onClick={() => ValidateOtp()} color="info">
+              <Button onClick={() => ValidateOtp()} color="primary">
                 Xác nhận
               </Button>
             )}
           </ModalFooter>
         </Modal>
         <form className="formFields" onSubmit={formik.handleSubmit}>
-          <h2>Đăng kí</h2>
-          <p className="text-danger">{errorMessage}</p>
-          <div className="formField">
-            <div className="formField">
-              <label className="formFieldLabel" for="account">
-                Họ và tên<span className="text-danger">*</span>
-              </label>
-              <input
-                id="username"
-                name="username"
-                type="text"
-                className="formFieldInput"
-                placeholder="Họ và tên"
-                value={formik.values.username}
-                onChange={formik.handleChange}
+          <div className="modalLogin_modalLogin">
+            <div className="Popup">
+              <img
+                className="bgbox"
+                alt="img"
+                src={ImgAsset.modalLogin_bgbox}
               />
-            </div>
-            <p className="text-warning field_validate_label">
-              {formik.errors.username ? formik.errors.username : null}{" "}
-            </p>
-          </div>
-          <div className="formField">
-            <div className="formField">
-              <label className="formFieldLabel" for="account">
-                Email / Số điện thoại<span className="text-danger">*</span>
-              </label>
-              <input
-                id="account"
-                name="account"
-                type="text"
-                className="formFieldInput"
-                placeholder="Email / Số điện thoại"
-                value={formik.values.account}
-                onChange={formik.handleChange}
+              <img
+                className="IMAGE1"
+                alt="img"
+                src={ImgAsset.modalLogin_IMAGE1}
               />
-            </div>
-            <p className="text-warning field_validate_label">
-              {formik.errors.account ? formik.errors.account : null}{" "}
-            </p>
-          </div>
-          <div className="formField">
-            <label className="formFieldLabel" htmlFor="password">
-              Mật khẩu: <span className="text-danger">*</span>
-            </label>
-            <input
-              className="formFieldInput"
-              id="password"
-              name="password"
-              type="password"
-              placeholder="Mật khẩu"
-              autoComplete="current-password"
-              value={formik.values.password}
-              onChange={formik.handleChange}
-            />
-            <p className="text-warning field_validate_label">
-              {formik.errors.password ? formik.errors.password : null}{" "}
-            </p>
-          </div>
-          <div className="formField">
-            <label className="formFieldLabel" htmlFor="password">
-              Nhập lại mật khẩu: <span className="text-danger">*</span>
-            </label>
-            <input
-              className="formFieldInput"
-              id="repeatPassword"
-              name="repeatPassword"
-              type="password"
-              placeholder="Nhập lại mật khẩu"
-              autoComplete="repeatPassword"
-              value={formik.values.repeatPassword}
-              onChange={formik.handleChange}
-            />
-            <p className="text-warning field_validate_label">
-              {formik.errors.repeatPassword
-                ? formik.errors.repeatPassword
-                : null}{" "}
-            </p>
-          </div>
-          <div id="recaptcha-container"></div>
-          <Row>
-            {/* Tạo loading button */}
-
-            {JSON.stringify(formik.errors) === "{}" ? (
-              isLoading ? (
-                <Col md="6">
-                  <Button type="submit" color="primary" className="float-left">
-                    <span
-                      class="spinner-border spinner-border-sm"
-                      role="status"
-                      aria-hidden="true"
-                    ></span>{" "}
-                    Đang tạo tài khoản
-                  </Button>
-                </Col>
-              ) : (
-                <Col md="6">
-                  <Button type="submit" color="primary" className="float-left">
-                    Tạo tài khoản
-                  </Button>
-                </Col>
-              )
-            ) : (
-              <Col md="6">
-                <Button disabled className="float-left">
-                  Tạo tài khoản
-                </Button>
-              </Col>
-            )}
-            <Col md="6" className="text-right">
-              <Button color="link" className="px-0">
-                <a href="/login">
-                  <b>Đã có tải khoản?</b>
+              <img className="IMAGE2" alt="img" src={ImgAsset.logo} />
+              <div className="ic_close">
+                <a href="/">
+                  <img
+                    className="Mask"
+                    alt="img"
+                    src={ImgAsset.modalLogin_Mask}
+                  />
                 </a>
-              </Button>
-            </Col>
-          </Row>
+              </div>
+              <div className="Rectangle_0">
+                <input
+                  id="username"
+                  name="username"
+                  type="text"
+                  className="formFieldInput"
+                  placeholder="Họ và tên"
+                  value={formik.values.username}
+                  onChange={formik.handleChange}
+                />
+              </div>
+              <div className="Rectangle_1">
+                <input
+                  id="account"
+                  name="account"
+                  type="text"
+                  className="formFieldInput"
+                  placeholder="Số điện thoại"
+                  value={formik.values.account}
+                  onChange={formik.handleChange}
+                />
+              </div>
+              <div className="Rectangle_2">
+                <input
+                  className="formFieldInput"
+                  id="password"
+                  name="password"
+                  type="password"
+                  placeholder="Mật khẩu"
+                  value={formik.values.password}
+                  onChange={formik.handleChange}
+                />
+              </div>
+              <div className="Rectangle_6">
+                <input
+                  className="formFieldInput"
+                  id="repeatPassword"
+                  name="repeatPassword"
+                  type="password"
+                  placeholder="Nhập lại mật khẩu"
+                  autoComplete="repeatPassword"
+                  value={formik.values.repeatPassword}
+                  onChange={formik.handleChange}
+                />
+              </div>
+              {isLoading ? (
+                <Button type="submit" color="primary" className="">
+                  <span
+                    class="spinner-border spinner-border-sm"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>{" "}
+                  <span className="ngnhp_2">Đang tạo tài khoản</span>
+                </Button>
+              ) : (
+                <>
+                  <Button type="submit" color="primary" className="">
+                    <span className="ngnhp_2">Đăng kí</span>
+                  </Button>
+                </>
+              )}
+              {isLoading ? (
+                <Button type="submit" color="primary" className="">
+                  <span
+                    class="spinner-border spinner-border-sm"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>{" "}
+                  <div className="Rectangle_7" />
+                </Button>
+              ) : (
+                <>
+                  <Button type="submit" color="primary" className="">
+                    <div className="Rectangle_7" />
+                  </Button>
+                </>
+              )}
+              <span className="ngnhp2">Đăng kí</span>
+              <span className="EmailSinthoi">
+                Số điện thoại{"  "}
+                <span
+                  className="text-warning field_validate_label"
+                  style={{ fontSize: 11 }}
+                >
+                  {formik.errors.account ? formik.errors.account : null}
+                </span>
+              </span>
+              <span className="Username">
+                Họ tên{"  "}
+                <span
+                  className="text-warning field_validate_label"
+                  style={{ fontSize: 11 }}
+                >
+                  {formik.errors.username ? formik.errors.username : null}
+                </span>
+              </span>
+              <span className="Mtkhu">
+                Mật khẩu{"  "}
+                <span
+                  className="text-warning field_validate_label"
+                  style={{ fontSize: 11 }}
+                >
+                  {formik.errors.password ? formik.errors.password : null}
+                </span>
+              </span>
+              <span className="Mtkhu2">
+                Nhập lại mật khẩu{"  "}
+                <span
+                  className="text-warning field_validate_label"
+                  style={{ fontSize: 11 }}
+                >
+                  {formik.errors.repeatPassword
+                    ? formik.errors.repeatPassword
+                    : null}
+                </span>
+              </span>
+              <a href="/login" className="px-0 float-right">
+                <span className="Login">Đã có tài khoản?</span>
+              </a>
+            </div>
+          </div>
         </form>
         <br />
         <p>

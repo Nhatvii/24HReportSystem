@@ -9,7 +9,6 @@ import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import Pagination from "./pagination";
-import "./style.css";
 
 const SearchPage = (props) => {
   const [posts, setPosts] = useState([]);
@@ -73,7 +72,6 @@ const SearchPage = (props) => {
   }, [searchContent, categoryID, rootCategoryID, title]);
   return (
     <Fragment>
-      {console.log(posts)}
       <BreadCrumb title={title} />
       <div className="archives padding-top-30">
         <div className="container">
@@ -121,13 +119,12 @@ const SearchPage = (props) => {
                               to={{
                                 pathname: "/search",
                                 state: {
-                                  title:
-                                    "Danh mục: " + item.category.subCategory,
+                                  title: "Danh mục: " + item.category.type,
                                   CategoryID: item.category.categoryId,
                                 },
                               }}
                             >
-                              {item.category.subCategory}
+                              {item.category.type}
                             </Link>
                             <Link to={`/post-detail/${item.postId}`}>
                               {moment(item.publicTime).format("DD.MM.YYYY")}
@@ -148,6 +145,7 @@ const SearchPage = (props) => {
                   <div className="ml-100 justify-content-center mt-5">
                     <div className="d-flex justify-content-center">
                       <img
+                        alt="art"
                         src="https://i.pinimg.com/originals/5d/35/e3/5d35e39988e3a183bdc3a9d2570d20a9.gif"
                         width={400}
                         height={400}
@@ -161,7 +159,20 @@ const SearchPage = (props) => {
                 )}
               </div>
               {posts.length > 0 && (
-                <Pagination items={posts} onChangePage={onChangePage} />
+                <Pagination
+                  items={
+                    title === "2"
+                      ? posts
+                          .sort(
+                            (a, b) =>
+                              new moment(a.publicTime) -
+                              new moment(b.publicTime)
+                          )
+                          .reverse()
+                      : posts
+                  }
+                  onChangePage={onChangePage}
+                />
               )}
             </div>
 

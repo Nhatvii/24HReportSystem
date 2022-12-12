@@ -31,7 +31,7 @@ const blog = [
       "The property, complete with 30-seat screening from room, a 100-seat amphitheater and a swimming pond with sandy shower…",
   },
 ];
-const OurBlogSectionTwo = () => {
+const SuggestionPostTwo = () => {
   return (
     <div className="theme3_bg section-padding layout3">
       <div className="container">
@@ -73,4 +73,4 @@ const OurBlogSectionTwo = () => {
   );
 };
 
-export default OurBlogSectionTwo;
+export default SuggestionPostTwo;

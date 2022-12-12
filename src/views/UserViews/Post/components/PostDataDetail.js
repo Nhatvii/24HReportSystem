@@ -40,7 +40,7 @@ export function PostDataDetail(props) {
         <div>
           <h3 className="h3">{postDetail.title}</h3>
           <h5 className="h5 text-muted">
-            viết bởi <b>{postDetail.editor.accountInfo.username}</b> lúc{" "}
+            viết bởi <b>{postDetail.editor.accountInfo.fullname}</b> lúc{" "}
             {postDetail.publicTime}
           </h5>
           <div>

@@ -30,8 +30,8 @@ class ReportApi {
     const url = "/ReportView";
     return axiosClient.post(url, params);
   };
-  find = (params) => {
-    const url = "/Report/" + params.id;
+  find = () => {
+    const url = "/Report";
     return axiosClient.get(url);
   };
 }

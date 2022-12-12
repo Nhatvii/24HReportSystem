@@ -5,7 +5,6 @@ import {
   getAuth,
   signInWithPopup,
   signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
   sendPasswordResetEmail,
   signOut,
 } from "firebase/auth";
@@ -65,8 +64,8 @@ const logInWithEmailAndPassword = async (email, password) => {
 };
 const registerWithEmailAndPassword = async (name, email, password) => {
   try {
-    const res = await createUserWithEmailAndPassword(auth, email, password);
-    const user = res.user;
+    // const res = await createUserWithEmailAndPassword(auth, email, password);
+    // const user = res.user;
     // await addDoc(collection(db, "users"), {
     //   uid: user.uid,
     //   name,
@@ -101,7 +100,7 @@ export const fetchToken = async (setTokenFound, setFcmToken) => {
     .then((currentToken) => {
       subscribeTokenToTopic(
         currentToken,
-        "abc"
+        "b91d59b9-de6e-4468-b9c1-88276e529667"
         // user_info.role.roleName + "/" + user_info.email
       );
       if (currentToken) {

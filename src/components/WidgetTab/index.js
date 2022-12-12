@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useState } from "react";
 import { TabContent, TabPane, Nav, NavItem, Fade } from "reactstrap";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
@@ -33,12 +33,12 @@ const WidgetTabPane = ({ arr, a_id, id }) => {
                       to={{
                         pathname: "/search",
                         state: {
-                          title: "Danh mục: " + item.category.subCategory,
+                          title: "Danh mục: " + item.category.type,
                           CategoryID: item.category.categoryId,
                         },
                       }}
                     >
-                      {item.category.subCategory}
+                      {item.category.type}
                     </Link>
                     <Link to={`/post-detail/${item.postId}`}>
                       {moment(item.publicTime).format("DD.MM.YYYY")}
@@ -66,7 +66,7 @@ const WidgetTabPane = ({ arr, a_id, id }) => {
                 >
                   <Button
                     style={{
-                      color: "#1ab7ea !important",
+                      color: "#21ccff !important",
                       fontSize: "1rem",
                       fontWeight: "bold",
                     }}
@@ -83,8 +83,7 @@ const WidgetTabPane = ({ arr, a_id, id }) => {
 };
 
 const WidgetTab = (props) => {
-  const [activeTab, setActiveTab] = useState("1");
-  const [widgetPosts, setWidgetPosts] = useState([]);
+  const [activeTab, setActiveTab] = useState("2");
   const { data, className } = props;
   const toggle = (tab) => {
     if (activeTab !== tab) setActiveTab(tab);
@@ -96,23 +95,23 @@ const WidgetTab = (props) => {
           <NavItem>
             <Link
               to="#"
-              className={classnames({ active: activeTab === "1" })}
-              onClick={() => {
-                toggle("1");
-              }}
-            >
-              Nổi bật
-            </Link>
-          </NavItem>
-          <NavItem>
-            <Link
-              to="#"
               className={classnames({ active: activeTab === "2" })}
               onClick={() => {
                 toggle("2");
               }}
             >
               Gần đây
+            </Link>
+          </NavItem>
+          <NavItem>
+            <Link
+              to="#"
+              className={classnames({ active: activeTab === "1" })}
+              onClick={() => {
+                toggle("1");
+              }}
+            >
+              Nổi bật
             </Link>
           </NavItem>
           <NavItem>
@@ -134,7 +133,10 @@ const WidgetTab = (props) => {
               id="1"
               arr={
                 data &&
-                data.sort((a, b) => a.viewCount - b.viewCount).slice(0, 4)
+                data
+                  .sort((a, b) => a.viewCount - b.viewCount)
+                  .reverse()
+                  .slice(0, 4)
               }
             />
           </TabPane>
@@ -149,6 +151,7 @@ const WidgetTab = (props) => {
                     (a, b) =>
                       new moment(a.publicTime) - new moment(b.publicTime)
                   )
+                  .reverse()
                   .slice(0, 4)
               }
             />
@@ -159,7 +162,10 @@ const WidgetTab = (props) => {
               id="3"
               arr={
                 data &&
-                data.sort((a, b) => a.likeCount - b.likeCount).slice(0, 4)
+                data
+                  .sort((a, b) => a.likeCount - b.likeCount)
+                  .reverse()
+                  .slice(0, 4)
               }
             />
           </TabPane>

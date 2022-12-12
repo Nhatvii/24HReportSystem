@@ -76,7 +76,9 @@ export default function PostList() {
           <div className="col-sm-4 col-md-4 col-lg-4">
             <div class="row">
               <div class="col-6 align-self-center">
-                <h2 class="widget-title">Chia sẻ nhiều</h2>
+                <h2 class="widget-title">
+                  <b>Chia sẻ nhiều</b>
+                </h2>
               </div>
               <div class="col-6 text-right align-self-center">
                 {" "}

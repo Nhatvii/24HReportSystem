@@ -1,19 +1,17 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from "react";
 import { Button, Col, Row } from "reactstrap";
 import { useFormik } from "formik";
 import { toast } from "react-toastify";
 import loginApi from "../../../api/loginApi";
 import "./styles.scss";
-import { signInWithGoogle } from "../../../firebase";
-
+import ImgAsset from "../../../assets/img/index.js";
 const Login = (props) => {
   // const { history } = props;
   const [isLoading, setIsLoading] = useState(false);
   // const [values, setValues] = useState([]);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
   //OTP phone login
-
   const validate = (values) => {
     const errors = {};
     if (!values.password) {
@@ -56,7 +54,6 @@ const Login = (props) => {
         password: values.password,
       });
       const response = await loginApi.getAll(json);
-      console.log("Response", response);
       if (!JSON.stringify(response).includes("error")) {
         localStorage.setItem("user_info", JSON.stringify(response));
         if (response.role.roleId === 1) {
@@ -66,10 +63,7 @@ const Login = (props) => {
             "https://report-24h-admin.azurewebsites.net/auth/sign-in";
         }
       } else {
-        setErrorMessage(
-          "Thông tin đăng nhập không chính xác hãy kiểm tra lại."
-        );
-        setSuccessMessage("");
+        toast.error("Thông tin đăng nhập không chính xác hãy kiểm tra lại.");
       }
       setIsLoading(false);
     } catch (e) {
@@ -80,98 +74,107 @@ const Login = (props) => {
   return (
     <div className="form-center">
       <form className="formFields" onSubmit={formik.handleSubmit}>
-        <h2>Đăng nhập</h2>
-        <p className="text-danger">{errorMessage}</p>
-        <div className="formField">
-          <label className="formFieldLabel" for="account">
-            Email / Số điện thoại
-          </label>
-          <input
-            id="account"
-            name="account"
-            type="text"
-            className="formFieldInput"
-            placeholder="Email / Số điện thoại"
-            value={formik.values.account}
-            onChange={formik.handleChange}
-          />
-        </div>
-        <p className="text-warning field_validate_label">
-          {formik.errors.account ? formik.errors.account : null}{" "}
-        </p>
-        <div className="formField">
-          <label className="formFieldLabel" htmlFor="password">
-            Mật khẩu
-          </label>
-          <input
-            className="formFieldInput"
-            id="password"
-            name="password"
-            type="password"
-            placeholder="Mật khẩu"
-            value={formik.values.password}
-            onChange={formik.handleChange}
-          />
-        </div>
-        <p className="text-warning field_validate_label">
-          {formik.errors.password ? formik.errors.password : null}{" "}
-        </p>
-        <div id="recaptcha-container"></div>
-        <Row>
-          {/* Tạo loading button */}
-          {isLoading ? (
-            <Col md="6">
-              <Button type="submit" color="primary" className="float-left">
+        <div className="modalLogin_modalLogin">
+          <div className="Popup">
+            <img className="bgbox" alt="img" src={ImgAsset.modalLogin_bgbox} />
+            <img
+              className="IMAGE1"
+              alt="img"
+              src={ImgAsset.modalLogin_IMAGE1}
+            />
+            <img className="IMAGE2" alt="img" src={ImgAsset.logo} />
+            <div className="ic_close">
+              <a href="/">
+                <img
+                  className="Mask"
+                  alt="img"
+                  src={ImgAsset.modalLogin_Mask}
+                />
+              </a>
+            </div>
+            <div className="Rectangle_1">
+              <input
+                id="account"
+                name="account"
+                type="text"
+                className="formFieldInput"
+                placeholder="Số điện thoại"
+                value={formik.values.account}
+                onChange={formik.handleChange}
+              />
+            </div>
+            <div className="Rectangle_2">
+              <input
+                className="formFieldInput"
+                id="password"
+                name="password"
+                type="password"
+                placeholder="Mật khẩu"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+              />
+            </div>
+            <div id="recaptcha-container"></div>
+            {isLoading ? (
+              <Button type="submit" color="primary" className="">
                 <span
                   class="spinner-border spinner-border-sm"
                   role="status"
                   aria-hidden="true"
                 ></span>{" "}
-                Đang đăng nhập
+                <span className="ngnhp_1">Đang đăng nhập</span>
               </Button>
-            </Col>
-          ) : (
-            <>
-              <Col md={4}>
-                <Button type="submit" color="primary" className="float-left">
-                  Đăng nhập
+            ) : (
+              <>
+                <Button type="submit" color="primary" className="">
+                  <span className="ngnhp_1">Đăng nhập</span>
                 </Button>
-              </Col>
-              <Col md={8}>
-                <div className="google-btn" onClick={signInWithGoogle}>
-                  <div className="google-icon-wrapper">
-                    <img
-                      className="google-icon"
-                      src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
-                    />
-                  </div>
-                  <p className="btn-text ">
-                    <b>Đăng nhập bằng Google</b>
-                  </p>
-                </div>
-              </Col>
-            </>
-          )}
-        </Row>
-      </form>
-      <br />
-      <Row>
-        <Col md={6}>
-          <p>
-            <a href="/">
-              <b>
-                <icon className="fa fa-angle-left" />
-                &nbsp;Trang chủ
-              </b>
+              </>
+            )}
+            {isLoading ? (
+              <Button type="submit" color="primary" className="">
+                <span
+                  class="spinner-border spinner-border-sm"
+                  role="status"
+                  aria-hidden="true"
+                ></span>{" "}
+                <div className="Rectangle_5" />
+              </Button>
+            ) : (
+              <>
+                <Button type="submit" color="primary" className="">
+                  <div className="Rectangle_5" />
+                </Button>
+              </>
+            )}
+            <span className="ngnhp">Đăng nhập</span>
+            <span className="EmailSinthoi">
+              Số điện thoại{"  "}
+              <span
+                className="text-warning field_validate_label"
+                style={{ fontSize: 11 }}
+              >
+                {formik.errors.account ? formik.errors.account : null}
+              </span>
+            </span>
+            <span className="Mtkhu">
+              Mật khẩu{"  "}
+              <span
+                className="text-warning field_validate_label"
+                style={{ fontSize: 11 }}
+              >
+                {formik.errors.password ? formik.errors.password : null}
+              </span>
+            </span>
+            <a href="/reset-password" className="px-0 float-right">
+              <span className="Qunmtkhu">Quên mật khẩu?</span>
             </a>
-          </p>
-        </Col>
-        <Col md={6}>
-          <a href="/reset-password" className="px-0 float-right">
-            <b>Quên mật khẩu?</b>
-          </a>
-        </Col>
-      </Row>
+            <a href="/register" className="px-0 float-right">
+              <span className="Register">Đăng kí ngay</span>
+            </a>
+          </div>
+        </div>
+      </form>
     </div>
   );
 };

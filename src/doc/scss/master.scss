@@ -163,13 +163,11 @@ body {
       top: 50%;
       z-index: 1;
       margin-top: -15px;
-
       .navBtn {
         height: 23px;
         width: 23px;
         line-height: 23px;
         padding: 0;
-
         &.nextBtn {
           margin-left: 7px;
         }
@@ -470,24 +468,16 @@ body {
   background-color: hsla(0, 0%, 37%, 0.911);
   transition: opacity 250ms ease;
   z-index: 999;
-  display: flex;
+  // display: flex;
   align-items: center;
   justify-content: center;
   visibility: hidden;
   opacity: 0;
   @include transition(all .3s);
-
-
   .v1search_form {
     input {
-      width: 75%;
-      float: left;
+      width: 100%;
       margin: 0;
-    }
-
-    button {
-      width: 25%;
-      float: left;
     }
   }
 
@@ -689,7 +679,7 @@ a.social_medium {
 
 .news_letter {
   background: $input_bg;
-
+  margin-top: 5rem;
   p {
     color: $news_letter_body;
     font-size: 17px;
@@ -729,6 +719,7 @@ a.social_medium {
 
   &:after {
     position: absolute;
+    border-radius: 10px;
     content: "";
     height: 60%;
     width: 100%;
@@ -900,10 +891,12 @@ a.social_medium {
 .post_img {
   position: relative;
   z-index: 2;
+  border-radius: 10px;
 }
 
 .post_img img {
   object-fit: cover;
+  border-radius: 10px;
 }
 
 .readmore {
@@ -930,9 +923,10 @@ a.social_medium {
       color: $nav_color;
       background: #fff;
       @include transition(all .3s);
-
+      border-radius: 50%;
       &.nextBtn {
         margin-left: 14px;
+        border-radius: 50%;
       }
 
       &:hover {
@@ -1421,7 +1415,9 @@ span.tranding {
 
     div.owl-prev {
       right: auto;
-      left: 0;
+      left: -10px;
+      border: 1px solid rgb(210, 240, 255);
+      border-radius: 5px;
     }
 
   }
@@ -1453,7 +1449,7 @@ span.tranding {
     z-index: 9;
     padding: 20px;
     color: $white;
-
+    
     p.post-p {
       font-size: 15px;
       line-height: 21px;
@@ -1476,7 +1472,8 @@ span.tranding {
     z-index: 9;
     padding: 20px;
     color: $white;
-    background-color: #181818;
+    border-radius: 10px;
+    background-color: rgba(24, 24, 24, 0.33);
     opacity: 0.75;
 
     p.post-p {
@@ -1633,8 +1630,10 @@ span.tranding {
       cursor: pointer;
       color: #000;
       top: 46%;
-      right: 0;
+      right: -10px;
+      border: 1px solid rgb(210, 240, 255);
       z-index: 9;
+      border-radius: 10px;
       margin-top: -35px;
       @include transition(all .3s);
 
@@ -1648,14 +1647,18 @@ span.tranding {
 
     div.owl-prev {
       right: auto;
-      left: 0;
+      left: -10px;
+      border: 1px solid rgb(210, 240, 255);
+      border-radius: 5px;
     }
+    
   }
 }
 
 .mix_carousel {
   background: $fifth_bg;
   padding: 30px;
+  border-radius: 30px;
 }
 
 /*POST TYPE-10*/
@@ -1996,6 +1999,7 @@ span.tranding {
 .viceo_posts_wrap {
   background: $fifth_bg;
   padding: 30px;
+  border-radius: 30px;
 }
 
 
@@ -2382,6 +2386,7 @@ textarea {
 
 .fourth_bg {
   background: $fourth_bg;
+  border-radius: 20px;
 }
 
 .secondary_bg {
@@ -2795,11 +2800,9 @@ a.cbtn3 {
 
   .post_type6 {
     background: $primary_bg;
-
     .single_post_text {
       padding: 20px;
       position: relative;
-
       a {
         margin-top: 10px;
         color: #fff;

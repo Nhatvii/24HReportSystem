@@ -35,7 +35,7 @@ const LastestPost = ({ className, dark, data }) => {
           <div className="col-12">
             <div className="heading white">
               <h2 className="widget-title" id="most_view">
-                Tin nóng hổi
+                <b>Tin nóng hổi</b>
               </h2>
             </div>
           </div>
@@ -75,18 +75,20 @@ const LastestPost = ({ className, dark, data }) => {
                           to={{
                             pathname: "/search",
                             state: {
-                              title: "Danh mục: " + post.category.subCategory,
+                              title: "Danh mục: " + post.category.type,
                               CategoryID: post.category.categoryId,
                             },
                           }}
                         >
-                          {post.category.subCategory}
+                          {post.category.type}
                         </Link>
-                        <Link to="#">
+                        <Link to="# ">
                           {moment(post.publicTime).format("DD.MM.YYYY")}
                         </Link>
                       </div>
-                      <h4>{post.title}</h4>
+                      <Link to={`/post-detail/${post.postId}`}>
+                        <h4>{post.title}</h4>
+                      </Link>
                       <p>{post.subTitle}</p>
                     </div>
                   </div>

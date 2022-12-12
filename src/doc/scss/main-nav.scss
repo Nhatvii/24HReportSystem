@@ -1667,7 +1667,6 @@
       margin: 0;
       padding: 0;
       list-style-type: none;
-
       li {
         list-style: none;
 
@@ -1752,11 +1751,11 @@
   .menu_right>div:after {
     position: absolute;
     content: "";
-    height: 25px;
-    width: 2px;
-    background: #B9BCBF;
+    height: 40px;
+    width: 1px;
+    background: rgb(231, 231, 231);
     right: -2px;
-    top: 50%;
+    top: 30%;
     margin-top: -12.5px;
   }
 
