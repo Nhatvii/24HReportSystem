@@ -14,6 +14,10 @@ import {
   InputGroup,
   InputGroupAddon,
   InputGroupText,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
   Row,
 } from "reactstrap";
 import userApi from "../../../api/UserApi";
@@ -30,7 +34,10 @@ export const Profile = () => {
   const [viewPassword, setViewPassword] = useState(false);
   const [updateEmail, setUpdateEmail] = useState(false);
   const [updatePhone, setUpdatePhone] = useState(false);
+  const [modal, setModal] = useState(false);
   const [message, setMessage] = useState("");
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   //Validate the input
   const validate = (values) => {
     const errors = {};
@@ -43,7 +50,6 @@ export const Profile = () => {
     //   errors.password = "Cần nhập mật khẩu";
     // }
     if (!values.email) {
-      errors.email = "Cần nhập email";
     } else if (
       !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
     ) {
@@ -68,8 +74,38 @@ export const Profile = () => {
       }
     } else if (!values.idcard) {
     }
+    console.log(errors);
     return errors;
   };
+  async function change_password() {
+    setIsLoading(true);
+    try {
+      const params = {
+        accountID: user_info.accountId,
+        password: oldPassword,
+        newPassword: newPassword,
+      };
+      console.log(params);
+      const response = await userApi.changePassword(params);
+      console.log(response);
+      if (!JSON.stringify(response).includes("error")) {
+        toast.success("Cập nhật thành công");
+        setNewPassword("");
+        setOldPassword("");
+        setModal(false);
+        setIsLoading(false);
+        setViewPassword(false);
+        setIsLoading(false);
+      } else {
+        toast.warning("Sai mật khẩu cũ");
+        setOldPassword("");
+        setIsLoading(false);
+      }
+    } catch (e) {
+      toast.error(e.message);
+      setMessage(e.message);
+    }
+  }
   //Cập nhật
   async function update_user(values) {
     setIsLoading(true);
@@ -81,7 +117,6 @@ export const Profile = () => {
         fullname: values.fullname,
         address: values.address ? values.address : "",
         identityCard: values.idcard ? values.idcard : null,
-        password: values.password,
       });
       console.log(json);
       const response = await userApi.update(json);
@@ -120,7 +155,12 @@ export const Profile = () => {
     },
     validate,
     onSubmit: (values) => {
-      update_user(values);
+      if (values.password !== "") {
+        setNewPassword(values.password);
+        setModal(true);
+      } else {
+        update_user(values);
+      }
     },
   });
   const renderPassword = () => {
@@ -132,6 +172,9 @@ export const Profile = () => {
   const renderPhone = () => {
     setUpdatePhone(!updatePhone);
   };
+  const toggle = () => {
+    setModal(!modal);
+  };
   useEffect(() => {
     if (localStorage.getItem("user_info") === null) {
       window.location.href = "/login";
@@ -140,6 +183,46 @@ export const Profile = () => {
   return (
     <>
       <div className="pt-5 pb-5 pl-5 pr-5 fifth_bg">
+        <Modal
+          isOpen={modal}
+          toggle={() => toggle()}
+          size="lg"
+          style={{ maxWidth: "35rem", width: "40%", paddingTop: "15rem" }}
+        >
+          <ModalHeader className="bg-primary" toggle={() => toggle()}>
+            Xin nhập mật khẩu cũ
+          </ModalHeader>
+          <ModalBody>
+            <div className="col-md-12">
+              <label className="pb-1 pt-1">
+                <b>
+                  Mật khẩu cũ:<span className="text-danger">*</span>{" "}
+                </b>
+              </label>
+              <Input
+                id="oldPassword"
+                placeholder="Mật khẩu cũ"
+                type="text"
+                min={6}
+                value={oldPassword}
+                onChange={(e) => setOldPassword(e.target.value)}
+              />
+            </div>
+          </ModalBody>
+          <ModalFooter>
+            {isLoading ? (
+              <Button color="primary">Đang cập nhật</Button>
+            ) : (
+              <Button
+                onClick={() => change_password()}
+                color="primary"
+                disabled={oldPassword.length < 6}
+              >
+                Xác nhận
+              </Button>
+            )}
+          </ModalFooter>
+        </Modal>
         <Row>
           <Col md="4">
             <Card>
@@ -215,9 +298,7 @@ export const Profile = () => {
                     <Col className="px-1" md="3">
                       <FormGroup>
                         <label className="pb-1 pt-1">
-                          <b>
-                            Email<span className="text-danger">*</span>{" "}
-                          </b>
+                          <b>Email</b>
                         </label>
                         {updateEmail ? (
                           <InputGroup>

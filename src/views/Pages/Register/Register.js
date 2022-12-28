@@ -39,7 +39,7 @@ const Register = (props) => {
     }
     if (!values.password) {
       errors.password = "Cần nhập mật khẩu";
-    } else if (!/[0-9a-zA-Z]{6,}/.test(values.password)) {
+    } else if (!/[0-9a-zA-Z$&+,:;=?@#|'<>.^*()%!-]{6,}/.test(values.password)) {
       errors.password = "Mật khẩu cần ít nhất 6 kí tự";
     }
     if (!values.repeatPassword) {
@@ -72,14 +72,14 @@ const Register = (props) => {
         email: values.account,
         roleId: 1,
         password: values.password,
-        username: values.username,
+        fullname: values.username,
         isAuthen: false,
       });
       const json2 = JSON.stringify({
         roleId: 1,
         phoneNumber: values.account,
         password: values.password,
-        username: values.username,
+        fullname: values.username,
         isAuthen: false,
       });
       if (phone !== "") {
@@ -164,7 +164,6 @@ const Register = (props) => {
         setEmail(values.account);
         setPassword(values.password);
         if (phone !== "") {
-          toast.success("Xin xác nhận số điện thoại");
           console.log(values.account);
           auth
             .signInWithPhoneNumber(
@@ -172,7 +171,8 @@ const Register = (props) => {
               window.recaptchaVerifier
             )
             .then((result) => {
-              console.log("first");
+              console.log(result);
+              toast.success("Xin xác nhận số điện thoại");
               setResetTime(30);
               setResult(result);
               setModal(!modal);

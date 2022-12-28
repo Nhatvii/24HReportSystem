@@ -19,6 +19,10 @@ class UserApi {
     const url = "/Account/GetAccount?UserId=" + params.userId;
     return axiosClient.get(url);
   };
+  changePassword = (params) => {
+    const url = "/Account/ChangePassword";
+    return axiosClient.put(url, params);
+  };
 }
 const userApi = new UserApi();
 export default userApi;

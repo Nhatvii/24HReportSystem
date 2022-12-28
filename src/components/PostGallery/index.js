@@ -19,10 +19,15 @@ const PostGallery = (props) => {
               <div className="col-xl-8">
                 <div className="slider_demo2">
                   <Slider fade={true} autoplay autoplaySpeed={2000}>
-                    {JSON.parse(localStorage.getItem("carousel-post")) &&
-                    JSON.parse(localStorage.getItem("carousel-post")).length > 0
-                      ? JSON.parse(localStorage.getItem("carousel-post")).map(
-                          (item, i) => (
+                    {data && data.length > 0
+                      ? data
+                          .sort(
+                            (a, b) =>
+                              new moment(a.publicTime) -
+                              new moment(b.publicTime)
+                          )
+                          .reverse()
+                          .map((item, i) => (
                             <div
                               key={i}
                               className="single_post post_type6 xs-mb0"
@@ -76,8 +81,7 @@ const PostGallery = (props) => {
                                 <p className="post-p">{item.subTitle}</p>
                               </div>
                             </div>
-                          )
-                        )
+                          ))
                       : null}
                   </Slider>
                 </div>

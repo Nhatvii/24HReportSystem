@@ -116,7 +116,7 @@ const MainMenu = ({ className, dark }) => {
       const response = await categoryApi.getAllSub(params);
       setSubCategories(response.filter((e) => e.rootCategory !== null));
       setRootCategories(
-        response.filter((e) => e.rootCategory === null && e.categoryId !== 0)
+        response.filter((e) => e.rootCategory === null && e.categoryId !== 1)
       );
     } catch (e) {
       toast.error(e.message);

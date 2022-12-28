@@ -12,6 +12,7 @@ import "./oxygen.fonts.css";
 import Slide from "react-reveal/Slide";
 import "./style.css";
 import { toast } from "react-toastify";
+import moment from "moment";
 const HomePage = () => {
   const [postList, setPostList] = useState([]);
   const [error, setError] = useState(false);
@@ -21,9 +22,13 @@ const HomePage = () => {
       const response = await postApi.getByStatus(params);
       localStorage.setItem(
         "carousel-post",
-        JSON.stringify(response.filter((e) => e.video === "null").reverse())
+        JSON.stringify(response.filter((e) => e.video === "null"))
       );
-      setPostList(JSON.parse(localStorage.getItem("carousel-post")));
+      setPostList(
+        response
+          .filter((e) => e.video === "null")
+          .sort((a, b) => new moment(a.publicTime) - new moment(b.publicTime))
+      );
     } catch (err) {
       setError(true);
       toast.error(err.message);
