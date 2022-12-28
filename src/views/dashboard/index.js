@@ -681,6 +681,7 @@ const Index = (props) => {
             sosToday.filter((e) => e.office.officeId === a.officeId).length
         )
       );
+      console.log(response);
     } catch (e) {
       toast.error(e.message);
     }
@@ -712,13 +713,15 @@ const Index = (props) => {
     loadUsers();
     loadOfficers();
     loadCategory();
+    getAllSOSToday();
+    getAllSOS();
   }, [temp]);
   useEffect(() => {
     getAllSOSToday();
     getAllSOS();
   }, []);
   useEffect(() => {
-    if (sosToday.length > 0 && officeList.length === 0) {
+    if (officeList.length === 0) {
       loadAllOffice();
     }
   }, [sosToday]);
@@ -769,131 +772,130 @@ const Index = (props) => {
                   </Col>
                   <Col md={9}>{selectedOffice.district}</Col>
                 </Row>
-                <Row className="h5 ml-1 mt-3 mb-3">
+                {/* <Row className="h5 ml-1 mt-3 mb-3">
                   <Col md={3}>
-                    <b className="mb-1">Số lượng sỹ quan:</b>
+                    <b className="mb-1">Số lượng người hỗ trợ:</b>
                   </Col>
                   <Col md={9}>{selectedOffice.activeOfficer}</Col>
-                </Row>
+                </Row> */}
                 <Row className="h5 mt-3 mb-3">
                   <Col md={3}>
                     <b className="mb-1">Số điện thoại:</b>
                   </Col>
                   <Col md={9}>{selectedOffice.phoneNumber}</Col>
                 </Row>
-                <Row>
-                  <h4 className="mb-2">
-                    <b>Danh sách sỹ quan</b>
-                  </h4>
-                  <table id="basic-table" className="table mb-2" role="grid">
-                    <thead>
-                      <tr>
-                        <th>Tên</th>
-                        <th>Số điện thoại</th>
-                        <th>SOS đã tiếp nhận</th>
-                        <th>Trạng thái</th>
-                        <th>Nhiệm vụ cuối</th>
-                      </tr>
-                    </thead>
-                    {officeList.length > 0 &&
-                      officerList
-                        .filter((e) => e.officeId === selectedOffice.officeId)
-                        .map((officer) => (
-                          <>
-                            <tr
-                              style={{
-                                cursor: "pointer",
-                              }}
-                              className="hover"
-                              onClick={() => {
-                                setShowMore2(!showMore2);
-                                setSelectedOfficer(officer);
-                              }}
-                            >
-                              <td>
-                                <div className="d-flex align-items-center">
-                                  {officer.accountInfo.fullname}
-                                </div>
-                              </td>
-                              <td>
-                                <div className="d-flex align-items-center">
-                                  {officer.phoneNumber}
-                                </div>
-                              </td>
-                              <td>
-                                <div className="iq-media-group iq-media-group-1">
-                                  {
-                                    allSos.filter(
-                                      (e) =>
-                                        e.officer.accountId ===
-                                          officer.accountId &&
-                                        e.notifyStatus === true
-                                    ).length
-                                  }
-                                </div>
-                              </td>
-                              <td className="d-flex align-items-center">
-                                {officer.isActive ? (
-                                  <Chip
-                                    key={officer.officeId}
-                                    label="Đang rảnh rỗi"
-                                    color="error"
-                                    style={{
-                                      backgroundColor: "orange",
-                                      color: "white",
-                                      marginTop: "10px",
-                                    }}
-                                  />
-                                ) : (
-                                  <Chip
-                                    key={officer.officeId}
-                                    label="Đang làm nhiệm vụ"
-                                    color="success"
-                                    style={{
-                                      backgroundColor: "green",
-                                      color: "white",
-                                      marginTop: "10px",
-                                    }}
-                                  />
-                                )}
-                              </td>
-                              <td>
-                                <div className="mb-2 d-flex align-items-center">
-                                  {allSos.filter(
-                                    (e) =>
-                                      e.officer.accountId === officer.accountId
-                                  ).length > 0
-                                    ? moment(
-                                        allSos.filter(
-                                          (e) =>
-                                            e.officer.accountId ===
-                                            officer.accountId
-                                        )[0].acceptedDate
-                                      )
-                                        .fromNow()
-                                        .toString()
-                                        .charAt(0)
-                                        .toUpperCase() +
-                                      moment(
-                                        allSos.filter(
-                                          (e) =>
-                                            e.officer.accountId ===
-                                            officer.accountId
-                                        )[0].acceptedDate
-                                      )
-                                        .fromNow()
-                                        .toString()
-                                        .slice(1)
-                                    : "Chưa làm nhiệm vụ nào"}
-                                </div>
-                              </td>
-                            </tr>
-                          </>
-                        ))}
-                  </table>
-                </Row>
               </Col>
-
+              <Row>
+                <h4 className="mb-2">
+                  <b>Danh sách người hỗ trợ</b>
+                </h4>
+                <table id="basic-table" className="table mb-2" role="grid">
+                  <thead>
+                    <tr>
+                      <th>Tên</th>
+                      <th>Số điện thoại</th>
+                      <th>SOS đã tiếp nhận</th>
+                      <th>Trạng thái</th>
+                      <th>Nhiệm vụ cuối</th>
+                    </tr>
+                  </thead>
+                  {officeList.length > 0 &&
+                    officerList
+                      .filter((e) => e.officeId === selectedOffice.officeId)
+                      .map((officer) => (
+                        <>
+                          <tr
+                            style={{
+                              cursor: "pointer",
+                            }}
+                            className="hover"
+                            onClick={() => {
+                              setShowMore2(!showMore2);
+                              setSelectedOfficer(officer);
+                            }}
+                          >
+                            <td>
+                              <div className="d-flex align-items-center">
+                                {officer.accountInfo.fullname}
+                              </div>
+                            </td>
+                            <td>
+                              <div className="d-flex align-items-center">
+                                {officer.phoneNumber}
+                              </div>
+                            </td>
+                            <td>
+                              <div className="iq-media-group iq-media-group-1">
+                                {
+                                  allSos.filter(
+                                    (e) =>
+                                      e.officer.accountId ===
+                                        officer.accountId &&
+                                      e.notifyStatus === true
+                                  ).length
+                                }
+                              </div>
+                            </td>
+                            <td className="d-flex align-items-center">
+                              {officer.isActive ? (
+                                <Chip
+                                  key={officer.officeId}
+                                  label="Đang hoạt động"
+                                  color="success"
+                                  style={{
+                                    backgroundColor: "green",
+                                    color: "white",
+                                    marginTop: "10px",
+                                  }}
+                                />
+                              ) : (
+                                <Chip
+                                  key={officer.officeId}
+                                  label="Không hoạt động"
+                                  color="success"
+                                  style={{
+                                    backgroundColor: "red",
+                                    color: "white",
+                                    marginTop: "10px",
+                                  }}
+                                />
+                              )}
+                            </td>
+                            <td>
+                              <div className="mb-2 d-flex align-items-center">
+                                {allSos.filter(
+                                  (e) =>
+                                    e.officer.accountId === officer.accountId
+                                ).length > 0
+                                  ? moment(
+                                      allSos.filter(
+                                        (e) =>
+                                          e.officer.accountId ===
+                                          officer.accountId
+                                      )[0].acceptedDate
+                                    )
+                                      .fromNow()
+                                      .toString()
+                                      .charAt(0)
+                                      .toUpperCase() +
+                                    moment(
+                                      allSos.filter(
+                                        (e) =>
+                                          e.officer.accountId ===
+                                          officer.accountId
+                                      )[0].acceptedDate
+                                    )
+                                      .fromNow()
+                                      .toString()
+                                      .slice(1)
+                                  : "Chưa làm nhiệm vụ nào"}
+                              </div>
+                            </td>
+                          </tr>
+                        </>
+                      ))}
+                </table>
+              </Row>
               <Col md={6}></Col>
             </Row>
           )}
@@ -915,21 +917,21 @@ const Index = (props) => {
       >
         <Modal.Header closeButton>
           <Modal.Title>
-            <span className="font-weight-bold h5">Thống kê sỹ quan</span>
+            <span className="font-weight-bold h5">Thống kê người hỗ trợ</span>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body style={{ color: "black" }}>
-          {selectedOffice && (
+          {selectedOfficer && (
             <Row>
               <Col md={12}>
                 <Row className="h4 ml-1 mt-2 mb-3">
                   <Col md={12}>
-                    <b className="mb-1">Thông tin sỹ quan</b>
+                    <b className="mb-1">Thông tin người hỗ trợ</b>
                   </Col>
                 </Row>
                 <Row className="h5 ml-1 mt-2 mb-3">
                   <Col md={3}>
-                    <b className="mb-1">Tên sỹ quan:</b>
+                    <b className="mb-1">Tên người hỗ trợ:</b>
                   </Col>
                   <Col md={9}>
                     {selectedOfficer
@@ -939,7 +941,7 @@ const Index = (props) => {
                 </Row>
                 <Row className="h5 ml-1 mt-2 mb-3">
                   <Col md={3}>
-                    <b className="mb-1">Tên sỹ quan:</b>
+                    <b className="mb-1">Tên người hỗ trợ:</b>
                   </Col>
                   <Col md={9}>
                     {selectedOfficer ? selectedOfficer.phoneNumber : "Không có"}
@@ -1039,7 +1041,7 @@ const Index = (props) => {
           </Button>
         </Modal.Footer>
       </Modal>
-      {user_info.role.roleId === 2 && (
+      {user_info && user_info.role.roleId === 2 && (
         <Row>
           <Col md="12" lg="12">
             <Row className="row-cols-1">
@@ -1286,7 +1288,7 @@ const Index = (props) => {
                       <SwiperSlide className=" card card-slide">
                         <div className="card-body">
                           <div className="progress-widget">
-                            <Circularprogressbar
+                            {/* <Circularprogressbar
                               stroke={props.cololrinfomode}
                               width="60px"
                               height="60px"
@@ -1304,18 +1306,7 @@ const Index = (props) => {
                                 100
                               }
                               id="circle-progress-02"
-                            >
-                              {Math.round(
-                                (reports.filter(
-                                  (report) =>
-                                    report.status === "Approved" &&
-                                    report.categoryId === e.categoryId
-                                ).length /
-                                  reports.length) *
-                                  100
-                              )}
-                              %
-                            </Circularprogressbar>
+                            ></Circularprogressbar> */}
                             <div className="progress-detail">
                               <p className="mb-2">{e.type}</p>
                               <h4 className="counter">
@@ -1434,7 +1425,7 @@ const Index = (props) => {
           </Col>
         </Row>
       )}
-      {user_info.role.roleId === 3 && (
+      {user_info && user_info.role.roleId === 3 && (
         <Row>
           <Col md="12" lg="12">
             <Row className="row-cols-1">
@@ -1889,7 +1880,7 @@ const Index = (props) => {
           </Col>
         </Row>
       )}
-      {user_info.role.roleId === 5 && (
+      {user_info && user_info.role.roleId === 5 && (
         <>
           <Row>
             <Col xl="4">
@@ -1916,6 +1907,15 @@ const Index = (props) => {
                     <div className="ms-5">
                       <h5 className="mb-1"> Báo cáo hôm nay</h5>
                       <h6 className="text-info">
+                        {console.log(
+                          reports.filter(
+                            (report) =>
+                              moment(0, "HH").diff(
+                                report.createTime,
+                                "days"
+                              ) === 0
+                          )
+                        )}
                         <CountUp
                           start={0}
                           end={
@@ -2114,39 +2114,187 @@ const Index = (props) => {
           </Col>
         </>
       )}
-      {(user_info.role.roleId === 5 || user_info.role.roleId === 4) && (
-        <Row>
+      {user_info && user_info.role.roleId === 7 && (
+        <>
           <Col md="12" lg="12">
-            <h5 className="mb-1 mt-4">Thống kê bài viết theo danh mục</h5>
-            <Row className="row-cols-1">
-              <div className="overflow-hidden d-slider1 ">
-                <Swiper
-                  className="p-0 m-0 mb-2 list-inline "
-                  slidesPerView={5}
-                  spaceBetween={32}
-                  navigation={{
-                    nextEl: ".swiper-button-next",
-                    prevEl: ".swiper-button-prev",
-                  }}
-                  breakpoints={{
-                    320: { slidesPerView: 1 },
-                    550: { slidesPerView: 2 },
-                    991: { slidesPerView: 3 },
-                    1400: { slidesPerView: 4 },
-                    1500: { slidesPerView: 5 },
-                    1920: { slidesPerView: 6 },
-                    2040: { slidesPerView: 7 },
-                    2440: { slidesPerView: 8 },
-                  }}
-                  data-aos="fade-up"
-                  data-aos-delay="700"
-                >
-                  {categoryList.length > 0 &&
-                    categoryList.map((e) => (
-                      <SwiperSlide className=" card card-slide">
-                        <div className="card-body">
-                          <div className="progress-widget">
-                            <Circularprogressbar
+            <div
+              className="overflow-hidden card"
+              data-aos="fade-up"
+              data-aos-delay="600"
+            >
+              <div className="flex-wrap card-header d-flex justify-content-between">
+                <div className="header-title">
+                  <h4 className="mb-2 card-title">
+                    Thống kê lượt dùng SOS khẩn cấp
+                  </h4>
+                  <p className="mb-0">
+                    <svg
+                      className="me-2"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fill="#3a57e8"
+                        d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"
+                      />
+                    </svg>
+                    Cơ quan có tất cả{" "}
+                    {sosToday.length > 0
+                      ? sosToday.filter(
+                          (e) => e.office.officeId === user_info.officeId
+                        ).length
+                      : 0}{" "}
+                    lượt dùng SOS trong hôm nay
+                  </p>
+                </div>
+              </div>
+              <Row>
+                <table id="basic-table" className="table mb-2" role="grid">
+                  <thead>
+                    <tr>
+                      <th>Tên</th>
+                      <th>Số điện thoại</th>
+                      <th>SOS đã tiếp nhận</th>
+                      <th>Trạng thái</th>
+                      <th>Nhiệm vụ cuối</th>
+                    </tr>
+                  </thead>
+                  {officeList.length > 0 &&
+                    officerList
+                      .filter((e) => e.officeId === user_info.officeId)
+                      .map((officer) => (
+                        <>
+                          <tr
+                            style={{
+                              cursor: "pointer",
+                            }}
+                            className="hover"
+                            onClick={() => {
+                              setShowMore2(!showMore2);
+                              setSelectedOfficer(officer);
+                            }}
+                          >
+                            <td>
+                              <div className="d-flex align-items-center">
+                                {officer.accountInfo.fullname}
+                              </div>
+                            </td>
+                            <td>
+                              <div className="d-flex align-items-center">
+                                {officer.phoneNumber}
+                              </div>
+                            </td>
+                            <td>
+                              <div className="iq-media-group iq-media-group-1">
+                                {
+                                  allSos.filter(
+                                    (e) =>
+                                      e.officer.accountId ===
+                                        officer.accountId &&
+                                      e.notifyStatus === true
+                                  ).length
+                                }
+                              </div>
+                            </td>
+                            <td className="d-flex align-items-center">
+                              {officer.isActive ? (
+                                <Chip
+                                  key={officer.officeId}
+                                  label="Đang hoạt động"
+                                  color="success"
+                                  style={{
+                                    backgroundColor: "green",
+                                    color: "white",
+                                    marginTop: "10px",
+                                  }}
+                                />
+                              ) : (
+                                <Chip
+                                  key={officer.officeId}
+                                  label="Không hoạt động"
+                                  color="success"
+                                  style={{
+                                    backgroundColor: "red",
+                                    color: "white",
+                                    marginTop: "10px",
+                                  }}
+                                />
+                              )}
+                            </td>
+                            <td>
+                              <div className="mb-2 d-flex align-items-center">
+                                {allSos.filter(
+                                  (e) =>
+                                    e.officer.accountId === officer.accountId
+                                ).length > 0
+                                  ? moment(
+                                      allSos.filter(
+                                        (e) =>
+                                          e.officer.accountId ===
+                                          officer.accountId
+                                      )[0].acceptedDate
+                                    )
+                                      .fromNow()
+                                      .toString()
+                                      .charAt(0)
+                                      .toUpperCase() +
+                                    moment(
+                                      allSos.filter(
+                                        (e) =>
+                                          e.officer.accountId ===
+                                          officer.accountId
+                                      )[0].acceptedDate
+                                    )
+                                      .fromNow()
+                                      .toString()
+                                      .slice(1)
+                                  : "Chưa làm nhiệm vụ nào"}
+                              </div>
+                            </td>
+                          </tr>
+                        </>
+                      ))}
+                </table>
+              </Row>
+            </div>
+          </Col>
+        </>
+      )}
+      {user_info &&
+        (user_info.role.roleId === 5 || user_info.role.roleId === 4) && (
+          <Row>
+            <Col md="12" lg="12">
+              <h5 className="mb-1 mt-4">Thống kê bài viết theo danh mục</h5>
+              <Row className="row-cols-1">
+                <div className="overflow-hidden d-slider1 ">
+                  <Swiper
+                    className="p-0 m-0 mb-2 list-inline "
+                    slidesPerView={5}
+                    spaceBetween={32}
+                    navigation={{
+                      nextEl: ".swiper-button-next",
+                      prevEl: ".swiper-button-prev",
+                    }}
+                    breakpoints={{
+                      320: { slidesPerView: 1 },
+                      550: { slidesPerView: 2 },
+                      991: { slidesPerView: 3 },
+                      1400: { slidesPerView: 4 },
+                      1500: { slidesPerView: 5 },
+                      1920: { slidesPerView: 6 },
+                      2040: { slidesPerView: 7 },
+                      2440: { slidesPerView: 8 },
+                    }}
+                    data-aos="fade-up"
+                    data-aos-delay="700"
+                  >
+                    {categoryList.length > 0 &&
+                      categoryList.map((e) => (
+                        <SwiperSlide className=" card card-slide">
+                          <div className="card-body">
+                            <div className="progress-widget">
+                              {/* <Circularprogressbar
                               stroke={props.cololrinfomode}
                               width="60px"
                               height="60px"
@@ -2164,77 +2312,66 @@ const Index = (props) => {
                                 100
                               }
                               id="circle-progress-02"
-                            >
-                              {Math.round(
-                                (allPost.filter(
-                                  (post) =>
-                                    post.status === "Public" &&
-                                    post.category.categoryId === e.categoryId
-                                ).length /
-                                  allPost.length) *
-                                  100
-                              )}
-                              %
-                            </Circularprogressbar>
-                            <div className="progress-detail">
-                              <p className="mb-2">{e.type}</p>
-                              <h4 className="counter">
-                                <CountUp
-                                  start={0}
-                                  end={
-                                    allPost.filter(
-                                      (post) =>
-                                        post.status === "Public" &&
-                                        post.category.categoryId ===
-                                          e.categoryId
-                                    ).length
-                                  }
-                                  duration={3}
-                                />
-                              </h4>
+                            ></Circularprogressbar> */}
+                              <div className="progress-detail">
+                                <p className="mb-2">{e.type}</p>
+                                <h4 className="counter">
+                                  <CountUp
+                                    start={0}
+                                    end={
+                                      allPost.filter(
+                                        (post) =>
+                                          post.status === "Public" &&
+                                          post.category.categoryId ===
+                                            e.categoryId
+                                      ).length
+                                    }
+                                    duration={3}
+                                  />
+                                </h4>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </SwiperSlide>
-                    ))}
+                        </SwiperSlide>
+                      ))}
 
-                  <div className="swiper-button swiper-button-next"></div>
-                  <div className="swiper-button swiper-button-prev"></div>
-                </Swiper>
-              </div>
-            </Row>
-          </Col>
-          <Col md="12" lg="12">
-            <h5 className="mb-1">Thống kê báo cáo theo danh mục</h5>
-            <Row className="row-cols-1">
-              <div className="overflow-hidden d-slider1 ">
-                <Swiper
-                  className="p-0 m-0 mb-2 list-inline "
-                  slidesPerView={5}
-                  spaceBetween={32}
-                  navigation={{
-                    nextEl: ".swiper-button-next",
-                    prevEl: ".swiper-button-prev",
-                  }}
-                  breakpoints={{
-                    320: { slidesPerView: 1 },
-                    550: { slidesPerView: 2 },
-                    991: { slidesPerView: 3 },
-                    1400: { slidesPerView: 4 },
-                    1500: { slidesPerView: 5 },
-                    1920: { slidesPerView: 6 },
-                    2040: { slidesPerView: 7 },
-                    2440: { slidesPerView: 8 },
-                  }}
-                  data-aos="fade-up"
-                  data-aos-delay="700"
-                >
-                  {categoryList.length > 0 &&
-                    categoryList.map((e) => (
-                      <SwiperSlide className=" card card-slide">
-                        <div className="card-body">
-                          <div className="progress-widget">
-                            <Circularprogressbar
+                    <div className="swiper-button swiper-button-next"></div>
+                    <div className="swiper-button swiper-button-prev"></div>
+                  </Swiper>
+                </div>
+              </Row>
+            </Col>
+            <Col md="12" lg="12">
+              <h5 className="mb-1">Thống kê báo cáo theo danh mục</h5>
+              <Row className="row-cols-1">
+                <div className="overflow-hidden d-slider1 ">
+                  <Swiper
+                    className="p-0 m-0 mb-2 list-inline "
+                    slidesPerView={5}
+                    spaceBetween={32}
+                    navigation={{
+                      nextEl: ".swiper-button-next",
+                      prevEl: ".swiper-button-prev",
+                    }}
+                    breakpoints={{
+                      320: { slidesPerView: 1 },
+                      550: { slidesPerView: 2 },
+                      991: { slidesPerView: 3 },
+                      1400: { slidesPerView: 4 },
+                      1500: { slidesPerView: 5 },
+                      1920: { slidesPerView: 6 },
+                      2040: { slidesPerView: 7 },
+                      2440: { slidesPerView: 8 },
+                    }}
+                    data-aos="fade-up"
+                    data-aos-delay="700"
+                  >
+                    {categoryList.length > 0 &&
+                      categoryList.map((e) => (
+                        <SwiperSlide className=" card card-slide">
+                          <div className="card-body">
+                            <div className="progress-widget">
+                              {/* <Circularprogressbar
                               stroke={props.cololrinfomode}
                               width="60px"
                               height="60px"
@@ -2252,182 +2389,183 @@ const Index = (props) => {
                                 100
                               }
                               id="circle-progress-02"
-                            >
-                              {Math.round(
-                                (reports.filter(
-                                  (report) =>
-                                    report.status === "Approved" &&
-                                    report.categoryId === e.categoryId
-                                ).length /
-                                  reports.length) *
-                                  100
-                              )}
-                              %
-                            </Circularprogressbar>
-                            <div className="progress-detail">
-                              <p className="mb-2">{e.type}</p>
-                              <h4 className="counter">
-                                <CountUp
-                                  start={0}
-                                  end={
-                                    reports.filter(
-                                      (report) =>
-                                        report.status === "Approved" &&
-                                        report.categoryId === e.categoryId
-                                    ).length
-                                  }
-                                  duration={3}
-                                />
-                              </h4>
+                            ></Circularprogressbar> */}
+                              <div className="progress-detail">
+                                <p className="mb-2">{e.type}</p>
+                                <h4 className="counter">
+                                  <CountUp
+                                    start={0}
+                                    end={
+                                      reports.filter(
+                                        (report) =>
+                                          report.status === "Approved" &&
+                                          report.categoryId === e.categoryId
+                                      ).length
+                                    }
+                                    duration={3}
+                                  />
+                                </h4>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </SwiperSlide>
-                    ))}
+                        </SwiperSlide>
+                      ))}
 
-                  <div className="swiper-button swiper-button-next"></div>
-                  <div className="swiper-button swiper-button-prev"></div>
-                </Swiper>
-              </div>
-            </Row>
-          </Col>
-          <Col md="12" lg="12">
-            <Row>
-              <Col md="12">
-                <div className="card" data-aos="fade-up" data-aos-delay="800">
-                  <div className="flex-wrap card-header d-flex justify-content-between">
-                    <div className="header-title">
-                      <h4 className="card-title">Thống kê</h4>
-                      <p className="mb-0">báo cáo</p>
-                    </div>
-                    <div className="d-flex align-items-center align-self-center">
-                      <div className="d-flex align-items-center text-primary">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="12"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                        >
-                          <g>
-                            <circle
-                              cx="12"
-                              cy="12"
-                              r="8"
-                              fill="currentColor"
-                            ></circle>
-                          </g>
-                        </svg>
-                        <div className="ms-2">
-                          <span className="text-secondary">Tất cả báo cáo</span>
-                        </div>
-                      </div>
-                      <div className="d-flex align-items-center ms-3 text-info">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="12"
-                          viewBox="0 0 24 24"
-                          fill="red"
-                        >
-                          <g>
-                            <circle cx="12" cy="12" r="8" fill="green"></circle>
-                          </g>
-                        </svg>
-                        <div className="ms-2">
-                          <span className="text-secondary">
-                            Báo cáo được duyệt
-                          </span>
-                        </div>
-                      </div>
-                      <div className="d-flex align-items-center ms-3 text-info">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="12"
-                          viewBox="0 0 24 24"
-                          fill="red"
-                        >
-                          <g>
-                            <circle cx="12" cy="12" r="8" fill="red"></circle>
-                          </g>
-                        </svg>
-                        <div className="ms-2">
-                          <span className="text-secondary">
-                            Báo cáo từ chối
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="card-body">
-                    <Chart
-                      options={chart1.options}
-                      series={chart1.series}
-                      type="area"
-                      height="245"
-                    />
-                  </div>
+                    <div className="swiper-button swiper-button-next"></div>
+                    <div className="swiper-button swiper-button-prev"></div>
+                  </Swiper>
                 </div>
-              </Col>
-            </Row>
-          </Col>
-          <Col md="12" lg="12">
-            <Row>
-              <Col md="12">
-                <div className="card" data-aos="fade-up" data-aos-delay="800">
-                  <div className="flex-wrap card-header d-flex justify-content-between">
-                    <div className="header-title">
-                      <h4 className="card-title">Thống kê</h4>
-                      <p className="mb-0">bài viết</p>
-                    </div>
-                    <div className="d-flex align-items-center align-self-center">
-                      <div className="d-flex align-items-center text-primary">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="12"
-                          viewBox="0 0 24 24"
-                          fill="green"
-                        >
-                          <g>
-                            <circle cx="12" cy="12" r="8" fill="green"></circle>
-                          </g>
-                        </svg>
-                        <div className="ms-2">
-                          <span className="text-secondary">
-                            Bài viết đã đăng
-                          </span>
+              </Row>
+            </Col>
+            <Col md="12" lg="12">
+              <Row>
+                <Col md="12">
+                  <div className="card" data-aos="fade-up" data-aos-delay="800">
+                    <div className="flex-wrap card-header d-flex justify-content-between">
+                      <div className="header-title">
+                        <h4 className="card-title">Thống kê</h4>
+                        <p className="mb-0">báo cáo</p>
+                      </div>
+                      <div className="d-flex align-items-center align-self-center">
+                        <div className="d-flex align-items-center text-primary">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="12"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                          >
+                            <g>
+                              <circle
+                                cx="12"
+                                cy="12"
+                                r="8"
+                                fill="currentColor"
+                              ></circle>
+                            </g>
+                          </svg>
+                          <div className="ms-2">
+                            <span className="text-secondary">
+                              Tất cả báo cáo
+                            </span>
+                          </div>
+                        </div>
+                        <div className="d-flex align-items-center ms-3 text-info">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="12"
+                            viewBox="0 0 24 24"
+                            fill="red"
+                          >
+                            <g>
+                              <circle
+                                cx="12"
+                                cy="12"
+                                r="8"
+                                fill="green"
+                              ></circle>
+                            </g>
+                          </svg>
+                          <div className="ms-2">
+                            <span className="text-secondary">
+                              Báo cáo được duyệt
+                            </span>
+                          </div>
+                        </div>
+                        <div className="d-flex align-items-center ms-3 text-info">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="12"
+                            viewBox="0 0 24 24"
+                            fill="red"
+                          >
+                            <g>
+                              <circle cx="12" cy="12" r="8" fill="red"></circle>
+                            </g>
+                          </svg>
+                          <div className="ms-2">
+                            <span className="text-secondary">
+                              Báo cáo từ chối
+                            </span>
+                          </div>
                         </div>
                       </div>
-                      <div className="d-flex align-items-center ms-3 text-info">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="12"
-                          viewBox="0 0 24 24"
-                          fill="red"
-                        >
-                          <g>
-                            <circle cx="12" cy="12" r="8" fill="red"></circle>
-                          </g>
-                        </svg>
-                        <div className="ms-2">
-                          <span className="text-secondary">
-                            Bài viết chưa đăng
-                          </span>
+                    </div>
+                    <div className="card-body">
+                      <Chart
+                        options={chart1.options}
+                        series={chart1.series}
+                        type="area"
+                        height="245"
+                      />
+                    </div>
+                  </div>
+                </Col>
+              </Row>
+            </Col>
+            <Col md="12" lg="12">
+              <Row>
+                <Col md="12">
+                  <div className="card" data-aos="fade-up" data-aos-delay="800">
+                    <div className="flex-wrap card-header d-flex justify-content-between">
+                      <div className="header-title">
+                        <h4 className="card-title">Thống kê</h4>
+                        <p className="mb-0">bài viết</p>
+                      </div>
+                      <div className="d-flex align-items-center align-self-center">
+                        <div className="d-flex align-items-center text-primary">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="12"
+                            viewBox="0 0 24 24"
+                            fill="green"
+                          >
+                            <g>
+                              <circle
+                                cx="12"
+                                cy="12"
+                                r="8"
+                                fill="green"
+                              ></circle>
+                            </g>
+                          </svg>
+                          <div className="ms-2">
+                            <span className="text-secondary">
+                              Bài viết đã đăng
+                            </span>
+                          </div>
+                        </div>
+                        <div className="d-flex align-items-center ms-3 text-info">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="12"
+                            viewBox="0 0 24 24"
+                            fill="red"
+                          >
+                            <g>
+                              <circle cx="12" cy="12" r="8" fill="red"></circle>
+                            </g>
+                          </svg>
+                          <div className="ms-2">
+                            <span className="text-secondary">
+                              Bài viết chưa đăng
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
+                    <div className="card-body">
+                      <Chart
+                        options={chart3.options}
+                        series={chart3.series}
+                        type="area"
+                        height="245"
+                      />
+                    </div>
                   </div>
-                  <div className="card-body">
-                    <Chart
-                      options={chart3.options}
-                      series={chart3.series}
-                      type="area"
-                      height="245"
-                    />
-                  </div>
-                </div>
-              </Col>
-            </Row>
-          </Col>
-          {/* <Slide bottom>
+                </Col>
+              </Row>
+            </Col>
+            {/* <Slide bottom>
             <h3>Thống kê biên tập viên</h3>
           </Slide>
           {editors !== [] &&
@@ -2580,8 +2718,8 @@ const Index = (props) => {
                 </div>
               </Col>
             ))} */}
-        </Row>
-      )}
+          </Row>
+        )}
     </>
   );
 };

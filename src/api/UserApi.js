@@ -21,6 +21,10 @@ class UserApi {
     const url = "/Account/GetAccount?email=" + params.email;
     return axiosClient.get(url);
   };
+  getActiveOfficer = (params) => {
+    const url = "/Account?RoleId=6&IsActive=true";
+    return axiosClient.get(url);
+  };
 }
 const userApi = new UserApi();
 export default userApi;

@@ -139,7 +139,7 @@ const VerticalNav = () => {
                   <i className="fa fa-solid fa-user-nurse"></i>
                 </SpaceIcon>
 
-                <span className="item-name">Danh sách sỹ quan</span>
+                <span className="item-name">Danh sách người hỗ trợ</span>
               </Link>
             </li>
             <li className="nav-item">
@@ -273,6 +273,26 @@ const VerticalNav = () => {
                 </SpaceIcon>
 
                 <span className="item-name">Bài viết của tôi</span>
+              </Link>
+            </li>
+          </>
+        )}
+        {user_info && user_info.role.roleId === 7 && (
+          <>
+            <li className="nav-item">
+              <Link
+                className={`${
+                  location.pathname === "/officer" ? "active" : ""
+                } nav-link `}
+                aria-current="page"
+                to="/admin/officer"
+                onClick={() => {}}
+              >
+                <SpaceIcon>
+                  <i className="fa fa-solid fa-user-nurse"></i>
+                </SpaceIcon>
+
+                <span className="item-name">Danh sách người hỗ trợ</span>
               </Link>
             </li>
           </>

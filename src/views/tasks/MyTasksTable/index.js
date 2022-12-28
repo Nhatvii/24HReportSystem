@@ -233,9 +233,9 @@ const MyTasksTable = ({ isWritePost, selectedTaskId, setSelectedTask }) => {
                     </Label>
                   </Col>
                   <Col md="9">
-                    {taskDetail.subTaskId === null
+                    {taskDetail.historyTaskId === null
                       ? "Không có"
-                      : taskDetail.subTaskId}
+                      : taskDetail.historyTaskId}
                   </Col>
                 </Row>
                 <Col md="3">

@@ -74,10 +74,8 @@ const CreateReport = () => {
       const params = {};
       const response = await categoryApi
         .getAllSub(params)
-        .then((list) =>
-          list.filter((e) => e.rootCategory !== null && e.categoryId !== 0)
-        );
-      categories.push({ value: 0, label: "Khác" });
+        .then((list) => list.filter((e) => e.rootCategory !== null));
+      categories.push({ value: 1, label: "Khác" });
       response.map((item) =>
         categories.push({ value: item.categoryId, label: item.type })
       );
@@ -95,7 +93,10 @@ const CreateReport = () => {
         },
         to: "/topics/editor_manager",
       };
-      await sendNotifyAPI.sendNotify(params);
+      const response = await sendNotifyAPI.sendNotify(params);
+      if (!JSON.stringify(response).includes("error")) {
+        window.location.href = "/admin/reports";
+      }
     } catch (e) {
       toast.error(e.message);
     }
@@ -292,13 +293,16 @@ const CreateReport = () => {
                 Tạo báo cáo
               </h4>
             </Card.Header>
-            <Card.Body>
+            <Card.Body className="text-black">
               <Row className="mb-4">
                 <Col md="2">
-                  Tiêu đề:<span className="text-danger">*</span>
+                  <b>
+                    Tiêu đề:<span className="text-danger">*</span>
+                  </b>
                 </Col>
-                <Col md="3">
+                <Col md="10">
                   <Input
+                    style={{ width: "100%" }}
                     type="text"
                     id="title"
                     value={title}
@@ -309,7 +313,9 @@ const CreateReport = () => {
               </Row>
               <Row className="mb-4">
                 <Col md="2">
-                  Vị trí:<span className="text-danger">*</span>
+                  <b>
+                    Vị trí:<span className="text-danger">*</span>
+                  </b>
                 </Col>
                 <Col md="10">
                   <Row>
@@ -357,7 +363,9 @@ const CreateReport = () => {
               </Row>
               <Row className="mb-4">
                 <Col md="2">
-                  Thời điểm: <span className="text-danger">*</span>
+                  <b>
+                    Thời điểm: <span className="text-danger">*</span>
+                  </b>
                 </Col>
                 <Col md="10">
                   <DatetimePickerTrigger
@@ -384,7 +392,9 @@ const CreateReport = () => {
               </Row>
               <Row className="mb-4">
                 <Col md="2">
-                  Chọn phân loại:<span className="text-danger">*</span>
+                  <b>
+                    Chọn phân loại:<span className="text-danger">*</span>
+                  </b>
                 </Col>
                 <Col md="10">
                   <div className="row pl-3">
@@ -402,7 +412,7 @@ const CreateReport = () => {
               <Row className="mb-3 form-group">
                 <Col md="2">
                   <Form.Label className="custom-file-input">
-                    Chọn file:
+                    <b>Chọn ảnh/video:</b>
                   </Form.Label>
                 </Col>
                 <Col md="10">
@@ -476,6 +486,11 @@ const CreateReport = () => {
                   </Row>
                 )}
               </Row>
+              <Col md="2">
+                <Form.Label className="custom-file-input">
+                  <b>Chi tiết:</b>
+                </Form.Label>
+              </Col>
               <Row className="pt-4">
                 <ReactQuill
                   value={text}

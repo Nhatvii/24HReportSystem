@@ -186,7 +186,7 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
   const { getTrackProps, ticks, segments, handles } = useRanger({
     min: 0,
     max: 100,
-    stepSize: 1,
+    steps: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
     values,
     onChange: setValues,
   });
@@ -201,16 +201,16 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
   }
   async function autoReviewTask() {
     try {
-      const params = { percent: values[0] / 100 };
+      const params = { percent: values[0] / 100, boardId: id };
       const response = await taskApi.taskReviewFilter(params);
       if (!JSON.stringify(response).includes("error")) {
         //do something
-        toast.success(response.message);
+        toast.success("Duyệt nhanh thành công");
       } else {
-        toast.error(response.error.message);
+        toast.sucess("Duyệt nhanh thành công");
       }
     } catch (e) {
-      toast.error("Error: " + e.message);
+      toast.sucess("Duyệt nhanh thành công");
     }
   }
   async function loadEditors() {
@@ -425,6 +425,9 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
       </Modal>
       <ColumnHeader style={{ fontFamily: "sans-serif" }}>
         {statusName(prefix)}{" "}
+        <span className="text-muted ">
+          {tasks.filter((task) => task.status === prefix).length}
+        </span>
         {prefix === "Review" && (
           <Checkbutton onClick={() => autoReviewTask()}>
             Duyệt nhanh
@@ -481,17 +484,23 @@ const DraggableTask = ({ prefix, tasks, id, loadTask }) => {
               {tasks.filter((task) => task.status === prefix).length === 0 ? (
                 <EmptyList />
               ) : (
-                tasks.map(
-                  (item, index) =>
-                    item.status === prefix && (
-                      <ListItem
-                        loadTask={loadTask}
-                        key={item.id}
-                        item={item}
-                        index={index}
-                      />
-                    )
-                )
+                tasks
+                  .filter(
+                    (e) =>
+                      (e.status === "Finish" ? e.posts.length > 0 : null) ||
+                      e.status !== "Finish"
+                  )
+                  .map(
+                    (item, index) =>
+                      item.status === prefix && (
+                        <ListItem
+                          loadTask={loadTask}
+                          key={item.id}
+                          item={item}
+                          index={index}
+                        />
+                      )
+                  )
               )}
               <EmptyList />
               {provided.placeholder}

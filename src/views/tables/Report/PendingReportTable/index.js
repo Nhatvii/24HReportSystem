@@ -122,10 +122,8 @@ const PendingReportTable = () => {
       const params = {};
       const response = await categoryApi
         .getAllSub(params)
-        .then((list) =>
-          list.filter((e) => e.rootCategory !== null && e.categoryId !== 0)
-        );
-      response.push({ categoryId: 0, type: "Khác", rootCategory: null });
+        .then((list) => list.filter((e) => e.rootCategory !== null));
+      response.push({ categoryId: 1, type: "Khác", rootCategory: null });
       setCategories(response);
     } catch (e) {
       toast.error(e.message);

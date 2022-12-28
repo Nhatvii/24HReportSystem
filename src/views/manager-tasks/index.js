@@ -81,7 +81,6 @@ function Tasks(props) {
       const response = await taskApi.getAll(params);
       setTasks(
         response
-          .filter((e) => (e.posts.length > 0 && e.posts[0].status) !== "Public")
           .sort((a, b) => new moment(a.createTime) - new moment(b.createTime))
           .reverse()
       );
@@ -90,11 +89,12 @@ function Tasks(props) {
     }
   };
   const abortTask = async () => {
+    console.log(task.posts.length > 0 ? task.posts[0].postId : null);
     //bỏ task
     const params = {
       taskId: task.taskId,
       status: 5,
-      postId: task.posts[0].postId,
+      postId: task.posts.length > 0 ? task.posts[0].postId : null,
     };
     task.reportTasks.map(async (task) => {
       const params2 = { reportID: task.reportId, editorID: "" };
@@ -102,7 +102,7 @@ function Tasks(props) {
     });
     const response = await taskApi.updateStatus(params);
     if (!JSON.stringify(response).includes("error")) {
-      toast.success("Không tạo tại task");
+      toast.success("Không tạo lại task thành công");
       loadTask();
     } else {
       loadTask();
@@ -140,7 +140,7 @@ function Tasks(props) {
         const params = {
           taskId: task.taskId,
           status: 5,
-          postId: task.posts[0].postId,
+          postId: task.posts.length > 0 ? task.posts[0].postId : null,
         };
         const response = await taskApi.updateStatus(params);
         if (!JSON.stringify(response).includes("error")) {

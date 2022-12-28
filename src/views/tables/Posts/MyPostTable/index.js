@@ -87,30 +87,30 @@ const MyPostTable = () => {
         );
       },
     },
-    {
-      title: "Trạng thái",
-      field: "taskId",
-      width: "1%",
-      render: (rowData) => {
-        return (
-          <div className="bluebag">
-            {rowData.taskId !== null ? (
-              <Chip
-                key={rowData.tableData.id}
-                label={"Đã có công việc đính kèm"}
-                color="success"
-              />
-            ) : (
-              <Chip
-                key={rowData.tableData.id}
-                label={"Chưa có công việc đính kèm"}
-                color="error"
-              />
-            )}
-          </div>
-        );
-      },
-    },
+    // {
+    //   title: "Trạng thái",
+    //   field: "taskId",
+    //   width: "1%",
+    //   render: (rowData) => {
+    //     return (
+    //       <div className="bluebag">
+    //         {rowData.taskId !== null ? (
+    //           <Chip
+    //             key={rowData.tableData.id}
+    //             label={"Đã có công việc đính kèm"}
+    //             color="success"
+    //           />
+    //         ) : (
+    //           <Chip
+    //             key={rowData.tableData.id}
+    //             label={"Chưa có công việc đính kèm"}
+    //             color="error"
+    //           />
+    //         )}
+    //       </div>
+    //     );
+    //   },
+    // },
     {
       title: "Danh mục",
       field: "category",

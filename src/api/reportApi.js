@@ -16,6 +16,7 @@ class ReportApi {
   };
   send = (params) => {
     const url = "/Report";
+    console.log(params);
     return axiosClient.post(url, params);
   };
   updateReportEditor = (params) => {

@@ -404,10 +404,12 @@ const Header = (props) => {
                       {user_info &&
                         user_info.role.roleId === 5 &&
                         "Quản trị viên"}
-                      {user_info && user_info.role.roleId === 6 && "Sỹ Quan"}
+                      {user_info &&
+                        user_info.role.roleId === 6 &&
+                        "Người hỗ trợ"}
                       {user_info &&
                         user_info.role.roleId === 7 &&
-                        "Quản lý sỹ quan"}
+                        "Quản lý người hỗ trợ"}
                     </p>
                   </div>
                 </Dropdown.Toggle>

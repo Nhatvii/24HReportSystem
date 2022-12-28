@@ -5,52 +5,215 @@ import { Button, Card, Col, Row, Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
 import sosApi from "../../api/sosApi";
 import { Markup } from "interweave";
-const sendSOSList = [
-  {
-    accountId: "01bcb733-26eb-4b4a-b587-f5e282a710cc",
-    latitude: 10.77639229987708,
-    longitude: 106.70301683584347,
-    type: "Khác",
-  },
-  {
-    accountId: "0669a6dc-1fe9-4765-b11e-51824555b8b9",
-    latitude: 10.790016177232369,
-    longitude: 106.69673259678083,
-    type: "Khác",
-  },
-  {
-    accountId: "0a7dd2bd-73c5-43f5-ae2c-f1441fef822c",
-    latitude: 10.775681609116857,
-    longitude: 106.70394174410335,
-    type: "Khác",
-  },
-  {
-    accountId: "0c2291a4-fffa-4777-941a-4ad36ddd4e87",
-    latitude: 10.762275894671891,
-    longitude: 106.6860884190528,
-    type: "Khác",
-  },
-  {
-    accountId: "0e3df550-373f-4a3e-8b80-0fa9fb9bfd35",
-    latitude: 10.772056637399139,
-    longitude: 106.69106672111498,
-    type: "Khác",
-  },
-];
+import { createReportList, sendSOSList, createPostList } from "./data";
+import reportApi from "../../api/reportApi";
+import postApi from "../../api/postApi";
+import taskApi from "../../api/TaskApi";
+import boardApi from "../../api/boardApi";
+import userApi from "../../api/UserApi";
+
 const Scripts = () => {
   const messagesEndRef = React.createRef();
   const [isLoading, setIsLoading] = useState(false);
   const [title, setTitle] = useState("Đang chờ lệnh");
   const [result, setResult] = useState([]);
+  const [tasks, setTasks] = useState([]);
+  const [editorIdList, setEditorIdList] = useState([]);
   const [responseSOS, setReponseSOS] = useState([]);
+  const [lastestBoard, setLastestBoard] = useState("");
+  const [activeOfficerNumber, setActiveOfficerNumber] = useState(0);
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
   useEffect(() => {
     scrollToBottom();
+    getActiveOfficer();
   });
   const clearConsole = () => {
     setResult([]);
+  };
+  useEffect(() => {
+    loadLastestBoard();
+    getActiveOfficer();
+  }, []);
+  const getActiveOfficer = async () => {
+    try {
+      const params = {};
+      const response = await userApi.getActiveOfficer(params);
+      setActiveOfficerNumber(response.length);
+    } catch (e) {
+      toast.error(e.message);
+    }
+  };
+  const loadLastestBoard = async () => {
+    try {
+      const params = {};
+      const response = await boardApi.getAll(params);
+      setLastestBoard(
+        response
+          .filter((e) => e.isDelete === false)
+          .sort((a, b) => new moment(b.createTime) - new moment(a.createTime))
+          .slice(0, 1)[0].boardId
+      );
+    } catch (e) {
+      toast.error(e.message);
+    }
+  };
+  const loadAllTasks = async () => {
+    setEditorIdList([]);
+    try {
+      const params = {
+        status: "1",
+        boardId: lastestBoard,
+      };
+      const response = await taskApi.getAllByStatusAndBoard(params);
+      response.length > 0
+        ? response
+            .sort((a, b) => new moment(b.createTime) - new moment(a.createTime))
+            .slice(0, 10)
+            .map((e) =>
+              setResult((result) => [
+                ...result,
+                {
+                  message:
+                    "Lấy công việc mới với ID:<b className='text-black'>" +
+                    e.taskId +
+                    "</b> do <b>" +
+                    e.editorId +
+                    "</b>đảm nhận",
+                },
+              ])
+            )
+        : setResult((result) => [
+            ...result,
+            {
+              message: "Không tìm thấy công việc mới trong bảng mới nhất.",
+            },
+          ]);
+      response.length > 0
+        ? response
+            .sort((a, b) => new moment(b.createTime) - new moment(a.createTime))
+            .slice(0, 10)
+            .map((e) =>
+              setEditorIdList((result) => [
+                ...result,
+                {
+                  userId: e.editorId,
+                },
+              ])
+            )
+        : setResult((result) => [
+            ...result,
+            {
+              message: "Không tìm thấy công việc mới trong bảng mới nhất.",
+            },
+          ]);
+      setTasks(response);
+
+      response.length > 0 ? (
+        setResult((result) => [
+          ...result,
+          {
+            message: "<b>Hoàn thành</b>",
+          },
+        ])
+      ) : (
+        <></>
+      );
+    } catch (e) {
+      toast.error(e.message);
+    }
+  };
+  const createReport = async () => {
+    setIsLoading(true);
+    setTitle("Đang tạo 10 báo cáo...");
+    for await (let report of createReportList) {
+      setResult((result) => [
+        ...result,
+        {
+          message: "Đang tạo báo cáo ",
+        },
+      ]);
+      try {
+        const params = { report };
+        const response = await reportApi.send(params.report);
+        if (!JSON.stringify(response).includes("error")) {
+          setResult((result) => [
+            ...result,
+            {
+              message:
+                "Tạo báo cáo thành công. Công việc được tạo trong bảng <b className='text-black'>" +
+                lastestBoard +
+                "</b>",
+            },
+          ]);
+        }
+        if (!JSON.stringify(response).includes("200")) {
+          setResult((result) => [
+            ...result,
+            {
+              message: "Tạo báo cáo thất bại.",
+            },
+          ]);
+        }
+      } catch (e) {
+        toast.error("Tạo báo cáo thất bại.");
+      }
+    }
+    setResult((result) => [
+      ...result,
+      {
+        message: "<b>Hoàn thành <i class='fa fa-solid fa-thumbs-up'></i></b>",
+      },
+    ]);
+    setTitle("Hoàn thành.");
+    setIsLoading(false);
+  };
+  const createPost = async () => {
+    setIsLoading(true);
+    setTitle("Đang tạo 10 bài viết...");
+    for await (let post of createPostList.reverse()) {
+      console.log(createPostList.indexOf(post));
+      setResult((result) => [
+        ...result,
+        {
+          message: "Đang tạo bài viết ",
+        },
+      ]);
+      try {
+        const params = { post };
+        const response = await postApi.create({
+          ...params.post,
+          userID: editorIdList[createPostList.indexOf(post)].userId,
+        });
+        console.log(response);
+        if (!JSON.stringify(response).includes("error")) {
+          setResult((result) => [
+            ...result,
+            {
+              message: "Tạo Bài viết thành công .",
+            },
+          ]);
+          const params2 = {
+            taskId: tasks[createPostList.reverse().indexOf(post)].taskId,
+            status: 3,
+            postId: response,
+          };
+          console.log(params2);
+          await taskApi.updateStatus(params2);
+        }
+      } catch (e) {
+        toast.error("Tạo bài viết thất bại.");
+      }
+    }
+    setResult((result) => [
+      ...result,
+      {
+        message: "<b>Hoàn thành <i class='fa fa-solid fa-thumbs-up'></i></b>",
+      },
+    ]);
+    setTitle("Hoàn thành.");
+    setIsLoading(false);
   };
   const sendSOS = async () => {
     setIsLoading(true);
@@ -87,11 +250,18 @@ const Scripts = () => {
                 response.officeName +
                 "</b> tại địa chỉ <b className='text-black'>" +
                 response.district +
-                "</b>. Sỹ quan <b className='text-black'>" +
+                "</b>. Cộng tác viên <b className='text-green'>" +
                 response.officerName +
                 "</b> với số điện thoại <b className='text-black'>" +
                 response.officerPhoneNumber +
                 "</b> sẽ đảm nhận.",
+            },
+          ]);
+          setResult((result) => [
+            ...result,
+            {
+              message:
+                "------------------------------------------------------------------------------------------------",
             },
           ]);
           setReponseSOS((responseSOS) => [
@@ -100,7 +270,7 @@ const Scripts = () => {
               notifyId: response.notifyId,
               officerId: response.officerId,
               executeTime: "20 phút",
-              sumaryContent: "[Test]",
+              sumaryContent: "[Test] Demo",
             },
           ]);
         }
@@ -172,18 +342,40 @@ const Scripts = () => {
       <Col lg="12" className="">
         <Card className="rounded" style={{ height: "80vh" }}>
           <Card.Body className="">
-            <div>
-              <div className="mb-3 font-weight-bold h6 d-flex justify-content-between align-items-center">
-                <div>
-                  <i className="fa fa-light fa-terminal mr-2" /> Script Demo
-                </div>
-              </div>
-            </div>
             <Row>
               <Col lg="4">
+                <div className="mb-3 font-weight-bold h6 d-flex justify-content-between align-items-center">
+                  <div>
+                    <i className="fa fa-light fa-terminal mr-2" /> Script Demo
+                    tạo bài viết
+                  </div>
+                </div>
+                <Row className="pr-2 mb-2">
+                  <Button onClick={createReport} disabled={isLoading}>
+                    Test tạo 10 báo cáo
+                  </Button>
+                </Row>
+                <Row className="pr-2 mb-2">
+                  <Button onClick={loadAllTasks} disabled={isLoading}>
+                    Nhận 10 công việc mới
+                  </Button>
+                </Row>
+                <Row className="pr-2 mb-2">
+                  <Button onClick={createPost} disabled={isLoading}>
+                    Test tạo 10 bài viết
+                  </Button>
+                </Row>
+                <div className="mb-3 font-weight-bold h6 d-flex justify-content-between align-items-center">
+                  <div>
+                    <i className="fa fa-light fa-terminal mr-2" /> Script Demo
+                    SOS. Đang có{" "}
+                    <b className="text-success">{activeOfficerNumber}</b> người
+                    hỗ trợ đang hoạt động
+                  </div>
+                </div>
                 <Row className="pr-2 mb-2">
                   <Button onClick={sendSOS} disabled={isLoading}>
-                    Test gửi SOS
+                    Test gửi 5 SOS
                   </Button>
                 </Row>
                 <Row className="pr-2 mb-2">

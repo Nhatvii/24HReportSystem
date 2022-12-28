@@ -4,7 +4,15 @@ import React, { useEffect, useState } from "react";
 import postApi from "../../../../api/postApi";
 import moment from "moment";
 import { Markup } from "interweave";
-import { Button, Col, Container, Image, Modal, Row } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Container,
+  Image,
+  Modal,
+  Row,
+  Spinner,
+} from "react-bootstrap";
 import { toast } from "react-toastify";
 
 const PublishedPostTable = () => {
@@ -45,7 +53,6 @@ const PublishedPostTable = () => {
     }
   };
   const unpublicPost = async (id) => {
-    setShow(false);
     try {
       const params = {
         postId: id,
@@ -54,7 +61,8 @@ const PublishedPostTable = () => {
       const response = await postApi.editStatus(params);
       if (!JSON.stringify(response).includes("error")) {
         toast.success("Gỡ bài thành công");
-        loadPost();
+        setShow(false);
+        setTemp((prevTemp) => prevTemp + 1);
       }
     } catch (e) {
       toast.error(e.message);
@@ -368,36 +376,48 @@ const PublishedPostTable = () => {
           />
         </Modal.Body>
       </Modal>
-      <MaterialTable
-        columns={columns}
-        data={posts}
-        title="Bài viết đã đăng"
-        actions={[
-          {
-            icon: "visibility",
-            tooltip: "Xem chi tiết",
-            onClick: (event, rowData) => handleShowModel(rowData),
-          },
-          {
-            icon: "newspaper",
-            tooltip: "Xem preview bài viết",
-            onClick: (event, rowData) => handlePreviewModel(rowData),
-          },
-        ]}
-        options={{
-          actionsColumnIndex: -1,
-          exportButton: true,
-          headerStyle: {
-            backgroundColor: "#1669f0",
-            color: "#FFF",
-          },
-          rowStyle: (rowData) => ({
-            // Check if read or not
-            backgroundColor:
-              rowData.tableData.id % 2 !== 0 ? "lightgray" : "white",
-          }),
-        }}
-      />
+      {posts.length === 0 ? (
+        <>
+          {" "}
+          <div className="pt-5 d-flex justify-content-center">
+            <Spinner animation="border" role="status" size="xl"></Spinner>{" "}
+          </div>
+          <div className="pt-5 d-flex justify-content-center">
+            Đang tải dữ liệu...
+          </div>
+        </>
+      ) : (
+        <MaterialTable
+          columns={columns}
+          data={posts}
+          title="Bài viết đã đăng"
+          actions={[
+            {
+              icon: "visibility",
+              tooltip: "Xem chi tiết",
+              onClick: (event, rowData) => handleShowModel(rowData),
+            },
+            {
+              icon: "newspaper",
+              tooltip: "Xem preview bài viết",
+              onClick: (event, rowData) => handlePreviewModel(rowData),
+            },
+          ]}
+          options={{
+            actionsColumnIndex: -1,
+            exportButton: true,
+            headerStyle: {
+              backgroundColor: "#1669f0",
+              color: "#FFF",
+            },
+            rowStyle: (rowData) => ({
+              // Check if read or not
+              backgroundColor:
+                rowData.tableData.id % 2 !== 0 ? "lightgray" : "white",
+            }),
+          }}
+        />
+      )}
     </div>
   );
 };

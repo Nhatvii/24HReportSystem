@@ -31,7 +31,7 @@ const Footer = () => {
               ></path>
             </svg>
           </span>{" "}
-          bởi <Link to="#">Anh</Link>.
+          .
         </div>
       </div>
     </footer>

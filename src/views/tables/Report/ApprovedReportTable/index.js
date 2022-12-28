@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Markup } from "interweave";
 import moment from "moment";
 import reportApi from "../../../../api/reportApi";
-import { Button, Col, Container, Modal, Row } from "react-bootstrap";
+import { Button, Col, Container, Modal, Row, Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
 
 const ApprovedReportTable = ({ setReportSelectedList }) => {
@@ -307,44 +307,57 @@ const ApprovedReportTable = ({ setReportSelectedList }) => {
           />
         </Modal.Body>
       </Modal>
-      <MaterialTable
-        columns={columns}
-        data={reports}
-        onRowClick={(event, rowData) => {
-          handleShowModel(rowData);
-        }}
-        title={
-          user_info.role.roleId === 4
-            ? "Chọn báo cáo"
-            : "Tất cả báo cáo được duyệt"
-        }
-        actions={[
-          {
-            icon: "add",
-            tooltip: "Tạo báo cáo",
-            isFreeAction: true,
-            onClick: (event) => (window.location.href = "/admin/create-report"),
-          },
-          {
-            icon: "visibility",
-            tooltip: "Xem chi tiết báo cáo",
-            onClick: (event, rowData) => handleShowModel(rowData),
-          },
-        ]}
-        options={{
-          pageSize: 10,
-          actionsColumnIndex: -1,
-          selection: user_info && user_info.role.roleId === 4 ? true : false,
-          exportButton: true,
-          headerStyle: {
-            backgroundColor: "#1669f0",
-            color: "#FFF",
-          },
-        }}
-        onSelectionChange={(rows) =>
-          setReportSelectedList(rows.map((row) => row.reportId))
-        }
-      />
+      {reports.length === 0 ? (
+        <>
+          {" "}
+          <div className="pt-5 d-flex justify-content-center">
+            <Spinner animation="border" role="status" size="xl"></Spinner>{" "}
+          </div>
+          <div className="pt-5 d-flex justify-content-center">
+            Đang tải dữ liệu...
+          </div>
+        </>
+      ) : (
+        <MaterialTable
+          columns={columns}
+          data={reports}
+          onRowClick={(event, rowData) => {
+            handleShowModel(rowData);
+          }}
+          title={
+            user_info.role.roleId === 4
+              ? "Chọn báo cáo"
+              : "Tất cả báo cáo được duyệt"
+          }
+          actions={[
+            {
+              icon: "add",
+              tooltip: "Tạo báo cáo",
+              isFreeAction: true,
+              onClick: (event) =>
+                (window.location.href = "/admin/create-report"),
+            },
+            {
+              icon: "visibility",
+              tooltip: "Xem chi tiết báo cáo",
+              onClick: (event, rowData) => handleShowModel(rowData),
+            },
+          ]}
+          options={{
+            pageSize: 10,
+            actionsColumnIndex: -1,
+            selection: user_info && user_info.role.roleId === 4 ? true : false,
+            exportButton: true,
+            headerStyle: {
+              backgroundColor: "#1669f0",
+              color: "#FFF",
+            },
+          }}
+          onSelectionChange={(rows) =>
+            setReportSelectedList(rows.map((row) => row.reportId))
+          }
+        />
+      )}
     </div>
   );
 };

@@ -92,8 +92,12 @@ const ListItem = ({ item, index, loadTask }) => {
         postId: id,
       };
       await taskApi.updateStatus(params2);
-      await postApi.editStatus(params);
-      loadTask();
+      const response = await postApi.editStatus(params);
+      if (!JSON.stringify(response).includes("error")) {
+        setShow(false);
+        loadTask();
+        toast.success("Thành công.");
+      }
     } catch (e) {
       toast.error(e.message);
     }
@@ -140,7 +144,8 @@ const ListItem = ({ item, index, loadTask }) => {
           fullscreen={
             (taskDetail.status === "Review" ||
               taskDetail.status === "Finish" ||
-              taskDetail.status === "UnFinished") &&
+              (taskDetail.status === "UnFinished" &&
+                taskDetail.posts.length > 0)) &&
             true
           }
         >
@@ -153,7 +158,8 @@ const ListItem = ({ item, index, loadTask }) => {
                 md={
                   taskDetail.status === "Review" ||
                   taskDetail.status === "Finish" ||
-                  taskDetail.status === "UnFinished"
+                  (taskDetail.status === "UnFinished" &&
+                    taskDetail.posts.length > 0)
                     ? 6
                     : 12
                 }
@@ -193,13 +199,13 @@ const ListItem = ({ item, index, loadTask }) => {
                     </Label>
                   </Col>
                   <Col md="9">
-                    {taskDetail.subTaskId === null ? (
+                    {taskDetail.historyTaskId === null ? (
                       "Không có"
                     ) : (
                       <i
                         className="text-primary"
                         role="button"
-                        onClick={() => handleOpenTask(taskDetail.subTaskId)}
+                        onClick={() => handleOpenTask(taskDetail.historyTaskId)}
                       >
                         Xem chi tiết
                       </i>
@@ -349,71 +355,72 @@ const ListItem = ({ item, index, loadTask }) => {
               </Col>
               {(taskDetail.status === "Review" ||
                 taskDetail.status === "Finish" ||
-                taskDetail.status === "UnFinished") && (
-                <Col md={6}>
-                  <Container
-                    fluid
-                    style={{
-                      border: "1px solid lightgray",
-                      borderRadius: "5px",
-                      maxHeight: "calc(100vh - 200px)",
-                      overflowY: "auto",
-                    }}
-                  >
-                    {taskDetail && (
-                      <div className="form-card">
-                        <p
-                          className="mb-1"
-                          style={{
-                            color: "black",
-                            fontWeight: "bold",
-                            fontSize: "30px",
-                            marginLeft: "5rem",
-                            marginRight: "5rem",
-                          }}
-                        >
-                          {taskDetail.posts[0].title}
-                        </p>
-                        <p
-                          className="mb-4"
-                          style={{
-                            color: "black",
-                            fontSize: "16px",
-                            marginLeft: "5rem",
-                            marginRight: "5rem",
-                          }}
-                        >
-                          <strong>{taskDetail.posts[0].subTitle}</strong>
-                        </p>
-                        <div className="row justify-content-center">
-                          <div className="col-7">
-                            <Image
-                              src={taskDetail.posts[0].image}
-                              className="img-fluid"
-                              alt="fit-image"
-                            />
+                taskDetail.status === "UnFinished") &&
+                taskDetail.posts.length > 0 && (
+                  <Col md={6}>
+                    <Container
+                      fluid
+                      style={{
+                        border: "1px solid lightgray",
+                        borderRadius: "5px",
+                        maxHeight: "calc(100vh - 200px)",
+                        overflowY: "auto",
+                      }}
+                    >
+                      {taskDetail && (
+                        <div className="form-card">
+                          <p
+                            className="mb-1"
+                            style={{
+                              color: "black",
+                              fontWeight: "bold",
+                              fontSize: "30px",
+                              marginLeft: "5rem",
+                              marginRight: "5rem",
+                            }}
+                          >
+                            {taskDetail.posts[0].title}
+                          </p>
+                          <p
+                            className="mb-4"
+                            style={{
+                              color: "black",
+                              fontSize: "16px",
+                              marginLeft: "5rem",
+                              marginRight: "5rem",
+                            }}
+                          >
+                            <strong>{taskDetail.posts[0].subTitle}</strong>
+                          </p>
+                          <div className="row justify-content-center">
+                            <div className="col-7">
+                              <Image
+                                src={taskDetail.posts[0].image}
+                                className="img-fluid"
+                                alt="fit-image"
+                              />
+                            </div>
                           </div>
+                          <p
+                            className="mt-2"
+                            style={{
+                              color: "black",
+                              fontSize: "16px",
+                              marginLeft: "5rem",
+                              marginRight: "5rem",
+                            }}
+                          >
+                            <Markup
+                              content={taskDetail.posts[0].description}
+                              allowAttributes
+                              allowElements
+                            />
+                          </p>
                         </div>
-                        <p
-                          className="mt-2"
-                          style={{
-                            color: "black",
-                            fontSize: "16px",
-                            marginLeft: "5rem",
-                            marginRight: "5rem",
-                          }}
-                        >
-                          <Markup
-                            content={taskDetail.posts[0].description}
-                            allowAttributes
-                            allowElements
-                          />
-                        </p>
-                      </div>
-                    )}
-                  </Container>
-                </Col>
-              )}
+                      )}
+                    </Container>
+                  </Col>
+                )}
             </Row>
           </Modal.Body>
           <Modal.Footer>
@@ -616,38 +623,24 @@ const ListItem = ({ item, index, loadTask }) => {
                 )}
               </CardBody>
               <CardFooter>
-                {item.posts.length !== 0 &&
-                  (item.posts[0].status === "Public" ? (
+                {item.status === "Finish" && (
+                  <>
                     <span>
-                      <Badge bg="success">
-                        Bài viết đã đăng <i className="fa fa-check" />
+                      <Badge bg="info">
+                        Đã hoàn thành <i className="fa fa-exclamation" />
                       </Badge>
                     </span>
-                  ) : item.posts[0].status === "Hidden" ? (
-                    <>
-                      <span>
-                        <Badge bg="info">
-                          Bài viết đã duyệt <i className="fa fa-exclamation" />
-                        </Badge>
-                      </span>
-                      <Button
-                        variant="primary"
-                        size="sm"
-                        className="float-end"
-                        onClick={() =>
-                          publicPost(item.posts[0].postId, item.taskId)
-                        }
-                      >
-                        Đăng ngay
-                      </Button>
-                    </>
-                  ) : (
+                  </>
+                )}
+                {item.status === "UnFinished" && (
+                  <>
                     <span>
                       <Badge bg="warning">
-                        Bài viết chưa duyệt <i className="fa fa-exclamation" />
+                        Đã hủy <i className="fa fa-exclamation" />
                       </Badge>
                     </span>
-                  ))}
+                  </>
+                )}
               </CardFooter>
             </DragItem>
           );

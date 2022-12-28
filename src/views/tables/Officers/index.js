@@ -213,7 +213,7 @@ const OfficerTable = () => {
   ];
   return (
     <>
-      {/* Tạo sỹ quan */}
+      {/* Tạo người hỗ trợ */}
       <Modal
         scrollable={true}
         show={show}
@@ -222,7 +222,7 @@ const OfficerTable = () => {
         size="md"
       >
         <Modal.Header closeButton>
-          <Modal.Title>Tạo sỹ quan</Modal.Title>
+          <Modal.Title>Tạo người hỗ trợ</Modal.Title>
         </Modal.Header>
         <Modal.Body style={{ color: "black" }}>
           <div className="mm-example-row">
@@ -296,7 +296,7 @@ const OfficerTable = () => {
                 <Row className="mb-3">
                   <Col md="3">
                     <b style={{ color: "black" }}>
-                      Tên sỹ quan:<span className="text-danger">*</span>
+                      Tên người hỗ trợ:<span className="text-danger">*</span>
                     </b>
                   </Col>
                   <Col md="9" className="ml-auto">
@@ -304,7 +304,7 @@ const OfficerTable = () => {
                       type="text"
                       className="form-control"
                       name="fullname"
-                      placeholder="Tên sỹ quan"
+                      placeholder="Tên người hỗ trợ"
                       value={fullname}
                       onChange={(e) => handlefullnameChange(e)}
                     />
@@ -383,11 +383,11 @@ const OfficerTable = () => {
               )
             }
           >
-            Tạo sỹ quan
+            Tạo người hỗ trợ
           </Button>
         </Modal.Footer>
       </Modal>
-      {/* Cập nhật sỹ quan */}
+      {/* Cập nhật người hỗ trợ */}
       <Modal
         scrollable={true}
         show={show2}
@@ -396,7 +396,7 @@ const OfficerTable = () => {
         size="md"
       >
         <Modal.Header closeButton>
-          <Modal.Title>Chi tiết sỹ quan</Modal.Title>
+          <Modal.Title>Chi tiết người hỗ trợ</Modal.Title>
         </Modal.Header>
         <Modal.Body style={{ color: "black" }}>
           <div className="mm-example-row">
@@ -487,7 +487,7 @@ const OfficerTable = () => {
                   <Row className="mb-3">
                     <Col md="3">
                       <b style={{ color: "black" }}>
-                        Tên sỹ quan:<span className="text-danger">*</span>
+                        Tên người hỗ trợ:<span className="text-danger">*</span>
                       </b>
                     </Col>
                     <Col md="9" className="ml-auto">
@@ -582,7 +582,7 @@ const OfficerTable = () => {
         <MaterialTable
           columns={columns}
           data={officerList}
-          title="Danh sách sỹ quan"
+          title="Danh sách người hỗ trợ"
           onRowClick={(event, rowData) => {
             handleShowModel2(rowData);
           }}

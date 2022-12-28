@@ -76,6 +76,9 @@ const SubHeader = (props) => {
                     {user_info &&
                       user_info.role.roleId === 5 &&
                       "quản trị viên"}
+                    {user_info &&
+                      user_info.role.roleId === 7 &&
+                      "quản lí người hỗ trợ"}
                     .
                   </h2>
                   {user_info && user_info.role.roleId === 2 && (

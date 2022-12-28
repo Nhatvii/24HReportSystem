@@ -12,13 +12,13 @@ import Boards from "../views/boards";
 import Employees from "../views/employees";
 import SubCategories from "../views/categories/sub-category";
 import RootCategories from "../views/categories/root-category";
-import MyPost from "../views/posts/MyPost";
 import CreatePost from "../views/posts/CreatePost";
 import CreateReport from "../views/create-report";
 import ManagerTasks from "../views/manager-tasks";
 import Offices from "../views/Offices";
 import Badwords from "../views/badwords";
 import Scripts from "../views/scripts";
+import MyPost from "../views/posts/MyPost";
 
 const DefaultRouter = () => {
   const user_info = JSON.parse(localStorage.getItem("user_info"));

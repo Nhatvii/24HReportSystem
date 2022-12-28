@@ -56,7 +56,7 @@ const CreatePost = (props) => {
       const response = await categoryApi
         .getAllSub(params)
         .then((list) =>
-          list.filter((e) => e.rootCategory !== null && e.categoryId !== 0)
+          list.filter((e) => e.rootCategory !== null && e.categoryId !== 1)
         );
       setCategories(response);
     } catch (e) {
@@ -389,11 +389,13 @@ const CreatePost = (props) => {
                           <h3 className="mb-4">Chi tiết bài viết:</h3>
                         </div>
                       </div>
-                      <div className="row">
+                      <div className="row text-black">
                         <div className="col-md-12">
                           <div className="form-group">
                             <label className="form-label">
-                              Tiêu đề: <span className="text-danger">*</span>
+                              <b>
+                                Tiêu đề: <span className="text-danger">*</span>
+                              </b>
                             </label>
                             <input
                               type="text"
@@ -407,7 +409,9 @@ const CreatePost = (props) => {
                         <div className="col-md-12">
                           <div className="form-group">
                             <label className="form-label">
-                              Phụ đề: <span className="text-danger">*</span>
+                              <b>
+                                Phụ đề: <span className="text-danger">*</span>
+                              </b>
                             </label>
                             <input
                               type="text"
@@ -422,7 +426,9 @@ const CreatePost = (props) => {
                         <div className="col-md-12">
                           <div className="form-group">
                             <label className="form-label">
-                              Danh mục: <span className="text-danger">*</span>
+                              <b>
+                                Danh mục: <span className="text-danger">*</span>
+                              </b>
                             </label>
                             <Form.Select
                               size="sm"
@@ -438,10 +444,11 @@ const CreatePost = (props) => {
                           </div>
                         </div>
                       </div>
+                      <b className="text-black">Nội dung bài viết:</b>
                       <Row className="pt-4 mb-4">
                         <ReactQuill
                           value={text}
-                          placeholder="Chi tiết báo cáo"
+                          placeholder="Nội dung bài viết"
                           onChange={handleEditor}
                           modules={modules}
                           style={{

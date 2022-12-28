@@ -183,7 +183,7 @@ const OfficeTable = () => {
       },
     },
     {
-      title: "Sỹ quan khả dụng",
+      title: "Người hỗ trợ khả dụng",
       field: "activeOfficer",
       width: "1%",
       render: (rowData) => {
@@ -235,7 +235,11 @@ const OfficeTable = () => {
           case "User":
             return (
               <div>
-                <Chip key={item.role.roleId} label="sỹ quan" color="primary" />
+                <Chip
+                  key={item.role.roleId}
+                  label="người hỗ trợ"
+                  color="primary"
+                />
               </div>
             );
           case "Staff":
@@ -476,7 +480,7 @@ const OfficeTable = () => {
   }, [temp]);
   return (
     <div style={{ maxWidth: "100%" }}>
-      {/* Cập nhật sỹ quan */}
+      {/* Cập nhật người hỗ trợ */}
       <Modal
         scrollable={true}
         show={show2}
@@ -485,7 +489,7 @@ const OfficeTable = () => {
         size="md"
       >
         <Modal.Header closeButton>
-          <Modal.Title>Chi tiết sỹ quan</Modal.Title>
+          <Modal.Title>Chi tiết người hỗ trợ</Modal.Title>
         </Modal.Header>
         <Modal.Body style={{ color: "black" }}>
           <div className="mm-example-row">
@@ -571,7 +575,7 @@ const OfficeTable = () => {
                   </Row>
                   <Row className="mb-3">
                     <Col md="3">
-                      <b style={{ color: "black" }}>Tên sỹ quan:</b>
+                      <b style={{ color: "black" }}>Tên người hỗ trợ:</b>
                     </Col>
                     <Col md="9" className="ml-auto">
                       <input
@@ -625,7 +629,7 @@ const OfficeTable = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-      {/* Tạo sỹ quan */}
+      {/* Tạo người hỗ trợ */}
       <Modal
         scrollable={true}
         show={show3}
@@ -634,7 +638,7 @@ const OfficeTable = () => {
         size="md"
       >
         <Modal.Header closeButton>
-          <Modal.Title>Tạo sỹ quan</Modal.Title>
+          <Modal.Title>Tạo người hỗ trợ</Modal.Title>
         </Modal.Header>
         <Modal.Body style={{ color: "black" }}>
           <div className="mm-example-row">
@@ -701,14 +705,14 @@ const OfficeTable = () => {
                 </Row>
                 <Row className="mb-3">
                   <Col md="3">
-                    <b style={{ color: "black" }}>Tên sỹ quan:</b>
+                    <b style={{ color: "black" }}>Tên người hỗ trợ:</b>
                   </Col>
                   <Col md="9" className="ml-auto">
                     <input
                       type="text"
                       className="form-control"
                       name="fullname"
-                      placeholder="Tên sỹ quan"
+                      placeholder="Tên người hỗ trợ"
                       value={fullname}
                       onChange={(e) => handlefullnameChange(e)}
                     />
@@ -753,7 +757,7 @@ const OfficeTable = () => {
             Đóng
           </Button>
           <Button variant="primary" onClick={() => create_user()}>
-            Tạo sỹ quan
+            Tạo người hỗ trợ
           </Button>
         </Modal.Footer>
       </Modal>
@@ -848,20 +852,20 @@ const OfficeTable = () => {
                     <MaterialTable
                       columns={columns2}
                       data={selectedOfficerList}
-                      title="Danh sách sỹ quan"
+                      title="Danh sách người hỗ trợ"
                       onRowClick={(event, rowData) => {
                         handleShowModel2(rowData);
                       }}
                       actions={[
                         {
                           icon: "add",
-                          tooltip: "Thêm sỹ quan",
+                          tooltip: "Thêm người hỗ trợ",
                           isFreeAction: true,
                           onClick: () => handleShowModel3(),
                         },
                         {
                           icon: "edit",
-                          tooltip: "Sửa chi tiết sỹ quan",
+                          tooltip: "Sửa chi tiết người hỗ trợ",
                           onClick: (event, rowData) =>
                             handleShowModel2(rowData),
                         },

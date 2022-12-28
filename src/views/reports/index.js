@@ -6,7 +6,7 @@ import DeniedReportTable from "../tables/Report/DeniedReportTable";
 import PendingReportTable from "../tables/Report/PendingReportTable";
 
 const Reports = () => {
-  const [show, setShow] = useState("New");
+  const [show, setShow] = useState("Approved");
   return (
     <div>
       <ul id="top-tab-list" className="p-0 row list-inline">
